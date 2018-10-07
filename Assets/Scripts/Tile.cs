@@ -4,8 +4,8 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class Tile : MonoBehaviour {
-	
-	public Vector2 gridPosition = Vector2.zero;
+
+    [SerializeField] Vector2 gridPosition = Vector2.zero;
 
     [SerializeField] Material baseMaterial;
     [SerializeField] Material mouseOverMaterial;
@@ -14,9 +14,20 @@ public class Tile : MonoBehaviour {
 
     Renderer[] childrenRenderers;
 
+    public Vector2 GridPosition
+    {
+        get
+        {
+            return gridPosition;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         childrenRenderers = GetComponentsInChildren<Renderer>();
+        //Convert transform position to x and y
+        gridPosition = new Vector2(transform.position.x / 10, transform.position.z / 10);
+        UpdateMaterial(baseMaterial);
 	}
 	
 	// Update is called once per frame

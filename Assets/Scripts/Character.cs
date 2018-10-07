@@ -47,7 +47,10 @@ public class Character : MonoBehaviour {
 
     public void MoveToTile(Tile tile)
     {
-        moveDestination = tile.transform.position + heightOffset;
-        currentTile = tile;
+        if (tile != null)
+        {
+            moveDestination = tile.transform.position + heightOffset;
+            currentTile = tile;
+        }
     }
 }

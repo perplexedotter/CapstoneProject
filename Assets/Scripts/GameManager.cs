@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
 
     //Create tile and char lists
     //List<List<Tile>> map = new List<List<Tile>>();
-    [SerializeField] List<Tile> map;
+    [SerializeField] Map map;
 	List<Character> characters = new List<Character>();
     Character activeCharacter;
 	int characterIndex = 0;
@@ -77,8 +77,10 @@ public class GameManager : MonoBehaviour {
 		PlayerCharacter character;
 		NonPlayerCharacter npc;
 
-		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
-		characters.Add(character);
+		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
+        //Test Map System
+        character.MoveToTile(map.GetMapTileByCoord(5, 5));
+        characters.Add(character);
 
         //Removed Extra characters for clarity
 		
@@ -92,12 +94,13 @@ public class GameManager : MonoBehaviour {
 		//characters.Add(npc);
 	}
 
+
+    //TODO Actually implement
     public List<Tile> GetPossibleMoves(Character character)
     {
         List<Tile> possibleMoves = new List<Tile>();
         //Queue<Tile>
         int movementRange = character.GetMovementRange();
-
 
 
         return possibleMoves;

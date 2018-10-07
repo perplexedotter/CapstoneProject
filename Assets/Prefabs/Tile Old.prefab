@@ -9,46 +9,46 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1830837447279510}
+  m_RootGameObject: {fileID: 1578944068249676}
   m_IsPrefabAsset: 1
---- !u!1 &1830837447279510
+--- !u!1 &1578944068249676
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4965736832887132}
-  - component: {fileID: 33469862153157674}
-  - component: {fileID: 23820310776215352}
-  - component: {fileID: 136296572209650672}
-  - component: {fileID: 114107231231396638}
+  - component: {fileID: 4525241119039854}
+  - component: {fileID: 33941924357835690}
+  - component: {fileID: 23386010476300542}
+  - component: {fileID: 65440196103502258}
+  - component: {fileID: 114434566628630438}
   m_Layer: 0
-  m_Name: PlayerCharacter
+  m_Name: Tile Old
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4965736832887132
+--- !u!4 &4525241119039854
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1830837447279510}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.87, y: -4.5, z: 0}
-  m_LocalScale: {x: 8, y: 8, z: 8}
+  m_GameObject: {fileID: 1578944068249676}
+  m_LocalRotation: {x: -0.29726422, y: -0.75413495, z: 0.0525893, w: -0.5832228}
+  m_LocalPosition: {x: 0, y: -3.69, z: 0}
+  m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23820310776215352
+  m_LocalEulerAnglesHint: {x: 25.218, y: 470.32, z: 25.327002}
+--- !u!23 &23386010476300542
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1830837447279510}
+  m_GameObject: {fileID: 1578944068249676}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -58,7 +58,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 4a8f9b67b83a8cc489fa920f91bdfb7e, type: 2}
+  - {fileID: 2100000, guid: d0eab84b036589141a4697b4638f89ac, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,37 +78,35 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33469862153157674
+--- !u!33 &33941924357835690
 MeshFilter:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1830837447279510}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114107231231396638
+  m_GameObject: {fileID: 1578944068249676}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65440196103502258
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1578944068249676}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114434566628630438
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1830837447279510}
+  m_GameObject: {fileID: 1578944068249676}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d3f7d3fd45c21f43a7efe43538f0d07, type: 3}
+  m_Script: {fileID: 11500000, guid: 08408fb76814f1d4eb58f406db9c807a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heightOffset: {x: 0, y: 1.5, z: 0}
-  moveDestination: {x: 0, y: 0, z: 0}
-  moveSpeed: 50
---- !u!136 &136296572209650672
-CapsuleCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1830837447279510}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  baseMaterial: {fileID: 2100000, guid: d0eab84b036589141a4697b4638f89ac, type: 2}
+  mouseOverMaterial: {fileID: 2100000, guid: 9647e1a2ef7e8304c93fc2ea9816d395, type: 2}
