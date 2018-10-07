@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-	public static GameManager instance;
+
+    //Make avaliable in the editor
+    [SerializeField] public int mapSize = 11;
+    
+    public static GameManager instance;
 	public GameObject TilePreFab;
 	public GameObject PlayerCharacterPreFab;
 	public GameObject NonPlayerCharacterPreFab;
-	public int mapSize = 11;
 	//Create tile and char lists
 	List<List<Tile>> map = new List<List<Tile>>();
 	List<Character> characters = new List<Character>();
-	int charIndex = 0;
+    Character activeCharacter;
+	int characterIndex = 0;
 	// Use this for initialization
 	void Awake(){
 		instance = this;		
@@ -19,22 +23,25 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		generateMap();
 		generateCharacters();
+        activeCharacter = characters[characterIndex];
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		characters[charIndex].TurnUpdate();
+		characters[characterIndex].TurnUpdate();
 	}
 	public void nextTurn(){
-		if (charIndex + 1 < characters.Count){
-			charIndex++;
+		if (characterIndex + 1 < characters.Count){
+			characterIndex++;
 		} else {
-			charIndex = 0;
+			characterIndex = 0;
 		}
+        activeCharacter = characters[characterIndex];
 	}
 
 	public void moveCurrentPlayer(Tile destinationTile) {
-		characters[charIndex].moveDestination = destinationTile.transform.position + 1.5f * Vector3.up;
+        activeCharacter.MoveToTile(destinationTile);
+		//characters[charIndex].moveDestination = destinationTile.transform.position + 1.5f * Vector3.up;
 	}
 	void generateMap(){
 		map = new List<List<Tile>>();
@@ -58,13 +65,26 @@ public class GameManager : MonoBehaviour {
 		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0-Mathf.Floor(mapSize/2), 1.5f, 0+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
 		characters.Add(character);
 
-		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3((mapSize-1)-Mathf.Floor(mapSize/2), 1.5f, -(mapSize-1)+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
-		characters.Add(character);
+        //Removed Extra characters for clarity
+		
+        //character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3((mapSize-1)-Mathf.Floor(mapSize/2), 1.5f, -(mapSize-1)+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
+		//characters.Add(character);
 
-		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
-		characters.Add(character);
+		//character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
+		//characters.Add(character);
 
-		npc = ((GameObject)Instantiate(NonPlayerCharacterPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerCharacter>();			
-		characters.Add(npc);
-		}
+		//npc = ((GameObject)Instantiate(NonPlayerCharacterPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerCharacter>();			
+		//characters.Add(npc);
+	}
+
+    public List<Tile> GetPossibleMoves(Character character)
+    {
+        List<Tile> possibleMoves = new List<Tile>();
+        //Queue<Tile>
+        int movementRange = character.GetMovementRange();
+
+
+
+        return possibleMoves;
+    }
 }

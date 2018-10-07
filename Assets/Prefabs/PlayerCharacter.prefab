@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d3f7d3fd45c21f43a7efe43538f0d07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heightOffset: {x: 0, y: 1.5, z: 0}
   moveDestination: {x: 0, y: 0, z: 0}
   moveSpeed: 10
 --- !u!136 &136296572209650672
