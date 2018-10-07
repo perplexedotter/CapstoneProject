@@ -23,7 +23,7 @@ public class TileEditor : MonoBehaviour {
         string tilePosition = Mathf.RoundToInt(snapPos.x / 10f) + "," + Mathf.RoundToInt(snapPos.z / 10f);
 
         textMesh = GetComponentInChildren<TextMesh>();
-        textMesh.text = tilePosition;
+        //textMesh.text = tilePosition;
 
         gameObject.name = "Tile " + tilePosition;
 
