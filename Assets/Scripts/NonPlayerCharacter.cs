@@ -22,7 +22,7 @@ public class NonPlayerCharacter : Character {
 				GameManager.instance.nextTurn();
 			}
 		} else {
-			moveDestination = new Vector3(0 - Mathf.Floor(Random.Range(0, GameManager.instance.mapSize/2)), 1.5f, Mathf.Floor(Random.Range(0-GameManager.instance.mapSize/2, 0)));
+			moveDestination = new Vector3(0 - Mathf.Floor(Random.Range(0, GameManager.instance.MapSize/2)), 1.5f, Mathf.Floor(Random.Range(0-GameManager.instance.MapSize/2, 0)));
 		}
 		
 		base.TurnUpdate();

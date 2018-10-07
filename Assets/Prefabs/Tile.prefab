@@ -109,3 +109,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridPosition: {x: 0, y: 0}
+  baseMaterial: {fileID: 2100000, guid: d0eab84b036589141a4697b4638f89ac, type: 2}
+  mouseOverMaterial: {fileID: 2100000, guid: 9647e1a2ef7e8304c93fc2ea9816d395, type: 2}

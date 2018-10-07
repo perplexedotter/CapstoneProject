@@ -2,12 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class Tile : MonoBehaviour {
 	
 	public Vector2 gridPosition = Vector2.zero;
-	// Use this for initialization
-	void Start () {
-		
+
+    [SerializeField] Material baseMaterial;
+    [SerializeField] Material mouseOverMaterial;
+
+    private Character characterOnTile;
+
+    Renderer[] childrenRenderers;
+
+    // Use this for initialization
+    void Start () {
+        childrenRenderers = GetComponentsInChildren<Renderer>();
 	}
 	
 	// Update is called once per frame
@@ -15,16 +24,25 @@ public class Tile : MonoBehaviour {
 		
 	}
 
-	void OnMouseEnter() {
-		transform.GetComponent<Renderer>().material.color = Color.blue;
-		//Debug.Log("Mouse Position ("+ gridPosition.x + ","+gridPosition.y+")");
-	}
-	void OnMouseExit() {
-		transform.GetComponent<Renderer>().material.color = Color.white;
-		//Debug.Log("Mouse Position ("+ gridPosition.x + ","+gridPosition.y+")");
-	}
+    //Update all faces material
+    public void UpdateMaterial(Material material)
+    {
+        foreach (Renderer renderer in childrenRenderers)
+        {
+            renderer.material = material;
+        }
+    }
 
-	void OnMouseDown(){
+	void OnMouseEnter() {
+        UpdateMaterial(mouseOverMaterial);
+    }
+	void OnMouseExit() {
+        //Update all faces material
+        UpdateMaterial(baseMaterial);
+    }
+
+    void OnMouseDown(){
+        print("Click");
 		GameManager.instance.moveCurrentPlayer(this);
 	}
 }
