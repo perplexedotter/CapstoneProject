@@ -3068,12 +3068,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapSize: 13
   unitHeightOffset: 1.5
+  map: {fileID: 1645087134}
+  tileMoveRangeMaterial: {fileID: 2100000, guid: e0b6da4cb90885c488b5fe7ed75ddb7b,
+    type: 2}
   TilePreFab: {fileID: 1578944068249676, guid: db246d67572e73746afa6433f1d6b83d, type: 2}
   PlayerCharacterPreFab: {fileID: 1830837447279510, guid: 4274d27aa8936534d8f924f4410cdf6c,
     type: 2}
   NonPlayerCharacterPreFab: {fileID: 1260252792409282, guid: 98f55e1329360dc4fa60610a163abf4a,
     type: 2}
-  map: {fileID: 1645087134}
 --- !u!4 &982764463
 Transform:
   m_ObjectHideFlags: 0
