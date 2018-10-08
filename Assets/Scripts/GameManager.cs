@@ -5,17 +5,24 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
     //Make avaliable in the editor
+    [Header("Map Properties")]
     [SerializeField] int mapSize = 11;
     [SerializeField] float unitHeightOffset = 1.5f;
-    
+    [SerializeField] Map map;
+
+
+    //Test
+    [Header("Tile Materials")]
+    [SerializeField] Material tileMoveRangeMaterial;
+
     public static GameManager instance;
 	public GameObject TilePreFab;
 	public GameObject PlayerCharacterPreFab;
 	public GameObject NonPlayerCharacterPreFab;
 
+    private List<Tile> possibleMoves;
+
     //Create tile and char lists
-    //List<List<Tile>> map = new List<List<Tile>>();
-    [SerializeField] Map map;
 	List<Character> characters = new List<Character>();
     Character activeCharacter;
 	int characterIndex = 0;
@@ -34,7 +41,6 @@ public class GameManager : MonoBehaviour {
 		instance = this;		
 	}
 	void Start () {
-		//generateMap();
 		generateCharacters();
         activeCharacter = characters[characterIndex];
 	}
@@ -44,34 +50,22 @@ public class GameManager : MonoBehaviour {
 		characters[characterIndex].TurnUpdate();
 	}
 	public void nextTurn(){
+        map.ResetTileMaterials();
 		if (characterIndex + 1 < characters.Count){
 			characterIndex++;
 		} else {
 			characterIndex = 0;
 		}
         activeCharacter = characters[characterIndex];
-        GetPossibleMoves(activeCharacter);
+        possibleMoves = GetPossibleMoves(activeCharacter);
+        foreach(Tile tile in possibleMoves)
+            tile.UpdateMaterial(tileMoveRangeMaterial);
 	}
 
 	public void moveCurrentPlayer(Tile destinationTile) {
         activeCharacter.MoveToTile(destinationTile);
 		//characters[charIndex].moveDestination = destinationTile.transform.position + 1.5f * Vector3.up;
 	}
-	//void generateMap(){
-	//	map = new List<List<Tile>>();
-	//	for (int i = 0; i < MapSize; i++) {
-	//		List <Tile> row = new List <Tile>();
-	//		//This loop creates the grid by iterating through i and j coords
-	//		for (int j = 0; j < MapSize; j++) {
- //               //Place the tile into the 3d space, y will always be zero
- //               //Tile tile = ((GameObject)Instantiate(TilePreFab, new Vector3(i-Mathf.Floor(mapSize/2), 0, -j+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Tile>();			
- //               Tile tile = ((GameObject)Instantiate(TilePreFab, new Vector3(i - MapSize, 0, -j + MapSize), Quaternion.Euler(new Vector3()))).GetComponent<Tile>();
- //               tile.gridPosition = new Vector2(i,j);
-	//			row.Add(tile);
-	//		}
-	//		map.Add(row);
-	//	}
-	//}
 
 	//this will create the characters on the map for this level
 	void generateCharacters(){
@@ -95,7 +89,7 @@ public class GameManager : MonoBehaviour {
 		//characters.Add(npc);
 	}
 
-    //TODO Actually implement 
+    //Takes a character and finds all tiles they could possibly move to
     public List<Tile> GetPossibleMoves(Character character)
     {
         HashSet<Tile> possibleMoves = new HashSet<Tile>();
@@ -105,7 +99,6 @@ public class GameManager : MonoBehaviour {
         tileQueue.Enqueue(character.CurrentTile);
         map.ResetVisited();
 
-        //TODO pretty sure range is going out to one too many
         while(movementRange > 0 && tileQueue.Count > 0)
         {
             List<Tile> currentTiles = new List<Tile>();
@@ -136,7 +129,16 @@ public class GameManager : MonoBehaviour {
 
     public void TileClicked(Tile tile)
     {
-        activeCharacter.MoveToTile(tile);
+        if(possibleMoves.Contains(tile))
+            activeCharacter.MoveToTile(tile);
+    }
+
+    public void TileMouseExit(Tile tile)
+    {
+        if (possibleMoves != null && possibleMoves.Contains(tile))
+            tile.UpdateMaterial(tileMoveRangeMaterial);
+        else
+            tile.ResetTileMaterial();
     }
 
     public void CharacterClicked(Character character)

@@ -37,12 +37,25 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public Material BaseMaterial
+    {
+        get
+        {
+            return baseMaterial;
+        }
+
+        set
+        {
+            baseMaterial = value;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         childrenRenderers = GetComponentsInChildren<Renderer>();
         //Convert transform position to x and y
         gridPosition = new Vector2(Mathf.Floor(transform.position.x / 10), Mathf.Floor(transform.position.z / 10));
-        UpdateMaterial(baseMaterial);
+        UpdateMaterial(BaseMaterial);
 	}
 	
 	// Update is called once per frame
@@ -59,17 +72,20 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    //TODO maybe let gameManager handle this
 	void OnMouseEnter() {
         UpdateMaterial(mouseOverMaterial);
     }
 	void OnMouseExit() {
-        //Update all faces material
-        UpdateMaterial(baseMaterial);
+        GameManager.instance.TileMouseExit(this);
     }
 
     void OnMouseDown(){
-        //print("Click");
-        //GameManager.instance.moveCurrentPlayer(this);
         GameManager.instance.TileClicked(this);
 	}
+
+    public void ResetTileMaterial()
+    {
+        UpdateMaterial(BaseMaterial);
+    }
 }

@@ -8,7 +8,6 @@ public class Map : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //mapTiles = GetComponents<Tile>();
 	}
 	
 	// Update is called once per frame
@@ -57,5 +56,11 @@ public class Map : MonoBehaviour {
         {
             tile.Visted = false;
         }
+    }
+
+    public void ResetTileMaterials()
+    {
+        foreach (Tile tile in mapTiles)
+            tile.ResetTileMaterial();
     }
 }
