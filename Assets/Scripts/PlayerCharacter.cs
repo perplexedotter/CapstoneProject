@@ -13,7 +13,9 @@ public class PlayerCharacter : Character {
 	void Update () {
 		
 	}
-	public override void TurnUpdate () {
+
+    //TODO Move this to base Character MoveToTile and remove GameManager.instance.nextTurn(); (should be handled in GameManager)
+    public override void TurnUpdate () {
 		if (Vector3.Distance(moveDestination, transform.position) > 0.1f) {
 			transform.position += (moveDestination - transform.position).normalized * moveSpeed * Time.deltaTime;
 			
