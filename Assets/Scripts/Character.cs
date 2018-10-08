@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class Character : MonoBehaviour {
 
+    [Header("Transfom Properties")]
     [SerializeField] protected Vector3 heightOffset;
     [SerializeField] protected Vector3 moveDestination;
 	[SerializeField] protected float moveSpeed = 10.0f;
+
+    [Header("Unit Stats")]
+    [Tooltip("Which player controls this unit")]
+    [SerializeField] protected int playerNumber;
 
     //TODO replace with calculation based on speed
     private int movementRange = 4;
@@ -51,6 +56,15 @@ public class Character : MonoBehaviour {
         {
             moveDestination = tile.transform.position + heightOffset;
             currentTile = tile;
+        }
+    }
+
+    //Places the unit on a tile instantly (No Visual Movment)
+    public void PlaceOnTile(Tile tile)
+    {
+        if(tile != null)
+        {
+            transform.position = tile.transform.position + heightOffset;
         }
     }
 }
