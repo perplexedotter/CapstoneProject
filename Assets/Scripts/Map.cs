@@ -20,7 +20,7 @@ public class Map : MonoBehaviour {
         //TODO Optimize search
         foreach(Tile tile in mapTiles)
         {
-            if (tile.GridPosition.x == x && tile.GridPosition.y == y)
+            if (tile.coords.x == x && tile.coords.y == y)
                 return tile;
         }
         return null;
@@ -28,8 +28,8 @@ public class Map : MonoBehaviour {
 
     public List<Tile> GetSurroundingTiles(Tile tile)
     {
-        int x = (int) tile.GridPosition.x;
-        int y = (int) tile.GridPosition.y;
+        int x = tile.coords.x;
+        int y = tile.coords.y;
         List<Tile> tiles = new List<Tile>();
 
         //Check each position aroud the tile and if there is a tile add it to the list

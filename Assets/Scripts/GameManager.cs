@@ -46,25 +46,29 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
+    //TODO move this out of update
 	void Update () {
 		characters[characterIndex].TurnUpdate();
 	}
-	public void nextTurn(){
+	public void nextTurn()
+    {
         map.ResetTileMaterials();
-		if (characterIndex + 1 < characters.Count){
-			characterIndex++;
-		} else {
-			characterIndex = 0;
-		}
-        activeCharacter = characters[characterIndex];
-        possibleMoves = GetPossibleMoves(activeCharacter);
-        foreach(Tile tile in possibleMoves)
-            tile.UpdateMaterial(tileMoveRangeMaterial);
-	}
+        UpdateActiveCharacter();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
 
-	public void moveCurrentPlayer(Tile destinationTile) {
+    private void UpdateActiveCharacter()
+    {
+        if (characterIndex + 1 < characters.Count)
+            characterIndex++;
+        else
+            characterIndex = 0;
+        activeCharacter = characters[characterIndex];
+    }
+
+    public void moveCurrentPlayer(Tile destinationTile) {
         activeCharacter.MoveToTile(destinationTile);
-		//characters[charIndex].moveDestination = destinationTile.transform.position + 1.5f * Vector3.up;
 	}
 
 	//this will create the characters on the map for this level
@@ -75,30 +79,36 @@ public class GameManager : MonoBehaviour {
 		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
         //Test Map System
         character.MoveToTile(map.GetTileByCoord(5, 5));
+        //character.PlaceOnTile(map.GetTileByCoord(5, 1));
+        characters.Add(character);
+
+
+        character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -(mapSize - 1) + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
+        character.MoveToTile(map.GetTileByCoord(0, 0));
         characters.Add(character);
 
         //Removed Extra characters for clarity
-		
-        //character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3((mapSize-1)-Mathf.Floor(mapSize/2), 1.5f, -(mapSize-1)+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
-		//characters.Add(character);
 
-		//character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
-		//characters.Add(character);
+        //character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
+        //characters.Add(character);
 
-		//npc = ((GameObject)Instantiate(NonPlayerCharacterPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerCharacter>();			
-		//characters.Add(npc);
-	}
+        //npc = ((GameObject)Instantiate(NonPlayerCharacterPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerCharacter>();			
+        //characters.Add(npc);
+    }
 
     //Takes a character and finds all tiles they could possibly move to
+    //TODO possibly move this to the Map class and make it take a tile and range instead of character
     public List<Tile> GetPossibleMoves(Character character)
     {
         HashSet<Tile> possibleMoves = new HashSet<Tile>();
         Queue<Tile> tileQueue = new Queue<Tile>();
         int movementRange = character.GetMovementRange();
 
+        //Add starting tile and reset tiles to unvisited
         tileQueue.Enqueue(character.CurrentTile);
         map.ResetVisited();
 
+        //Loop while there are tiles to examine within range
         while(movementRange > 0 && tileQueue.Count > 0)
         {
             List<Tile> currentTiles = new List<Tile>();
@@ -109,7 +119,7 @@ public class GameManager : MonoBehaviour {
                 List<Tile> surroundTiles = map.GetSurroundingTiles(tileToExamine);
                 foreach(Tile tile in surroundTiles)
                 {
-                    //TODO adjust to account for terrain
+                    //TODO adjust to account for terrain and for other units in path
                     if (!possibleMoves.Contains(tile))
                     {
                         possibleMoves.Add(tile);
@@ -118,21 +128,42 @@ public class GameManager : MonoBehaviour {
                     }
                 }
             }
+            //Add next set of tiles to queue and decrement range
             foreach (Tile tile in currentTiles)
                 tileQueue.Enqueue(tile);
             movementRange--;
         }
 
+        //Return tiles if there are any
         List<Tile> posMoves = new List<Tile>(possibleMoves);
         return posMoves.Count > 0 ? posMoves : null;
     }
 
-    public void TileClicked(Tile tile)
+    //Update the active Units possible moves
+    public void UpdateCurrentPossibleMoves()
     {
-        if(possibleMoves.Contains(tile))
-            activeCharacter.MoveToTile(tile);
+        possibleMoves = GetPossibleMoves(activeCharacter);
     }
 
+    //Display the active Units possible moves
+    public void ShowCurrentPossibleMoves()
+    {
+        foreach (Tile tile in possibleMoves)
+            tile.UpdateMaterial(tileMoveRangeMaterial);
+    }
+
+    //Respond to use clicking on a tile
+    public void TileClicked(Tile tile)
+    {
+        if(possibleMoves != null && possibleMoves.Contains(tile))
+        {
+            activeCharacter.MoveToTile(tile);
+            //TODO Move this logic elsewhere
+            //nextTurn();
+        }
+    }
+
+    //TODO refacter mouse enters and exits to a seperate highlighter script
     public void TileMouseExit(Tile tile)
     {
         if (possibleMoves != null && possibleMoves.Contains(tile))
@@ -141,6 +172,7 @@ public class GameManager : MonoBehaviour {
             tile.ResetTileMaterial();
     }
 
+    //TODO add context dependent actions for character clicks
     public void CharacterClicked(Character character)
     {
 
