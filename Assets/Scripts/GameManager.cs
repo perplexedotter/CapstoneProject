@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour {
 			characterIndex = 0;
 		}
         activeCharacter = characters[characterIndex];
+        GetPossibleMoves(activeCharacter);
 	}
 
 	public void moveCurrentPlayer(Tile destinationTile) {
@@ -79,7 +80,7 @@ public class GameManager : MonoBehaviour {
 
 		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
         //Test Map System
-        character.MoveToTile(map.GetMapTileByCoord(5, 5));
+        character.MoveToTile(map.GetTileByCoord(5, 5));
         characters.Add(character);
 
         //Removed Extra characters for clarity
@@ -94,15 +95,52 @@ public class GameManager : MonoBehaviour {
 		//characters.Add(npc);
 	}
 
-
-    //TODO Actually implement
+    //TODO Actually implement 
     public List<Tile> GetPossibleMoves(Character character)
     {
-        List<Tile> possibleMoves = new List<Tile>();
-        //Queue<Tile>
+        HashSet<Tile> possibleMoves = new HashSet<Tile>();
+        Queue<Tile> tileQueue = new Queue<Tile>();
         int movementRange = character.GetMovementRange();
 
+        tileQueue.Enqueue(character.CurrentTile);
+        map.ResetVisited();
 
-        return possibleMoves;
+        //TODO pretty sure range is going out to one too many
+        while(movementRange > 0 && tileQueue.Count > 0)
+        {
+            List<Tile> currentTiles = new List<Tile>();
+            while(tileQueue.Count > 0)
+            {
+                Tile tileToExamine = tileQueue.Dequeue();
+                tileToExamine.Visted = true;
+                List<Tile> surroundTiles = map.GetSurroundingTiles(tileToExamine);
+                foreach(Tile tile in surroundTiles)
+                {
+                    //TODO adjust to account for terrain
+                    if (!possibleMoves.Contains(tile))
+                    {
+                        possibleMoves.Add(tile);
+                        if (!tile.Visted)
+                            currentTiles.Add(tile);
+                    }
+                }
+            }
+            foreach (Tile tile in currentTiles)
+                tileQueue.Enqueue(tile);
+            movementRange--;
+        }
+
+        List<Tile> posMoves = new List<Tile>(possibleMoves);
+        return posMoves.Count > 0 ? posMoves : null;
+    }
+
+    public void TileClicked(Tile tile)
+    {
+        activeCharacter.MoveToTile(tile);
+    }
+
+    public void CharacterClicked(Character character)
+    {
+
     }
 }

@@ -14,6 +14,8 @@ public class Tile : MonoBehaviour {
 
     Renderer[] childrenRenderers;
 
+    bool visted = false;
+
     public Vector2 GridPosition
     {
         get
@@ -22,11 +24,24 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public bool Visted
+    {
+        get
+        {
+            return visted;
+        }
+
+        set
+        {
+            visted = value;
+        }
+    }
+
     // Use this for initialization
     void Start () {
         childrenRenderers = GetComponentsInChildren<Renderer>();
         //Convert transform position to x and y
-        gridPosition = new Vector2(transform.position.x / 10, transform.position.z / 10);
+        gridPosition = new Vector2(Mathf.Floor(transform.position.x / 10), Mathf.Floor(transform.position.z / 10));
         UpdateMaterial(baseMaterial);
 	}
 	
@@ -53,7 +68,8 @@ public class Tile : MonoBehaviour {
     }
 
     void OnMouseDown(){
-        print("Click");
-		GameManager.instance.moveCurrentPlayer(this);
+        //print("Click");
+        //GameManager.instance.moveCurrentPlayer(this);
+        GameManager.instance.TileClicked(this);
 	}
 }
