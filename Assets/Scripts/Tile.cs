@@ -70,6 +70,7 @@ public class Tile : MonoBehaviour {
         );
     }
 
+    //TODO Possibly removed this and multiply GetGridPos by 10 any time actual coords are needed
     //Returns Unity Coordidates of the tile (0,0) (30,20) etc
     public Vector2Int GetCoords()
     {
