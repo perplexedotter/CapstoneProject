@@ -4,29 +4,19 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 [SelectionBase]
+[RequireComponent(typeof(Tile))]
 public class TileEditor : MonoBehaviour {
 
-    [SerializeField] [Range(1f, 20f)] float gridSize = 10f;
+    Tile tile;
 
-    TextMesh textMesh;
-
-    private void Start()
+    private void Awake()
     {
+        tile = GetComponent<Tile>();
     }
 
     // Update is called once per frame
     void Update () {
-        Vector3 snapPos;
-        snapPos.x = Mathf.RoundToInt(transform.position.x / gridSize) * gridSize;
-        snapPos.z = Mathf.RoundToInt(transform.position.z / gridSize) * gridSize;
-
-        string tilePosition = Mathf.RoundToInt(snapPos.x / 10f) + "," + Mathf.RoundToInt(snapPos.z / 10f);
-
-        textMesh = GetComponentInChildren<TextMesh>();
-        //textMesh.text = tilePosition;
-
-        gameObject.name = "Tile " + tilePosition;
-
-        transform.position = new Vector3(snapPos.x, 0f, snapPos.z);
+        gameObject.name = "Tile " + tile.GetGridPos().x + "," + tile.GetGridPos().y;
+        transform.position = new Vector3(tile.GetCoords().x, 0, tile.GetCoords().y);
 	}
 }
