@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Map : MonoBehaviour {
 
     [SerializeField] List<Tile> mapTiles;
 
 	// Use this for initialization
+    //TODO have script automatically get tiles.
 	void Start () {
+        //mapTiles = new List<Tile>(GetComponents<Tile>());
 	}
 	
 	// Update is called once per frame
@@ -50,6 +53,7 @@ public class Map : MonoBehaviour {
         return tiles.Count > 0 ? tiles : null;  
     }
 
+    //Resets all tiles visited status for BFS algo
     public void ResetVisited()
     {
         foreach(Tile tile in mapTiles)
@@ -58,9 +62,17 @@ public class Map : MonoBehaviour {
         }
     }
 
-    public void ResetTileMaterials()
+    //DEPRECIATED Use ResetTileColors Instead
+    //public void ResetTileMaterials()
+    //{
+    //    foreach (Tile tile in mapTiles)
+    //        tile.ResetTileMaterial();
+    //}
+
+    //Resets all tiles in map to base color
+    public void ResetTileColors()
     {
         foreach (Tile tile in mapTiles)
-            tile.ResetTileMaterial();
+            tile.ResetTileColor();
     }
 }
