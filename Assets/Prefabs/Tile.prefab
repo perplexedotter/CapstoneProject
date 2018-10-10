@@ -692,6 +692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08408fb76814f1d4eb58f406db9c807a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPosition: {x: 0, y: 0}
-  baseMaterial: {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
+  xCoord: 0
+  yCoord: 0
+  baseMaterial: {fileID: 2100000, guid: a07fadb24ea940240afba3afc1a692cc, type: 2}
   mouseOverMaterial: {fileID: 2100000, guid: 9647e1a2ef7e8304c93fc2ea9816d395, type: 2}
