@@ -5,6 +5,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Tile : MonoBehaviour {
 
+    public enum TileColors { standard, move, attack }
+
     public struct Coords
     {
         public int x, y;
@@ -18,12 +20,20 @@ public class Tile : MonoBehaviour {
 
     public Coords coords;
 
+
+
     //[SerializeField] Vector2 gridPosition = Vector2.zero;
+    [Header("Grid Posistion")]
     [SerializeField] int xCoord;
     [SerializeField] int yCoord;
 
-    [SerializeField] Material baseMaterial;
-    [SerializeField] Material mouseOverMaterial;
+    //[SerializeField] Material baseMaterial;
+    //[SerializeField] Material mouseOverMaterial;
+
+    [Header("Material Colors")]
+    [SerializeField] Color baseColor;
+    [SerializeField] Color moveRangeColor;
+    [SerializeField] Color attackRangeColor;
 
 
     //TODO Possibly remove this. Tile may not need to care if unit is there and GameManager can handle that
@@ -32,14 +42,6 @@ public class Tile : MonoBehaviour {
     Renderer[] childrenRenderers;
 
     bool visted = false;
-
-    //public Vector2 GridPosition
-    //{
-    //    get
-    //    {
-    //        return gridPosition;
-    //    }
-    //}
 
     public bool Visted
     {
@@ -54,19 +56,6 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    public Material BaseMaterial
-    {
-        get
-        {
-            return baseMaterial;
-        }
-
-        set
-        {
-            baseMaterial = value;
-        }
-    }
-
     //TODO Clean up coordianate systems
     private void Awake()
     {
@@ -77,10 +66,6 @@ public class Tile : MonoBehaviour {
     // Use this for initialization
     void Start () {
         childrenRenderers = GetComponentsInChildren<Renderer>();
-        //Convert transform position to x and y
-        //CMathf.Floor(transform.position.x / 10), Mathf.Floor(transform.position.z / 10));
-
-        UpdateMaterial(BaseMaterial);
 	}
 	
 	// Update is called once per frame
@@ -90,29 +75,70 @@ public class Tile : MonoBehaviour {
 
     }
 
-    //Update all faces material
-    public void UpdateMaterial(Material material)
+    public void SetColor(Color color)
     {
-        foreach (Renderer renderer in childrenRenderers)
+        Queue<Color> colors = new Queue<Color>();
+        foreach (Renderer r in childrenRenderers)
         {
-            renderer.material = material;
+            r.material.color = color;
+            colors.Enqueue(color);
         }
+        SendMessage("UpdateBaseColorQueue", colors);
     }
 
-    //TODO maybe let gameManager handle this
-	void OnMouseEnter() {
-        UpdateMaterial(mouseOverMaterial);
-    }
-	void OnMouseExit() {
-        GameManager.instance.TileMouseExit(this);
-    }
+    //DEPRECIATED Use SetTileColor instead
+    //Update all faces material
+    //public void UpdateMaterial(Material material)
+    //{
+    //    foreach (Renderer renderer in childrenRenderers)
+    //    {
+    //        renderer.material = material;
+    //    }
+    //}
 
     void OnMouseDown(){
         GameManager.instance.TileClicked(this);
 	}
 
-    public void ResetTileMaterial()
+    //DEPRECIATED Use ResetTileColor Instead
+    //public void ResetTileMaterial()
+    //{
+    //    UpdateMaterial(BaseMaterial);
+    //}
+
+    public void ResetTileColor()
     {
-        UpdateMaterial(BaseMaterial);
+        SetColor(baseColor);
+    }
+
+
+
+    public void SetTileColor(TileColors color)
+    {
+        switch (color)
+        {
+            case TileColors.standard:
+                SetColor(baseColor);
+                break;
+            case TileColors.move:
+                SetColor(moveRangeColor);
+                break;
+            case TileColors.attack:
+                SetColor(attackRangeColor);
+                break;
+            default:
+                SetColor(baseColor);
+                break;
+        }
+    }
+
+    private void StartHighlightAnimation()
+    {
+
+    }
+
+    private void StopHighlightAnimation()
+    {
+
     }
 }

@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour {
 
 
     //Test
-    [Header("Tile Materials")]
-    [SerializeField] Material tileMoveRangeMaterial;
+    //[header("tile materials")]
+    //[serializefield] material tilemoverangematerial;
 
     public static GameManager instance;
 	public GameObject TilePreFab;
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour {
 	}
 	public void nextTurn()
     {
-        map.ResetTileMaterials();
+        map.ResetTileColors();
         UpdateActiveCharacter();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour {
     public void ShowCurrentPossibleMoves()
     {
         foreach (Tile tile in possibleMoves)
-            tile.UpdateMaterial(tileMoveRangeMaterial);
+            tile.SetTileColor(Tile.TileColors.move);
     }
 
     //Respond to use clicking on a tile
@@ -163,14 +163,14 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    //TODO refacter mouse enters and exits to a seperate highlighter script
-    public void TileMouseExit(Tile tile)
-    {
-        if (possibleMoves != null && possibleMoves.Contains(tile))
-            tile.UpdateMaterial(tileMoveRangeMaterial);
-        else
-            tile.ResetTileMaterial();
-    }
+    //DEPRECIATED refactered mouse enters and exits to a seperate highlighter script
+    //public void TileMouseExit(Tile tile)
+    //{
+    //    if (possibleMoves != null && possibleMoves.Contains(tile))
+    //        tile.UpdateMaterial(tileMoveRangeMaterial);
+    //    else
+    //        tile.ResetTileMaterial();
+    //}
 
     //TODO add context dependent actions for character clicks
     public void CharacterClicked(Character character)

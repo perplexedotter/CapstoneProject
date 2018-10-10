@@ -67,4 +67,14 @@ public class Character : MonoBehaviour {
             transform.position = tile.transform.position + heightOffset;
         }
     }
+
+    private void StartHighlightAnimation()
+    {
+
+    }
+
+    private void StopHighlightAnimation()
+    {
+
+    }
 }

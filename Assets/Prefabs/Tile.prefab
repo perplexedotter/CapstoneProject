@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 114021566875694224}
   - component: {fileID: 114193524029788770}
   - component: {fileID: 65693544023135266}
+  - component: {fileID: 114334998026443132}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -694,5 +695,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xCoord: 0
   yCoord: 0
-  baseMaterial: {fileID: 2100000, guid: a07fadb24ea940240afba3afc1a692cc, type: 2}
+  baseMaterial: {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
   mouseOverMaterial: {fileID: 2100000, guid: 9647e1a2ef7e8304c93fc2ea9816d395, type: 2}
+  baseColor: {r: 1, g: 1, b: 1, a: 0.5686275}
+  moveRangeColor: {r: 0, g: 0.9811321, b: 0.108579166, a: 0.5647059}
+  attackRangeColor: {r: 1, g: 0, b: 0, a: 0.5803922}
+--- !u!114 &114334998026443132
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1417412251040802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dca3b8d3583caa94b8ad2372437be659, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightColor: {r: 1, g: 0.9584457, b: 0, a: 0.59607846}
