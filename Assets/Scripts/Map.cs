@@ -5,12 +5,20 @@ using UnityEngine;
 
 public class Map : MonoBehaviour {
 
-    [SerializeField] List<Tile> mapTiles;
+    //[SerializeField] List<Tile> mapTiles;
+
+    Dictionary<Vector2Int, Tile> mapDict = new Dictionary<Vector2Int, Tile>();
 
 	// Use this for initialization
     //TODO have script automatically get tiles.
-	void Start () {
-        //mapTiles = new List<Tile>(GetComponents<Tile>());
+	void Awake () {
+        //Find all the tiles and add them to the dictionary. Ignoring duplicates
+        var tiles = FindObjectsOfType<Tile>();
+        foreach(Tile t in tiles)
+        {
+            if (!mapDict.ContainsKey(t.GetGridPos()))
+                mapDict.Add(t.GetGridPos(), t);
+        }
 	}
 	
 	// Update is called once per frame
@@ -18,22 +26,24 @@ public class Map : MonoBehaviour {
 		
 	}
 
+    //If the 
     public Tile GetTileByCoord(int x, int y)
     {
-        //TODO Optimize search
-        foreach(Tile tile in mapTiles)
-        {
-            if (tile.coords.x == x && tile.coords.y == y)
-                return tile;
-        }
-        return null;
+        return GetTileByVector(new Vector2Int(x, y));
     }
 
+    public Tile GetTileByVector(Vector2Int vector)
+    {
+        Tile tile;
+        if (mapDict.TryGetValue(vector, out tile))
+            return tile;
+        return null;
+    }
     public List<Tile> GetSurroundingTiles(Tile tile)
     {
-        int x = tile.coords.x;
-        int y = tile.coords.y;
         List<Tile> tiles = new List<Tile>();
+        int x = tile.GetGridPos().x;
+        int y = tile.GetGridPos().y;
 
         //Check each position aroud the tile and if there is a tile add it to the list
         Tile adjacentTile = GetTileByCoord(x, y+1);
@@ -56,10 +66,15 @@ public class Map : MonoBehaviour {
     //Resets all tiles visited status for BFS algo
     public void ResetVisited()
     {
-        foreach(Tile tile in mapTiles)
-        {
+        foreach(var tile in mapDict.Values)
             tile.Visted = false;
-        }
+    }
+
+    //Resets all tiles in map to base color
+    public void ResetTileColors()
+    {
+        foreach (var tile in mapDict.Values)
+            tile.ResetTileColor();
     }
 
     //DEPRECIATED Use ResetTileColors Instead
@@ -68,11 +83,4 @@ public class Map : MonoBehaviour {
     //    foreach (Tile tile in mapTiles)
     //        tile.ResetTileMaterial();
     //}
-
-    //Resets all tiles in map to base color
-    public void ResetTileColors()
-    {
-        foreach (Tile tile in mapTiles)
-            tile.ResetTileColor();
-    }
 }

@@ -7,28 +7,9 @@ public class Tile : MonoBehaviour {
 
     public enum TileColors { standard, move, attack }
 
-    public struct Coords
-    {
-        public int x, y;
+    private const int gridSize = 10;
 
-        public Coords(int p1, int p2)
-        {
-            x = p1;
-            y = p2;
-        }
-    }
-
-    public Coords coords;
-
-
-
-    //[SerializeField] Vector2 gridPosition = Vector2.zero;
-    [Header("Grid Posistion")]
-    [SerializeField] int xCoord;
-    [SerializeField] int yCoord;
-
-    //[SerializeField] Material baseMaterial;
-    //[SerializeField] Material mouseOverMaterial;
+    private Vector2Int gridPos;
 
     [Header("Material Colors")]
     [SerializeField] Color baseColor;
@@ -56,11 +37,18 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public static int GridSize
+    {
+        get
+        {
+            return gridSize;
+        }
+    }
+
     //TODO Clean up coordianate systems
     private void Awake()
     {
-        xCoord = coords.x = (int)Mathf.Floor(transform.position.x / 10);
-        yCoord = coords.y = (int)Mathf.Floor(transform.position.z / 10);
+        gridPos = GetGridPos();
     }
 
     // Use this for initialization
@@ -70,9 +58,26 @@ public class Tile : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        xCoord = coords.x = (int)Mathf.Floor(transform.position.x / 10);
-        yCoord = coords.y = (int)Mathf.Floor(transform.position.z / 10);
 
+    }
+
+    //Returns Position within the grid (0,0) (3,2) etc
+    public Vector2Int GetGridPos()
+    {
+        return new Vector2Int(
+            (int)Mathf.Floor(transform.position.x / gridSize),
+            (int)Mathf.Floor(transform.position.z / gridSize)
+        );
+    }
+
+    //TODO Possibly removed this and multiply GetGridPos by 10 any time actual coords are needed
+    //Returns Unity Coordidates of the tile (0,0) (30,20) etc
+    public Vector2Int GetCoords()
+    {
+        return new Vector2Int(
+            (int)Mathf.Floor(transform.position.x / gridSize) * gridSize,
+            (int)Mathf.Floor(transform.position.z / gridSize) * gridSize
+        );
     }
 
     public void SetColor(Color color)
