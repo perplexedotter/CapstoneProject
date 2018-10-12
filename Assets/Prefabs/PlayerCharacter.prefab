@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 23820310776215352}
   - component: {fileID: 136296572209650672}
   - component: {fileID: 114107231231396638}
+  - component: {fileID: 114135923480173152}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -100,6 +101,21 @@ MonoBehaviour:
   moveDestination: {x: 0, y: 0, z: 0}
   moveSpeed: 50
   playerNumber: 0
+<<<<<<< HEAD
+=======
+--- !u!114 &114135923480173152
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1830837447279510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dca3b8d3583caa94b8ad2372437be659, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+>>>>>>> ffebd64436aa6f0a63f6ae63dfc1847629ff1741
 --- !u!136 &136296572209650672
 CapsuleCollider:
   m_ObjectHideFlags: 1

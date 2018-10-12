@@ -5,25 +5,16 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Tile : MonoBehaviour {
 
-    public struct Coords
-    {
-        public int x, y;
+    public enum TileColors { standard, move, attack }
 
-        public Coords(int p1, int p2)
-        {
-            x = p1;
-            y = p2;
-        }
-    }
+    private const int gridSize = 10;
 
-    public Coords coords;
+    private Vector2Int gridPos;
 
-    //[SerializeField] Vector2 gridPosition = Vector2.zero;
-    [SerializeField] int xCoord;
-    [SerializeField] int yCoord;
-
-    [SerializeField] Material baseMaterial;
-    [SerializeField] Material mouseOverMaterial;
+    [Header("Material Colors")]
+    [SerializeField] Color baseColor;
+    [SerializeField] Color moveRangeColor;
+    [SerializeField] Color attackRangeColor;
 
 
     //TODO Possibly remove this. Tile may not need to care if unit is there and GameManager can handle that
@@ -32,14 +23,6 @@ public class Tile : MonoBehaviour {
     Renderer[] childrenRenderers;
 
     bool visted = false;
-
-    //public Vector2 GridPosition
-    //{
-    //    get
-    //    {
-    //        return gridPosition;
-    //    }
-    //}
 
     public bool Visted
     {
@@ -54,65 +37,113 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    public Material BaseMaterial
+    public static int GridSize
     {
         get
         {
-            return baseMaterial;
-        }
-
-        set
-        {
-            baseMaterial = value;
+            return gridSize;
         }
     }
 
     //TODO Clean up coordianate systems
     private void Awake()
     {
-        xCoord = coords.x = (int)Mathf.Floor(transform.position.x / 10);
-        yCoord = coords.y = (int)Mathf.Floor(transform.position.z / 10);
+        gridPos = GetGridPos();
     }
 
     // Use this for initialization
     void Start () {
         childrenRenderers = GetComponentsInChildren<Renderer>();
-        //Convert transform position to x and y
-        //CMathf.Floor(transform.position.x / 10), Mathf.Floor(transform.position.z / 10));
-
-        UpdateMaterial(BaseMaterial);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        xCoord = coords.x = (int)Mathf.Floor(transform.position.x / 10);
-        yCoord = coords.y = (int)Mathf.Floor(transform.position.z / 10);
 
     }
 
-    //Update all faces material
-    public void UpdateMaterial(Material material)
+    //Returns Position within the grid (0,0) (3,2) etc
+    public Vector2Int GetGridPos()
     {
-        foreach (Renderer renderer in childrenRenderers)
-        {
-            renderer.material = material;
-        }
+        return new Vector2Int(
+            (int)Mathf.Floor(transform.position.x / gridSize),
+            (int)Mathf.Floor(transform.position.z / gridSize)
+        );
     }
 
-    //TODO maybe let gameManager handle this
-	void OnMouseEnter() {
-        UpdateMaterial(mouseOverMaterial);
+    //TODO Possibly removed this and multiply GetGridPos by 10 any time actual coords are needed
+    //Returns Unity Coordidates of the tile (0,0) (30,20) etc
+    public Vector2Int GetCoords()
+    {
+        return new Vector2Int(
+            (int)Mathf.Floor(transform.position.x / gridSize) * gridSize,
+            (int)Mathf.Floor(transform.position.z / gridSize) * gridSize
+        );
     }
-	void OnMouseExit() {
-        GameManager.instance.TileMouseExit(this);
+
+    public void SetColor(Color color)
+    {
+        Queue<Color> colors = new Queue<Color>();
+        foreach (Renderer r in childrenRenderers)
+        {
+            r.material.color = color;
+            colors.Enqueue(color);
+        }
+        SendMessage("UpdateBaseColorQueue", colors);
     }
+
+    //DEPRECIATED Use SetTileColor instead
+    //Update all faces material
+    //public void UpdateMaterial(Material material)
+    //{
+    //    foreach (Renderer renderer in childrenRenderers)
+    //    {
+    //        renderer.material = material;
+    //    }
+    //}
 
     void OnMouseDown(){
         GameManager.instance.TileClicked(this);
 	}
 
-    public void ResetTileMaterial()
+    //DEPRECIATED Use ResetTileColor Instead
+    //public void ResetTileMaterial()
+    //{
+    //    UpdateMaterial(BaseMaterial);
+    //}
+
+    public void ResetTileColor()
     {
-        UpdateMaterial(BaseMaterial);
+        SetColor(baseColor);
+    }
+
+
+
+    public void SetTileColor(TileColors color)
+    {
+        switch (color)
+        {
+            case TileColors.standard:
+                SetColor(baseColor);
+                break;
+            case TileColors.move:
+                SetColor(moveRangeColor);
+                break;
+            case TileColors.attack:
+                SetColor(attackRangeColor);
+                break;
+            default:
+                SetColor(baseColor);
+                break;
+        }
+    }
+
+    private void StartHighlightAnimation()
+    {
+
+    }
+
+    private void StopHighlightAnimation()
+    {
+
     }
 }
