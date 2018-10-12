@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     //Make avaliable in the editor
     [Header("Map Properties")]
@@ -16,16 +17,16 @@ public class GameManager : MonoBehaviour {
     [SerializeField] Material tileMoveRangeMaterial;
 
     public static GameManager instance;
-	public GameObject TilePreFab;
-	public GameObject PlayerCharacterPreFab;
-	public GameObject NonPlayerCharacterPreFab;
+    public GameObject TilePreFab;
+    public GameObject PlayerCharacterPreFab;
+    public GameObject NonPlayerCharacterPreFab;
 
     private List<Tile> possibleMoves;
 
     //Create tile and char lists
-	List<Character> characters = new List<Character>();
+    List<Character> characters = new List<Character>();
     Character activeCharacter;
-	int characterIndex = 0;
+    int characterIndex = 0;
 
 
     public int MapSize
@@ -37,20 +38,40 @@ public class GameManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Awake(){
-		instance = this;		
-	}
-	void Start () {
-		generateCharacters();
+    void Awake()
+    {
+        instance = this;
+    }
+
+    //two short range modules
+    //TODO move elsewhere
+    [SerializeField] public Module shortRange1;
+    [SerializeField] public Module shortRange2;
+
+    void Start()
+    {
+        generateCharacters();
         activeCharacter = characters[characterIndex];
-	}
-	
-	// Update is called once per frame
+
+        //For Fighter Module
+        //TODO create shortrange module elsewhere
+        //2 short range modules equipped below
+        shortRange1 = new Module();
+        shortRange2 = new Module();
+        shortRange1.EquipFighter(characters[0]);
+        shortRange2.EquipFighter(characters[0]);
+    }
+
+    // Update is called once per frame
     //TODO move this out of update
-	void Update () {
-		characters[characterIndex].TurnUpdate();
-	}
-	public void nextTurn()
+    void Update()
+    {
+        characters[characterIndex].TurnUpdate();
+        //This adds base health and all the multipliers / buffs
+        characters[characterIndex].GetFinalStat();
+        
+    }
+    public void nextTurn()
     {
         map.ResetTileMaterials();
         UpdateActiveCharacter();
@@ -67,20 +88,23 @@ public class GameManager : MonoBehaviour {
         activeCharacter = characters[characterIndex];
     }
 
-    public void moveCurrentPlayer(Tile destinationTile) {
+    public void moveCurrentPlayer(Tile destinationTile)
+    {
         activeCharacter.MoveToTile(destinationTile);
-	}
+    }
+    
+    //this will create the characters on the map for this level
+    void generateCharacters()
+    {
+        PlayerCharacter character;
+        //NonPlayerCharacter npc;
 
-	//this will create the characters on the map for this level
-	void generateCharacters(){
-		PlayerCharacter character;
-		NonPlayerCharacter npc;
-
-		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
+        character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0 - Mathf.Floor(MapSize / 2), 1.5f, 0 + Mathf.Floor(MapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
         //Test Map System
         character.MoveToTile(map.GetTileByCoord(5, 5));
         //character.PlaceOnTile(map.GetTileByCoord(5, 1));
         characters.Add(character);
+       
 
 
         character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -(mapSize - 1) + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
@@ -109,15 +133,15 @@ public class GameManager : MonoBehaviour {
         map.ResetVisited();
 
         //Loop while there are tiles to examine within range
-        while(movementRange > 0 && tileQueue.Count > 0)
+        while (movementRange > 0 && tileQueue.Count > 0)
         {
             List<Tile> currentTiles = new List<Tile>();
-            while(tileQueue.Count > 0)
+            while (tileQueue.Count > 0)
             {
                 Tile tileToExamine = tileQueue.Dequeue();
                 tileToExamine.Visted = true;
                 List<Tile> surroundTiles = map.GetSurroundingTiles(tileToExamine);
-                foreach(Tile tile in surroundTiles)
+                foreach (Tile tile in surroundTiles)
                 {
                     //TODO adjust to account for terrain and for other units in path
                     if (!possibleMoves.Contains(tile))
@@ -155,7 +179,7 @@ public class GameManager : MonoBehaviour {
     //Respond to use clicking on a tile
     public void TileClicked(Tile tile)
     {
-        if(possibleMoves != null && possibleMoves.Contains(tile))
+        if (possibleMoves != null && possibleMoves.Contains(tile))
         {
             activeCharacter.MoveToTile(tile);
             //TODO Move this logic elsewhere

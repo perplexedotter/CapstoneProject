@@ -13,8 +13,22 @@ public class Character : MonoBehaviour {
     [Tooltip("Which player controls this unit")]
     [SerializeField] protected int playerNumber;
 
-    //TODO replace with calculation based on speed
-    private int movementRange = 4;
+    //Contains Base Stats
+    [SerializeField] public baseCharStat Health;
+    [SerializeField] public baseCharStat Attack;
+    [SerializeField] public baseCharStat Speed;
+    [SerializeField] public baseCharStat Mass;
+    [SerializeField] public baseCharStat DamageTaken;
+    [SerializeField] public baseCharStat Hardpoints;
+
+    //Contains Stats with modifiers  
+    [SerializeField] public float ModdedHealth;
+    [SerializeField] public float ModdedAttack;
+    [SerializeField] public float ModdedSpeed;
+    [SerializeField] public float ModdedMass;
+
+    [SerializeField] private int movementRange = 4;
+    
 
     private Tile currentTile;
 
@@ -33,22 +47,46 @@ public class Character : MonoBehaviour {
 
     void Awake () {
 		moveDestination = transform.position;
-	}
+
+        //TODO Move elsewhere
+        //Base Stats for fighter
+        Health = new baseCharStat(100);
+        Mass = new baseCharStat(400);
+        ModdedMass = Mass.baseStat;
+        Hardpoints = new baseCharStat(2);
+        Speed = new baseCharStat(100);
+        DamageTaken = new baseCharStat(0);
+        Attack = new baseCharStat(20);
+      
+    }
 	// Use this for initialization
 	void Start () {
-		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        
+    }
 	public virtual void TurnUpdate(){
 
 	}
 
-    //TODO replace with calculation based on speed
-    public int GetMovementRange() { return movementRange; }
+    //Get the Final stats (base + modifiers)
+    public void GetFinalStat()
+    {
+        ModdedHealth = Health.getModdedValue();
+        ModdedAttack = Attack.getModdedValue();
+        ModdedSpeed = Speed.getModdedValue();
+        ModdedMass = Mass.getModdedValue();
+        
+    }
+
+    // (1000 - Mass) / 100 = movement
+    public int GetMovementRange()
+    {
+        movementRange = (int)((1000 - ModdedMass) / 100);
+        return movementRange;
+    }
 
     public void MoveToTile(Tile tile)
     {
