@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
+[SelectionBase]
 public class Tile : MonoBehaviour {
 
     public enum TileColors { standard, move, attack }
@@ -18,10 +19,11 @@ public class Tile : MonoBehaviour {
 
 
     //TODO Possibly remove this. Tile may not need to care if unit is there and GameManager can handle that
-    private Character characterOnTile;
+    private Unit unitOnTile;
 
     Renderer[] childrenRenderers;
 
+    //TODO Move this to the search itself
     bool visted = false;
 
     public bool Visted

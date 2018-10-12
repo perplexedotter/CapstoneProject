@@ -10,22 +10,17 @@ public class GameManager : MonoBehaviour {
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
 
-
-    //Test
-    //[header("tile materials")]
-    //[serializefield] material tilemoverangematerial;
-
     public static GameManager instance;
-	public GameObject TilePreFab;
-	public GameObject PlayerCharacterPreFab;
-	public GameObject NonPlayerCharacterPreFab;
+	[SerializeField] GameObject PlayerUnitPreFab;
+    //public GameObject TilePreFab;
+    //public GameObject NonPlayerUnitPreFab;
 
-    private List<Tile> possibleMoves;
+    private List<Tile> activeUnitPosMoves;
 
     //Create tile and char lists
-	List<Character> characters = new List<Character>();
-    Character activeCharacter;
-	int characterIndex = 0;
+	List<Unit> units = new List<Unit>();
+    Unit activeUnit;
+	int unitIndex = 0;
 
 
     public int MapSize
@@ -41,71 +36,72 @@ public class GameManager : MonoBehaviour {
 		instance = this;		
 	}
 	void Start () {
-		generateCharacters();
-        activeCharacter = characters[characterIndex];
+		GenerateUnits();
+        activeUnit = units[unitIndex];
 	}
 	
 	// Update is called once per frame
     //TODO move this out of update
 	void Update () {
-		characters[characterIndex].TurnUpdate();
+		//units[unitIndex].TurnUpdate();
 	}
 	public void nextTurn()
     {
         map.ResetTileColors();
-        UpdateActiveCharacter();
+        UpdateActiveUnit();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
     }
 
-    private void UpdateActiveCharacter()
+    private void UpdateActiveUnit()
     {
-        if (characterIndex + 1 < characters.Count)
-            characterIndex++;
+        if (unitIndex + 1 < units.Count)
+            unitIndex++;
         else
-            characterIndex = 0;
-        activeCharacter = characters[characterIndex];
+            unitIndex = 0;
+        activeUnit = units[unitIndex];
     }
 
-    public void moveCurrentPlayer(Tile destinationTile) {
-        activeCharacter.MoveToTile(destinationTile);
+    public void MoveCurrentPlayer(Tile destinationTile) {
+        activeUnit.MoveToTile(destinationTile);
 	}
 
-	//this will create the characters on the map for this level
-	void generateCharacters(){
-		PlayerCharacter character;
-		NonPlayerCharacter npc;
+	//this will create the units on the map for this level
+	void GenerateUnits(){
+		Unit unit;
+		//NonPlayerUnit npc;
 
-		character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
+		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
         //Test Map System
-        character.MoveToTile(map.GetTileByCoord(5, 5));
-        //character.PlaceOnTile(map.GetTileByCoord(5, 1));
-        characters.Add(character);
+        //unit.MoveToTile(map.GetTileByCoord(5, 5));
+        unit.PlaceOnTile(map.GetTileByCoord(5, 1));
+        units.Add(unit);
+        nextTurn();
 
+        //unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -(mapSize - 1) + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerUnit>();
+        //unit.MoveToTile(map.GetTileByCoord(0, 0));
+        //units.Add(unit);
 
-        character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -(mapSize - 1) + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();
-        character.MoveToTile(map.GetTileByCoord(0, 0));
-        characters.Add(character);
+        //Removed Extra units for clarity
 
-        //Removed Extra characters for clarity
+        //unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerUnit>();			
+        //units.Add(unit);
 
-        //character = ((GameObject)Instantiate(PlayerCharacterPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerCharacter>();			
-        //characters.Add(character);
-
-        //npc = ((GameObject)Instantiate(NonPlayerCharacterPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerCharacter>();			
-        //characters.Add(npc);
+        //npc = ((GameObject)Instantiate(NonPlayerUnitPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerUnit>();			
+        //units.Add(npc);
     }
 
-    //Takes a character and finds all tiles they could possibly move to
-    //TODO possibly move this to the Map class and make it take a tile and range instead of character
-    public List<Tile> GetPossibleMoves(Character character)
+    //Takes a unit and finds all tiles they could possibly move to
+    //TODO move this to the Map class and make it take a tile and range instead of unit
+    //TODO build second search to return a path of tiles to a destination
+    public List<Tile> GetPossibleMoves(Unit unit)
     {
         HashSet<Tile> possibleMoves = new HashSet<Tile>();
         Queue<Tile> tileQueue = new Queue<Tile>();
-        int movementRange = character.GetMovementRange();
+        int movementRange = unit.GetMovementRange();
 
         //Add starting tile and reset tiles to unvisited
-        tileQueue.Enqueue(character.CurrentTile);
+        tileQueue.Enqueue(unit.CurrentTile);
         map.ResetVisited();
 
         //Loop while there are tiles to examine within range
@@ -142,25 +138,30 @@ public class GameManager : MonoBehaviour {
     //Update the active Units possible moves
     public void UpdateCurrentPossibleMoves()
     {
-        possibleMoves = GetPossibleMoves(activeCharacter);
+        activeUnitPosMoves = GetPossibleMoves(activeUnit);
     }
 
     //Display the active Units possible moves
     public void ShowCurrentPossibleMoves()
     {
-        foreach (Tile tile in possibleMoves)
+        foreach (Tile tile in activeUnitPosMoves)
             tile.SetTileColor(Tile.TileColors.move);
     }
 
     //Respond to use clicking on a tile
     public void TileClicked(Tile tile)
     {
-        if(possibleMoves != null && possibleMoves.Contains(tile))
+        //TODO Add logic for attacking and abilities
+        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving)
         {
-            activeCharacter.MoveToTile(tile);
+            activeUnit.MoveToTile(tile);
             //TODO Move this logic elsewhere
-            //nextTurn();
         }
+    }
+
+    public void FinishedMovement()
+    {
+        nextTurn();
     }
 
     //DEPRECIATED refactered mouse enters and exits to a seperate highlighter script
@@ -172,8 +173,8 @@ public class GameManager : MonoBehaviour {
     //        tile.ResetTileMaterial();
     //}
 
-    //TODO add context dependent actions for character clicks
-    public void CharacterClicked(Character character)
+    //TODO add context dependent actions for unit clicks
+    public void UnitClicked(Unit unit)
     {
 
     }

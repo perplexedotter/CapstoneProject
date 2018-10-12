@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NonPlayerCharacter : Character {
+public class PlayerCharacter : Unit {
 
 	// Use this for initialization
 	void Start () {
@@ -11,9 +11,18 @@ public class NonPlayerCharacter : Character {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
-	public override void TurnUpdate () {
+        //print("Update");
+        if (IsMoving)
+            MoveCharacter();
+        if (movementFinished)
+        {
+            movementFinished = false;
+            GameManager.instance.FinishedMovement();
+        }
+    }
+
+    //TODO Move this to base Character MoveToTile and remove GameManager.instance.nextTurn(); (should be handled in GameManager)
+    public override void TurnUpdate () {
 		if (Vector3.Distance(moveDestination, transform.position) > 0.1f) {
 			transform.position += (moveDestination - transform.position).normalized * moveSpeed * Time.deltaTime;
 			
@@ -21,11 +30,8 @@ public class NonPlayerCharacter : Character {
 				transform.position = moveDestination;
 				GameManager.instance.nextTurn();
 			}
-		} else {
-			moveDestination = new Vector3(0 - Mathf.Floor(Random.Range(0, GameManager.instance.MapSize/2)), 1.5f, Mathf.Floor(Random.Range(0-GameManager.instance.MapSize/2, 0)));
 		}
 		
-		base.TurnUpdate();
+		base.TurnUpdate ();
 	}
-	
 }
