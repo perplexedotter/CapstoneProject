@@ -25,6 +25,7 @@ public class Highlighter : MonoBehaviour {
     private void OnMouseEnter()
     {
         Highlight();
+        print("Highlight");
     }
 
     private void OnMouseExit()
@@ -34,12 +35,7 @@ public class Highlighter : MonoBehaviour {
 
     public void Highlight()
     {
-        if (renderer != null)
-        {
-            baseColor = renderer.material.color;
-            renderer.material.color = highlightColor;
-        }
-        else if (childRenderers != null)
+        if (childRenderers != null)
         {
             childColors = new Queue<Color>();
             foreach (Renderer r in childRenderers)
@@ -53,11 +49,7 @@ public class Highlighter : MonoBehaviour {
     }
     private void RemoveHighlight()
     {
-        if (renderer != null)
-        {
-            renderer.material.color = baseColor;
-        }
-        else if (childRenderers != null)
+        if (childRenderers != null)
         {
             foreach (Renderer r in childRenderers)
             {
@@ -77,6 +69,7 @@ public class Highlighter : MonoBehaviour {
     //Allows other scripts to send a message indicating the base colors of the children has changed
     private void UpdateBaseColorQueue(Queue<Color> colors)
     {
+        print("Colors Updated");
         childColors = colors;
     }
 }
