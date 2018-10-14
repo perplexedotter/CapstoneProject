@@ -73,6 +73,7 @@ public class baseCharStat{
         return removed;
     }
 
+    
     //get value after adding base + modifications
     public float getModdedValue()
     {
@@ -81,7 +82,6 @@ public class baseCharStat{
         for (int i = 0; i < statChange.Count; i++)
         {
             modCharStat mod = statChange[i];
-            
             if (mod.Type == StatIdentifier.basic)
             {
                 moddedStat += statChange[i].Stat;
@@ -114,4 +114,9 @@ public enum StatIdentifier
     Addition_Percent = 200,
     //Multiply_Percent will take each percent and apply it independent of other multipliers
     Multiply_Percent = 300,
+}
+
+public enum ModuleName
+{
+    shortRange,
 }

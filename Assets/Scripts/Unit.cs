@@ -14,8 +14,26 @@ public class Unit : MonoBehaviour {
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
     [SerializeField] protected int playerNumber;
-    [SerializeField] protected int hitPoints;
 
+    //Contains Base Stats
+    [SerializeField] public baseCharStat DamageTaken;
+    [SerializeField] public baseCharStat Hardpoints;
+    [SerializeField] public baseCharStat Health;
+    [SerializeField] public baseCharStat Attack;
+    [SerializeField] public baseCharStat Speed;
+    [SerializeField] public baseCharStat Mass;
+
+    //Contains Stats with modifiers  
+    [SerializeField] public float ModdedHealth;
+    [SerializeField] public float ModdedAttack;
+    [SerializeField] public float ModdedSpeed;
+    [SerializeField] public float ModdedMass;
+    
+    //Two short range modules
+    public Module shortRange1;
+    public Module shortRange2;
+
+    [SerializeField] private int movementRange = 4;
     private bool isMoving = false;
     protected bool movementFinished = false;
     Tile currentTile;
@@ -48,7 +66,19 @@ public class Unit : MonoBehaviour {
 
     void Awake () {
 		moveDestination = transform.position;
-	}
+
+        //TODO Move elsewhere
+        //Base Stats for fighter
+        Health = new baseCharStat(100);
+        Mass = new baseCharStat(400);
+        ModdedMass = Mass.baseStat;
+        Hardpoints = new baseCharStat(2);
+        Speed = new baseCharStat(100);
+        DamageTaken = new baseCharStat(0);
+        Attack = new baseCharStat(20);
+        shortRange1 = new Module();
+        shortRange2 = new Module();
+    }
 	// Use this for initialization
 	void Start () {
 		
@@ -58,6 +88,16 @@ public class Unit : MonoBehaviour {
 	void Update ()
     {
         ProcessMovement();
+    }
+
+    //Get the Final stats (base + modifiers)
+    public void GetFinalStat()
+    {
+        ModdedHealth = Health.getModdedValue();
+        ModdedAttack = Attack.getModdedValue();
+        ModdedSpeed = Speed.getModdedValue();
+        ModdedMass = Mass.getModdedValue();
+
     }
 
     private void ProcessMovement()
@@ -75,9 +115,11 @@ public class Unit : MonoBehaviour {
 
 	}
 
-    //TODO replace with calculation based on speed
-    public int GetMovementRange() {
-        return 4;
+    // (1000 - Mass) / 100 = movement
+    public int GetMovementRange()
+    {
+        movementRange = (int)((1000 - ModdedMass) / 100);
+        return movementRange;
     }
 
 
@@ -127,5 +169,23 @@ public class Unit : MonoBehaviour {
     private void StopHighlightAnimation()
     {
 
+    }
+
+    public bool addModule(ModuleName module, Unit c)
+    {
+        if (module == ModuleName.shortRange)
+        {
+            if (shortRange1.equipped == 0)
+            {
+                shortRange1.EquipShortRange(c);
+                return false;
+            }
+            else if (shortRange2.equipped == 0)
+            {
+                shortRange2.EquipShortRange(c);
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public class GameManager : MonoBehaviour {
 
@@ -9,18 +10,18 @@ public class GameManager : MonoBehaviour {
     [SerializeField] int mapSize = 11;
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
-
+    [SerializeField] Button shortRange;
     public static GameManager instance;
-	[SerializeField] GameObject PlayerUnitPreFab;
+    [SerializeField] GameObject PlayerUnitPreFab;
     //public GameObject TilePreFab;
     //public GameObject NonPlayerUnitPreFab;
 
     private List<Tile> activeUnitPosMoves;
 
     //Create tile and char lists
-	List<Unit> units = new List<Unit>();
+    List<Unit> units = new List<Unit>();
     Unit activeUnit;
-	int unitIndex = 0;
+    int unitIndex = 0;
 
 
     public int MapSize
@@ -32,19 +33,37 @@ public class GameManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Awake(){
-		instance = this;		
-	}
-	void Start () {
-		GenerateUnits();
+    void Awake() {
+        instance = this;
+    }
+
+    void Start() {
+        GenerateUnits();
         activeUnit = units[unitIndex];
-	}
-	
-	// Update is called once per frame
+        // For Fighter Module
+        //TODO create shortrange module elsewhere
+        //2 short range modules equipped below
+        activeUnit.GetFinalStat();
+        /*
+        shortRange1 = new Module();
+        shortRange2 = new Module();
+        shortRange1.EquipShortRange(units[0]);
+        shortRange2.EquipShortRange(units[0]);
+        units[unitIndex].GetFinalStat();
+        */
+    }
+
+    // Update is called once per frame
     //TODO move this out of update
-	void Update () {
-		//units[unitIndex].TurnUpdate();
-	}
+    void Update() {
+        //units[unitIndex].TurnUpdate();
+        //This adds base health and all the multipliers / buffs
+    }
+    public void addShortRangeModule()
+    {
+        activeUnit.addModule(ModuleName.shortRange, activeUnit);
+        activeUnit.GetFinalStat();
+    }
 	public void nextTurn()
     {
         map.ResetTileColors();
