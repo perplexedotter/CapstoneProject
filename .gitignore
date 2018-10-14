@@ -35,5 +35,3 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-Assets/Scenes/Fighter1.unity
-Assets/Prefabs/Fighter.prefab
