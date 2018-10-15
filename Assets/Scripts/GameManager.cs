@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public class GameManager : MonoBehaviour {
 
@@ -9,18 +10,17 @@ public class GameManager : MonoBehaviour {
     [SerializeField] int mapSize = 11;
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
-
     public static GameManager instance;
-	[SerializeField] GameObject PlayerUnitPreFab;
+    [SerializeField] GameObject PlayerUnitPreFab;
     //public GameObject TilePreFab;
     //public GameObject NonPlayerUnitPreFab;
 
     private List<Tile> activeUnitPosMoves;
 
     //Create tile and char lists
-	List<Unit> units = new List<Unit>();
+    List<Unit> units = new List<Unit>();
     Unit activeUnit;
-	int unitIndex = 0;
+    int unitIndex = 0;
 
 
     public int MapSize
@@ -32,20 +32,44 @@ public class GameManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Awake(){
-		instance = this;		
-	}
-	void Start () {
-		GenerateUnits();
+    void Awake() {
+        instance = this;
+    }
+
+    void Start() {
+        GenerateUnits();
         activeUnit = units[unitIndex];
-	}
-	
-	// Update is called once per frame
+        activeUnit.GetFinalStat();
+        
+    }
+
+    // Update is called once per frame
     //TODO move this out of update
-	void Update () {
-		//units[unitIndex].TurnUpdate();
-	}
-	public void nextTurn()
+    void Update() {
+        //units[unitIndex].TurnUpdate();
+    }
+
+    //Has the active unit add 1 short range module
+    //If 2 modules are equipped it will do nothing 
+    public void addShortRangeModule()
+    {
+        bool testShort = activeUnit.addModule(ModuleName.shortRange, activeUnit);
+        activeUnit.GetFinalStat();
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //Removes all modules attached to current active unit
+    public void removeAllModules()
+    {
+        activeUnit.removeAllModules(activeUnit);
+        activeUnit.GetFinalStat();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    public void nextTurn()
     {
         map.ResetTileColors();
         UpdateActiveUnit();
@@ -69,12 +93,23 @@ public class GameManager : MonoBehaviour {
 	//this will create the units on the map for this level
 	void GenerateUnits(){
 		Unit unit;
+
 		//NonPlayerUnit npc;
 
 		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+
+        //makes the unit a fighter
+        unit.defineUnit(unitType.fighter);
+
         //Test Map System
         //unit.MoveToTile(map.GetTileByCoord(5, 5));
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
+        units.Add(unit);
+        nextTurn();
+
+        unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0 - Mathf.Floor(MapSize / 2), 1.5f, 0 + Mathf.Floor(MapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+        unit.defineUnit(unitType.fighter);
+        unit.PlaceOnTile(map.GetTileByCoord(5, 2));
         units.Add(unit);
         nextTurn();
 
