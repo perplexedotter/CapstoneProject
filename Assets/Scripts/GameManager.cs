@@ -40,31 +40,37 @@ public class GameManager : MonoBehaviour {
     void Start() {
         GenerateUnits();
         activeUnit = units[unitIndex];
-        // For Fighter Module
-        //TODO create shortrange module elsewhere
-        //2 short range modules equipped below
         activeUnit.GetFinalStat();
-        /*
-        shortRange1 = new Module();
-        shortRange2 = new Module();
-        shortRange1.EquipShortRange(units[0]);
-        shortRange2.EquipShortRange(units[0]);
-        units[unitIndex].GetFinalStat();
-        */
+        
     }
 
     // Update is called once per frame
     //TODO move this out of update
     void Update() {
         //units[unitIndex].TurnUpdate();
-        //This adds base health and all the multipliers / buffs
     }
+
+    //Has the active unit add 1 short range module
+    //If 2 modules are equipped it will do nothing 
     public void addShortRangeModule()
     {
-        activeUnit.addModule(ModuleName.shortRange, activeUnit);
+        bool testShort = activeUnit.addModule(ModuleName.shortRange, activeUnit);
         activeUnit.GetFinalStat();
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
     }
-	public void nextTurn()
+
+    //Removes all modules attached to current active unit
+    public void removeAllModules()
+    {
+        activeUnit.removeAllModules(activeUnit);
+        activeUnit.GetFinalStat();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    public void nextTurn()
     {
         map.ResetTileColors();
         UpdateActiveUnit();
@@ -94,6 +100,11 @@ public class GameManager : MonoBehaviour {
         //Test Map System
         //unit.MoveToTile(map.GetTileByCoord(5, 5));
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
+        units.Add(unit);
+        nextTurn();
+
+        unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0 - Mathf.Floor(MapSize / 2), 1.5f, 0 + Mathf.Floor(MapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+        unit.PlaceOnTile(map.GetTileByCoord(5, 2));
         units.Add(unit);
         nextTurn();
 

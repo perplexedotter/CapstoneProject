@@ -7,7 +7,7 @@ using UnityEngine;
 [System.Serializable]
 public class baseCharStat{
 
-    public float baseStat;
+    public float baseStat { get; private set; }
     private readonly List<modCharStat> statChange;
     protected bool beenModded = true;
     protected float _value;
@@ -60,7 +60,6 @@ public class baseCharStat{
     public bool DeleteAllMods(object source)
     {
         bool removed = false;
-
         for (int i = statChange.Count - 1; i >= 0; i--)
         {
             if (statChange[i].Source == source)
@@ -110,13 +109,9 @@ public enum StatIdentifier
 {
     //flat will add the number specified
     basic = 100,
-    //Addition_Percent will take each percentage and add it together before using it on number 
+    //Addition_Percent will take each added percentage and add it together before using it on number 
     Addition_Percent = 200,
     //Multiply_Percent will take each percent and apply it independent of other multipliers
     Multiply_Percent = 300,
 }
 
-public enum ModuleName
-{
-    shortRange,
-}

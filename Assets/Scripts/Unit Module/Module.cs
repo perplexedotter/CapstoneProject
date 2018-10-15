@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class Module{
-    public int equipped = 0;
+    public int equipped { get; private set; }
+    private modCharStat healthMod;
+    private modCharStat attackMod;
+    private modCharStat massMod;
+
     public Module()
     {
         equipped = 0;
@@ -10,20 +14,31 @@ public class Module{
     public void EquipShortRange(Unit c)
     {
         equipped += 1;
-        //c.Health.AddModifier(new modCharStat(100, StatModType.Flat));
-        c.Health.PlusModStat(new modCharStat(0.25f, StatIdentifier.Addition_Percent));
-        //c.Health.AddModifier(new modCharStat(0.1f, StatModType.PercentMult));
-        c.Attack.PlusModStat(new modCharStat(15, StatIdentifier.basic));
-        c.Mass.PlusModStat(new modCharStat(100, StatIdentifier.basic));
+
+        healthMod = new modCharStat(0.25f, StatIdentifier.Addition_Percent, 200, this);
+        c.Health.PlusModStat(healthMod);
+        //c.Health.PlusModStat(new modCharStat(0.1f, StatIdentifier.Multiply_Percent));
+
+        attackMod = new modCharStat(15, StatIdentifier.basic, 100, this);
+        c.Attack.PlusModStat(attackMod);
+
+        massMod = new modCharStat(100, StatIdentifier.basic, 100, this);
+        c.Mass.PlusModStat(massMod);
         
     }
 
-    public void UnequipShortRange(Unit c)
+    public void UnequipAll(Unit c)
     {
-        equipped = 0;
+        c.shortRange1.equipped = 0;
+        c.shortRange2.equipped = 0;
         c.Health.DeleteAllMods(this);
         c.Attack.DeleteAllMods(this);
         c.Mass.DeleteAllMods(this);
     }
+}
+
+public enum ModuleName
+{
+    shortRange,
 }
 

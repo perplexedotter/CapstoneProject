@@ -16,22 +16,22 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected int playerNumber;
 
     //Contains Base Stats
-    [SerializeField] public baseCharStat DamageTaken;
-    [SerializeField] public baseCharStat Hardpoints;
-    [SerializeField] public baseCharStat Health;
-    [SerializeField] public baseCharStat Attack;
-    [SerializeField] public baseCharStat Speed;
-    [SerializeField] public baseCharStat Mass;
+    [SerializeField] public baseCharStat DamageTaken { get; protected set; }
+    [SerializeField] public baseCharStat Hardpoints { get; protected set; }
+    [SerializeField] public baseCharStat Health { get; protected set; }
+    [SerializeField] public baseCharStat Attack { get; protected set; }
+    [SerializeField] public baseCharStat Speed { get; protected set; }
+    [SerializeField] public baseCharStat Mass { get; protected set; }
 
     //Contains Stats with modifiers  
-    [SerializeField] public float ModdedHealth;
-    [SerializeField] public float ModdedAttack;
-    [SerializeField] public float ModdedSpeed;
-    [SerializeField] public float ModdedMass;
+    [SerializeField] protected float ModdedHealth;
+    [SerializeField] protected float ModdedAttack;
+    [SerializeField] protected float ModdedSpeed;
+    [SerializeField] protected float ModdedMass;
     
     //Two short range modules
-    public Module shortRange1;
-    public Module shortRange2;
+    public Module shortRange1 { get; protected set; }
+    public Module shortRange2 { get; protected set; }
 
     [SerializeField] private int movementRange = 4;
     private bool isMoving = false;
@@ -78,6 +78,7 @@ public class Unit : MonoBehaviour {
         Attack = new baseCharStat(20);
         shortRange1 = new Module();
         shortRange2 = new Module();
+        GetFinalStat();
     }
 	// Use this for initialization
 	void Start () {
@@ -187,5 +188,18 @@ public class Unit : MonoBehaviour {
             }
         }
         return true;
+    }
+
+    public void removeAllModules(Unit c)
+    {
+        if(shortRange2.equipped >= 1)
+        {
+            shortRange1.UnequipAll(c);
+            shortRange2.UnequipAll(c);
+        }
+        if (shortRange1.equipped >= 1)
+        {
+            shortRange1.UnequipAll(c);
+        }
     }
 }
