@@ -5,15 +5,11 @@ using UnityEngine;
 public class Highlighter : MonoBehaviour {
 
     [SerializeField] Color highlightColor = Color.yellow;
-
-    Color baseColor;
-    Renderer renderer;
     Renderer[] childRenderers;
     Queue<Color> childColors;
 
 	// Use this for initialization
 	void Start () {
-        renderer = GetComponent<Renderer>();
         childRenderers = GetComponentsInChildren<Renderer>();
 	}
 	
@@ -60,11 +56,11 @@ public class Highlighter : MonoBehaviour {
         SendMessage("StopHighlightAnimation");
     }
 
-    //Allows other scripts to send a message indicating the base color has changed
-    private void UpdateBaseColor(Color color)
-    {
-        baseColor = color;
-    }
+    //DEPRECIATED Allows other scripts to send a message indicating the base color has changed
+    //private void UpdateBaseColor(Color color)
+    //{
+    //    baseColor = color;
+    //}
 
     //Allows other scripts to send a message indicating the base colors of the children has changed
     private void UpdateBaseColorQueue(Queue<Color> colors)

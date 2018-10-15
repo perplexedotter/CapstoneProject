@@ -5,6 +5,9 @@ using UnityEngine;
 [SelectionBase]
 public class Unit : MonoBehaviour {
 
+    //Needed to Detect Child Collision
+    [SerializeField] Collider collider;
+
     [Header("Transform Properties")]
     [SerializeField] protected Vector3 heightOffset;
     [SerializeField] protected Vector3 moveDestination;
