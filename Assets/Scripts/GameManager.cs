@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour {
     [SerializeField] int mapSize = 11;
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
-    [SerializeField] Button shortRange;
     public static GameManager instance;
     [SerializeField] GameObject PlayerUnitPreFab;
     //public GameObject TilePreFab;
@@ -94,9 +93,14 @@ public class GameManager : MonoBehaviour {
 	//this will create the units on the map for this level
 	void GenerateUnits(){
 		Unit unit;
+
 		//NonPlayerUnit npc;
 
 		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+
+        //makes the unit a fighter
+        unit.defineUnit(unitType.fighter);
+
         //Test Map System
         //unit.MoveToTile(map.GetTileByCoord(5, 5));
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
@@ -104,6 +108,7 @@ public class GameManager : MonoBehaviour {
         nextTurn();
 
         unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0 - Mathf.Floor(MapSize / 2), 1.5f, 0 + Mathf.Floor(MapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+        unit.defineUnit(unitType.fighter);
         unit.PlaceOnTile(map.GetTileByCoord(5, 2));
         units.Add(unit);
         nextTurn();
