@@ -5,6 +5,9 @@ using UnityEngine;
 [SelectionBase]
 public class Unit : MonoBehaviour {
 
+    //Needed to Detect Child Collision
+    [SerializeField] Collider collider;
+
     [Header("Transform Properties")]
     [SerializeField] protected Vector3 heightOffset;
     [SerializeField] protected Vector3 moveDestination;
@@ -88,10 +91,18 @@ public class Unit : MonoBehaviour {
     {
         if (tile != null)
         {
+            UpdateTile(tile);
             moveDestination = tile.transform.position + heightOffset;
-            currentTile = tile;
             isMoving = true;
         }
+    }
+
+    private void UpdateTile(Tile tile)
+    {
+        if(currentTile != null)
+            currentTile.UnitOnTile = null;
+        currentTile = tile;
+        currentTile.UnitOnTile = this;
     }
 
     protected void MoveCharacter()
@@ -115,7 +126,7 @@ public class Unit : MonoBehaviour {
         if(tile != null)
         {
             moveDestination = transform.position = tile.transform.position + heightOffset;
-            currentTile = tile;
+            UpdateTile(tile);
         }
     }
 
