@@ -91,10 +91,17 @@ public class Unit : MonoBehaviour {
     {
         if (tile != null)
         {
+            UpdateTile(tile);
             moveDestination = tile.transform.position + heightOffset;
-            currentTile = tile;
             isMoving = true;
         }
+    }
+
+    private void UpdateTile(Tile tile)
+    {
+        currentTile.UnitOnTile = null;
+        currentTile = tile;
+        currentTile.UnitOnTile = this;
     }
 
     protected void MoveCharacter()
@@ -118,7 +125,7 @@ public class Unit : MonoBehaviour {
         if(tile != null)
         {
             moveDestination = transform.position = tile.transform.position + heightOffset;
-            currentTile = tile;
+            UpdateTile(tile);
         }
     }
 

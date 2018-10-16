@@ -104,6 +104,22 @@ public class Map : MonoBehaviour {
         }
     }
 
+    //Returns a list of all units in range passed including on the start tile
+    public List<Unit> GetUnitsInRange(Tile startTile, int range)
+    {
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(startTile, range);
+        List<Unit> units = new List<Unit>();
+        List<Tile> tiles = null;
+        if (tileDict != null)
+            tiles = new List<Tile>(tileDict.Keys);
+        foreach(var t in tiles)
+        {
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        }
+        return units.Count > 0 ? units : null;
+    }
+
     //Returns a list of tiles that are within a given range
     public List<Tile> GetTilesInRange(Tile startTile, int range)
     {

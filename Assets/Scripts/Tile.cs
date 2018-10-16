@@ -48,9 +48,23 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public Unit UnitOnTile
+    {
+        get
+        {
+            return unitOnTile;
+        }
+
+        set
+        {
+            unitOnTile = value;
+        }
+    }
+
     //TODO Clean up coordianate systems
     private void Awake()
     {
+        UnitOnTile = null;
         gridPos = GetGridPos();
     }
 
