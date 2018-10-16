@@ -99,7 +99,8 @@ public class Unit : MonoBehaviour {
 
     private void UpdateTile(Tile tile)
     {
-        currentTile.UnitOnTile = null;
+        if(currentTile != null)
+            currentTile.UnitOnTile = null;
         currentTile = tile;
         currentTile.UnitOnTile = this;
     }
