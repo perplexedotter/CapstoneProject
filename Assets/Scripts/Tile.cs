@@ -23,21 +23,22 @@ public class Tile : MonoBehaviour {
 
     Renderer[] childrenRenderers;
 
-    //TODO Move this to the search itself
-    bool visted = false;
+    //MOVED TO MAP
+    ////TODO Move this to the search itself
+    //bool visted = false;
 
-    public bool Visted
-    {
-        get
-        {
-            return visted;
-        }
+    //public bool Visted
+    //{
+    //    get
+    //    {
+    //        return visted;
+    //    }
 
-        set
-        {
-            visted = value;
-        }
-    }
+    //    set
+    //    {
+    //        visted = value;
+    //    }
+    //}
 
     public static int GridSize
     {
@@ -63,6 +64,8 @@ public class Tile : MonoBehaviour {
 
     }
 
+    //GRID FUNCTIONS
+
     //Returns Position within the grid (0,0) (3,2) etc
     public Vector2Int GetGridPos()
     {
@@ -82,36 +85,11 @@ public class Tile : MonoBehaviour {
         );
     }
 
-    public void SetColor(Color color)
-    {
-        Queue<Color> colors = new Queue<Color>();
-        foreach (Renderer r in childrenRenderers)
-        {
-            r.material.color = color;
-            colors.Enqueue(color);
-        }
-        SendMessage("UpdateBaseColorQueue", colors);
-    }
-
-    //DEPRECIATED Use SetTileColor instead
-    //Update all faces material
-    //public void UpdateMaterial(Material material)
-    //{
-    //    foreach (Renderer renderer in childrenRenderers)
-    //    {
-    //        renderer.material = material;
-    //    }
-    //}
-
     void OnMouseDown(){
         GameManager.instance.TileClicked(this);
 	}
 
-    //DEPRECIATED Use ResetTileColor Instead
-    //public void ResetTileMaterial()
-    //{
-    //    UpdateMaterial(BaseMaterial);
-    //}
+
 
     public void ResetTileColor()
     {
@@ -119,7 +97,7 @@ public class Tile : MonoBehaviour {
     }
 
 
-
+    //COLOR FUNCTIONS
     public void SetTileColor(TileColors color)
     {
         switch (color)
@@ -139,6 +117,19 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public void SetColor(Color color)
+    {
+        Queue<Color> colors = new Queue<Color>();
+        foreach (Renderer r in childrenRenderers)
+        {
+            r.material.color = color;
+            colors.Enqueue(color);
+        }
+        SendMessage("UpdateBaseColorQueue", colors);
+    }
+
+
+    //HIGHLIGHT FUNCTIONS
     private void StartHighlightAnimation()
     {
 
@@ -148,4 +139,21 @@ public class Tile : MonoBehaviour {
     {
 
     }
+
+    //DEPRECIATED
+    //public void ResetTileSearchFields()
+    //{
+    //    visted = false;
+    //    exploredFrom = null;
+    //}
+
+    //DEPRECIATED Use SetTileColor instead
+    //Update all faces material
+    //public void UpdateMaterial(Material material)
+    //{
+    //    foreach (Renderer renderer in childrenRenderers)
+    //    {
+    //        renderer.material = material;
+    //    }
+    //}
 }
