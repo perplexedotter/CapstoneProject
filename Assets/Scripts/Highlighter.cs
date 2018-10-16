@@ -56,16 +56,16 @@ public class Highlighter : MonoBehaviour {
         SendMessage("StopHighlightAnimation");
     }
 
-    //DEPRECIATED Allows other scripts to send a message indicating the base color has changed
-    //private void UpdateBaseColor(Color color)
-    //{
-    //    baseColor = color;
-    //}
-
     //Allows other scripts to send a message indicating the base colors of the children has changed
     private void UpdateBaseColorQueue(Queue<Color> colors)
     {
         print("Colors Updated");
         childColors = colors;
     }
+
+    //DEPRECIATED Allows other scripts to send a message indicating the base color has changed
+    //private void UpdateBaseColor(Color color)
+    //{
+    //    baseColor = color;
+    //}
 }
