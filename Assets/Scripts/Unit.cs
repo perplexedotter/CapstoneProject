@@ -184,7 +184,7 @@ public class Unit : MonoBehaviour {
         if (movementFinished)
         {
             movementFinished = false;
-            GameManager.instance.FinishedMovement();
+            SendMessageUpwards("FinishedMovement");
         }
     }
 
