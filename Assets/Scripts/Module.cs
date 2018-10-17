@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Module {
+public class Module : MonoBehaviour {
     public int hitPoints { get; protected set; }
     public int attack { get; protected set; }
     public int mass { get; protected set; }
