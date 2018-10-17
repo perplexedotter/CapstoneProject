@@ -3164,6 +3164,7 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4429949836186490, guid: a016727452de7bf49aeb5694f0b9145b,
     type: 2}
   m_PrefabInternal: {fileID: 882095288}
+<<<<<<< HEAD
 --- !u!1 &891363242
 GameObject:
   m_ObjectHideFlags: 0
@@ -3260,6 +3261,8 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+=======
+>>>>>>> upstream/master
 --- !u!1001 &900031184
 Prefab:
   m_ObjectHideFlags: 0

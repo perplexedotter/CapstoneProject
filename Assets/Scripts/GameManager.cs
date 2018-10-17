@@ -132,6 +132,7 @@ public class GameManager : MonoBehaviour {
 
     }
 
+<<<<<<< HEAD
     //add short range module to active unit
     public void addShortRangeModule()
     {
@@ -160,6 +161,8 @@ public class GameManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+=======
+>>>>>>> upstream/master
     //DEPRICATED use Map.GetTilesInRange instead
     ////Takes a unit and finds all tiles they could possibly move to
     //public List<Tile> GetPossibleMoves(Unit unit)
