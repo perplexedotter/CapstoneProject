@@ -62,9 +62,9 @@ public class GameManager : MonoBehaviour {
         activeUnit = units[unitIndex];
     }
 
-    public void MoveCurrentPlayer(Tile destinationTile) {
-        activeUnit.MoveToTile(destinationTile);
-	}
+ //   public void MoveCurrentPlayer(Tile destinationTile) {
+ //       activeUnit.MoveToTile(destinationTile);
+	//}
 
 	//this will create the units on the map for this level
 	void GenerateUnits(){
@@ -116,7 +116,8 @@ public class GameManager : MonoBehaviour {
         //TODO Add logic for attacking and abilities
         if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving && tile != activeUnit.CurrentTile)
         {
-            activeUnit.MoveToTile(tile);
+            activeUnit.TraversePath(map.GetPath(activeUnit.CurrentTile, tile));
+            //activeUnit.MoveToTile(tile);
             //TODO Move this logic elsewhere
         }
     }
