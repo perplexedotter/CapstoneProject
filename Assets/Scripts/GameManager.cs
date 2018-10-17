@@ -62,22 +62,22 @@ public class GameManager : MonoBehaviour {
         activeUnit = units[unitIndex];
     }
 
-    public void MoveCurrentPlayer(Tile destinationTile) {
-        activeUnit.MoveToTile(destinationTile);
-	}
+ //   public void MoveCurrentPlayer(Tile destinationTile) {
+ //       activeUnit.MoveToTile(destinationTile);
+	//}
 
 	//this will create the units on the map for this level
 	void GenerateUnits(){
 		Unit unit;
-		//NonPlayerUnit npc;
-
-		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+        //NonPlayerUnit npc;
+        GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+        obj.transform.parent = transform;
+        unit = obj.GetComponent<Unit>();
+		//unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
 
         //makes the unit a fighter
         unit.DefineUnit(UnitType.fighter);
 
-        //Test Map System
-        //unit.MoveToTile(map.GetTileByCoord(5, 5));
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
         units.Add(unit);
         nextTurn();
@@ -116,7 +116,8 @@ public class GameManager : MonoBehaviour {
         //TODO Add logic for attacking and abilities
         if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving && tile != activeUnit.CurrentTile)
         {
-            activeUnit.MoveToTile(tile);
+            activeUnit.TraversePath(map.GetPath(activeUnit.CurrentTile, tile));
+            //activeUnit.MoveToTile(tile);
             //TODO Move this logic elsewhere
         }
     }

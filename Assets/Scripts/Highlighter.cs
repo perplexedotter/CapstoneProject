@@ -21,7 +21,7 @@ public class Highlighter : MonoBehaviour {
     private void OnMouseEnter()
     {
         Highlight();
-        print("Highlight");
+        //print("Highlight");
     }
 
     private void OnMouseExit()
@@ -59,7 +59,7 @@ public class Highlighter : MonoBehaviour {
     //Allows other scripts to send a message indicating the base colors of the children has changed
     private void UpdateBaseColorQueue(Queue<Color> colors)
     {
-        print("Colors Updated");
+        //print("Colors Updated");
         childColors = colors;
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,10 +10,10 @@ public class Unit : MonoBehaviour {
     [SerializeField] Collider collider;
 
     [Header("Transform Properties")]
-    [SerializeField] protected Vector3 heightOffset;
-    [SerializeField] protected Vector3 moveDestination;
+    //[SerializeField] protected Vector3 heightOffset;
+    //[SerializeField] protected Vector3 moveDestination;
     [SerializeField] protected float moveSpeed = 10.0f;
-    [SerializeField] protected float movementTolerance = .25f;
+    [SerializeField] protected float movementTolerance = 1f;
 
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
@@ -28,10 +29,28 @@ public class Unit : MonoBehaviour {
     protected UnitType type;
     protected List<Module> modules;
 
-    [SerializeField] private int movementRange = 4;
+    //[SerializeField] private int movementRange = 4;
     private bool isMoving = false;
     protected bool movementFinished = false;
     Tile currentTile;
+    private List<Tile> path;
+    private int pathIndex;
+
+    void Awake()
+    {
+
+    }
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        ProcessMovement();
+    }
 
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
@@ -145,31 +164,6 @@ public class Unit : MonoBehaviour {
         }
     }
 
-    void Awake () {
-		moveDestination = transform.position;
-	}
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-        ProcessMovement();
-    }
-
-    private void ProcessMovement()
-    {
-        if (IsMoving)
-            MoveCharacter();
-        if (movementFinished)
-        {
-            movementFinished = false;
-            GameManager.instance.FinishedMovement();
-        }
-    }
-
     public virtual void TurnUpdate(){
 
 	}
@@ -177,21 +171,60 @@ public class Unit : MonoBehaviour {
     //returns movement after calculation based on unit mass
     public int GetMovementRange() {
         float moddedMass = GetMass();
-        movementRange = (int)((1000 - moddedMass) / 100);
+        int movementRange = (int)((1000 - moddedMass) / 100);
         return movementRange;
     }
 
-
-    //TODO Make unit get a path of tiles and follow that path
-    //This will make unit movement follow the actual NWSE movement they can perform
-    //And prevent a unit from shortcutting across tiles they can't actually enter
-    public void MoveToTile(Tile tile)
+    private void ProcessMovement()
     {
-        if (tile != null)
+        if (IsMoving)
         {
-            UpdateTile(tile);
-            moveDestination = tile.transform.position + heightOffset;
+            ContinuePathTraversal();
+        }
+        if (movementFinished)
+        {
+            movementFinished = false;
+            SendMessageUpwards("FinishedMovement");
+        }
+    }
+
+    public void TraversePath(List<Tile> path)
+    {
+        if(path != null)
+        {
+            this.path = path;
             isMoving = true;
+            pathIndex = 0;
+        }
+    }
+
+    private void ContinuePathTraversal()
+    {
+        if(currentTile != path[path.Count - 1]) //If the Unit hasn't reached the end of the path
+        {
+            if (currentTile != path[pathIndex]) //If the current Tile isn't the same as the next tile
+            {
+                Vector3 destination = path[pathIndex].transform.position;
+                if (Vector3.Distance(destination, transform.position) > movementTolerance) //May not need this if
+                {
+                    transform.position += (destination - transform.position).normalized * moveSpeed * Time.deltaTime;
+
+                    if (Vector3.Distance(destination, transform.position) <= movementTolerance) //If the unit is close enough call it good
+                    {
+                        UpdateTile(path[pathIndex]);
+                    }
+                }
+            }
+            else
+            {
+                pathIndex++;
+            }
+        }
+        else
+        {
+            transform.position = currentTile.transform.position;
+            movementFinished = true;
+            isMoving = false;
         }
     }
 
@@ -203,27 +236,12 @@ public class Unit : MonoBehaviour {
         currentTile.UnitOnTile = this;
     }
 
-    protected void MoveCharacter()
-    {
-        if (Vector3.Distance(moveDestination, transform.position) > movementTolerance)
-        {
-            transform.position += (moveDestination - transform.position).normalized * moveSpeed * Time.deltaTime;
-
-            if (Vector3.Distance(moveDestination, transform.position) <= movementTolerance)
-            {
-                movementFinished = true;
-                isMoving = false;
-                transform.position = moveDestination;
-            }
-        }
-    }
-
     //Places the unit on a tile instantly (No Visual Movment)
     public void PlaceOnTile(Tile tile)
     {
         if(tile != null)
         {
-            moveDestination = transform.position = tile.transform.position + heightOffset;
+            transform.position = tile.transform.position;
             UpdateTile(tile);
         }
     }
@@ -237,6 +255,35 @@ public class Unit : MonoBehaviour {
     {
 
     }
+
+    //DEPRECIATED Use TraversePath
+    //This will make unit movement follow the actual NWSE movement they can perform
+    //And prevent a unit from shortcutting across tiles they can't actually enter
+    //public void MoveToTile(Tile tile)
+    //{
+    //    if (tile != null)
+    //    {
+    //        UpdateTile(tile);
+    //        moveDestination = tile.transform.position;
+    //        isMoving = true;
+    //    }
+    //}
+
+    //DEPRECIATED
+    //protected void MoveCharacter()
+    //{
+    //    if (Vector3.Distance(moveDestination, transform.position) > movementTolerance)
+    //    {
+    //        transform.position += (moveDestination - transform.position).normalized * moveSpeed * Time.deltaTime;
+
+    //        if (Vector3.Distance(moveDestination, transform.position) <= movementTolerance)
+    //        {
+    //            movementFinished = true;
+    //            isMoving = false;
+    //            transform.position = moveDestination;
+    //        }
+    //    }
+    //}
 }
 
 //used to show type of unit
