@@ -25,7 +25,7 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected float shields;
     [SerializeField] protected float hardPoints;
 
-    protected unitType type;
+    protected UnitType type;
     protected List<Module> modules;
 
     [SerializeField] private int movementRange = 4;
@@ -34,11 +34,11 @@ public class Unit : MonoBehaviour {
     Tile currentTile;
 
     //based on unit type provide this will give base stats to unit
-    public void defineUnit(unitType Type)
+    public void DefineUnit(UnitType Type)
     {
         modules = new List<Module>();
 
-        if (unitType.fighter == Type)
+        if (UnitType.fighter == Type)
         {
             hitPoints = 100;
             mass = 400;
@@ -52,7 +52,7 @@ public class Unit : MonoBehaviour {
     }
 
     //Adds module to unit
-    public void addModule(Module module)
+    public void AddModule(Module module)
     {
         //can only have modules up to number of hardpoints
         if (!(modules.Count >= hardPoints))
@@ -62,11 +62,11 @@ public class Unit : MonoBehaviour {
     }
 
     //remove specific module from list (if it is in list)
-    public void removeModule(ModuleName module)
+    public void RemoveModule(ModuleName module)
     {
         for(int i = 0; i < modules.Count; i++)
         {
-            if(modules[i].moduleName == module)
+            if(modules[i].ModuleName == module)
             {
                 modules.RemoveAt(i);
                 break;
@@ -75,45 +75,45 @@ public class Unit : MonoBehaviour {
     }
 
     //removes all modules from unit
-    public void removeAllModules()
+    public void RemoveAllModules()
     {
         modules.Clear();
     }
 
     //returns base hp + bonus from modules
-    public float getHP()
+    public float GetHP()
     {
         float moddedStat = hitPoints;
 
         for (int i = 0; i < modules.Count; i++)
         {
-            moddedStat += modules[i].hitPoints;
+            moddedStat += modules[i].HitPoints;
         }
 
         return moddedStat;
     }
 
     //returns base mass + bonus from modules
-    public float getMass()
+    public float GetMass()
     {
         float moddedStat = mass;
 
         for (int i = 0; i < modules.Count; i++)
         {
-            moddedStat += modules[i].mass;
+            moddedStat += modules[i].Mass;
         }
 
         return moddedStat;
     }
 
     //returns base attack + bonus from modules
-    public float getAttack()
+    public float GetAttack()
     {
         float moddedStat = attack;
 
         for (int i = 0; i < modules.Count; i++)
         {
-            moddedStat += modules[i].attack;
+            moddedStat += modules[i].Attack;
         }
 
         return moddedStat;
@@ -176,8 +176,8 @@ public class Unit : MonoBehaviour {
 
     //returns movement after calculation based on unit mass
     public int GetMovementRange() {
-        float ModdedMass = getMass();
-        movementRange = (int)((1000 - ModdedMass) / 100);
+        float moddedMass = GetMass();
+        movementRange = (int)((1000 - moddedMass) / 100);
         return movementRange;
     }
 
@@ -240,7 +240,7 @@ public class Unit : MonoBehaviour {
 }
 
 //used to show type of unit
-public enum unitType
+public enum UnitType
 {
     fighter,
 }

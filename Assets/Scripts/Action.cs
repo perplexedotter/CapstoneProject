@@ -8,8 +8,7 @@ using UnityEngine;
 public class Action : MonoBehaviour {
     public enum ActionType { ShortAttack, LongAttack, Heal, Slow};
 
-    //TODO possibly expand. This should cover the actions we have
-    //decided to include so far
+    //TODO possibly expand. This should cover the actions we have decided to include so far
     private ActionType type; //What the action does
     private int power; //How much it does (damage, healing, etc)
     private int range; //How far it reaches

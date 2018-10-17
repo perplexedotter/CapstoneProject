@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour {
 		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
 
         //makes the unit a fighter
-        unit.defineUnit(unitType.fighter);
+        unit.DefineUnit(UnitType.fighter);
 
         //Test Map System
         //unit.MoveToTile(map.GetTileByCoord(5, 5));
@@ -135,8 +135,8 @@ public class GameManager : MonoBehaviour {
     //add short range module to active unit
     public void addShortRangeModule()
     {
-        activeUnit.addModule(new Module(ModuleName.shortRange));
-        Debug.Log("HP:" + activeUnit.getHP() + "  Mass:" + activeUnit.getMass() + "  Attack:" + activeUnit.getAttack());
+        activeUnit.AddModule(new Module(ModuleName.shortRange));
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass() + "  Attack:" + activeUnit.GetAttack());
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour {
     //remove short ranged module from active unit
     public void removeShortRangeModule()
     {
-        activeUnit.removeModule(ModuleName.shortRange);
+        activeUnit.RemoveModule(ModuleName.shortRange);
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour {
     //remove all modules from active unit
     public void removeAllModules()
     {
-        activeUnit.removeAllModules();
+        activeUnit.RemoveAllModules();
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
