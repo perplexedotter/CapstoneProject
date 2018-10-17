@@ -72,6 +72,10 @@ public class GameManager : MonoBehaviour {
 		//NonPlayerUnit npc;
 
 		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+
+        //makes the unit a fighter
+        unit.defineUnit(unitType.fighter);
+
         //Test Map System
         //unit.MoveToTile(map.GetTileByCoord(5, 5));
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
@@ -126,6 +130,34 @@ public class GameManager : MonoBehaviour {
     public void UnitClicked(Unit unit)
     {
 
+    }
+
+    //add short range module to active unit
+    public void addShortRangeModule()
+    {
+        activeUnit.addModule(new Module(ModuleName.shortRange));
+        Debug.Log("HP:" + activeUnit.getHP() + "  Mass:" + activeUnit.getMass() + "  Attack:" + activeUnit.getAttack());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //remove short ranged module from active unit
+    public void removeShortRangeModule()
+    {
+        activeUnit.removeModule(ModuleName.shortRange);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //remove all modules from active unit
+    public void removeAllModules()
+    {
+        activeUnit.removeAllModules();
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
     }
 
     //DEPRICATED use Map.GetTilesInRange instead
