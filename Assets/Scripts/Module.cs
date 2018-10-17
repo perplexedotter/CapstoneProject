@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Module {
-    public int hitPoints { get; protected set; }
-    public int attack { get; protected set; }
-    public int mass { get; protected set; }
-    public ModuleName moduleName { get; protected set; }
+public class Module : MonoBehaviour {
+    public int HitPoints { get; protected set; }
+    public int Attack { get; protected set; }
+    public int Mass { get; protected set; }
+    public ModuleName ModuleName { get; protected set; }
 
     //basic constructor (give name)
     public Module(ModuleName name)
@@ -14,9 +14,9 @@ public class Module {
         //give stats to module based on type          
         if (name == ModuleName.shortRange)
         {
-            hitPoints = 25;
-            attack = 15;
-            mass = 100;
+            HitPoints = 25;
+            Attack = 15;
+            Mass = 100;
         }
     }
     // Use this for initialization
