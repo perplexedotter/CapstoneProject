@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.UIElements;
 
 public class GameManager : MonoBehaviour {
 
@@ -10,17 +9,18 @@ public class GameManager : MonoBehaviour {
     [SerializeField] int mapSize = 11;
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
+
     public static GameManager instance;
-    [SerializeField] GameObject PlayerUnitPreFab;
+	[SerializeField] GameObject PlayerUnitPreFab;
     //public GameObject TilePreFab;
     //public GameObject NonPlayerUnitPreFab;
 
     private List<Tile> activeUnitPosMoves;
 
     //Create tile and char lists
-    List<Unit> units = new List<Unit>();
+	List<Unit> units = new List<Unit>();
     Unit activeUnit;
-    int unitIndex = 0;
+	int unitIndex = 0;
 
 
     public int MapSize
@@ -32,44 +32,20 @@ public class GameManager : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Awake() {
-        instance = this;
-    }
-
-    void Start() {
-        GenerateUnits();
+    void Awake(){
+		instance = this;		
+	}
+	void Start () {
+		GenerateUnits();
         activeUnit = units[unitIndex];
-        activeUnit.GetFinalStat();
-        
-    }
-
-    // Update is called once per frame
+	}
+	
+	// Update is called once per frame
     //TODO move this out of update
-    void Update() {
-        //units[unitIndex].TurnUpdate();
-    }
-
-    //Has the active unit add 1 short range module
-    //If 2 modules are equipped it will do nothing 
-    public void addShortRangeModule()
-    {
-        bool testShort = activeUnit.addModule(ModuleName.shortRange, activeUnit);
-        activeUnit.GetFinalStat();
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-
-    //Removes all modules attached to current active unit
-    public void removeAllModules()
-    {
-        activeUnit.removeAllModules(activeUnit);
-        activeUnit.GetFinalStat();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-
-    public void nextTurn()
+	void Update () {
+		//units[unitIndex].TurnUpdate();
+	}
+	public void nextTurn()
     {
         map.ResetTileColors();
         UpdateActiveUnit();
@@ -93,7 +69,6 @@ public class GameManager : MonoBehaviour {
 	//this will create the units on the map for this level
 	void GenerateUnits(){
 		Unit unit;
-
 		//NonPlayerUnit npc;
 
 		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
@@ -104,12 +79,6 @@ public class GameManager : MonoBehaviour {
         //Test Map System
         //unit.MoveToTile(map.GetTileByCoord(5, 5));
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
-        units.Add(unit);
-        nextTurn();
-
-        unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0 - Mathf.Floor(MapSize / 2), 1.5f, 0 + Mathf.Floor(MapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
-        unit.defineUnit(unitType.fighter);
-        unit.PlaceOnTile(map.GetTileByCoord(5, 2));
         units.Add(unit);
         nextTurn();
 
@@ -126,54 +95,12 @@ public class GameManager : MonoBehaviour {
         //units.Add(npc);
     }
 
-    //Takes a unit and finds all tiles they could possibly move to
-    //TODO move this to the Map class and make it take a tile and range instead of unit
-    //TODO build second search to return a path of tiles to a destination
-    public List<Tile> GetPossibleMoves(Unit unit)
-    {
-        HashSet<Tile> possibleMoves = new HashSet<Tile>();
-        Queue<Tile> tileQueue = new Queue<Tile>();
-        int movementRange = unit.GetMovementRange();
-
-        //Add starting tile and reset tiles to unvisited
-        tileQueue.Enqueue(unit.CurrentTile);
-        map.ResetVisited();
-
-        //Loop while there are tiles to examine within range
-        while(movementRange > 0 && tileQueue.Count > 0)
-        {
-            List<Tile> currentTiles = new List<Tile>();
-            while(tileQueue.Count > 0)
-            {
-                Tile tileToExamine = tileQueue.Dequeue();
-                tileToExamine.Visted = true;
-                List<Tile> surroundTiles = map.GetSurroundingTiles(tileToExamine);
-                foreach(Tile tile in surroundTiles)
-                {
-                    //TODO adjust to account for terrain and for other units in path
-                    if (!possibleMoves.Contains(tile))
-                    {
-                        possibleMoves.Add(tile);
-                        if (!tile.Visted)
-                            currentTiles.Add(tile);
-                    }
-                }
-            }
-            //Add next set of tiles to queue and decrement range
-            foreach (Tile tile in currentTiles)
-                tileQueue.Enqueue(tile);
-            movementRange--;
-        }
-
-        //Return tiles if there are any
-        List<Tile> posMoves = new List<Tile>(possibleMoves);
-        return posMoves.Count > 0 ? posMoves : null;
-    }
+    
 
     //Update the active Units possible moves
     public void UpdateCurrentPossibleMoves()
     {
-        activeUnitPosMoves = GetPossibleMoves(activeUnit);
+        activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
     }
 
     //Display the active Units possible moves
@@ -187,7 +114,7 @@ public class GameManager : MonoBehaviour {
     public void TileClicked(Tile tile)
     {
         //TODO Add logic for attacking and abilities
-        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving)
+        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving && tile != activeUnit.CurrentTile)
         {
             activeUnit.MoveToTile(tile);
             //TODO Move this logic elsewhere
@@ -199,6 +126,83 @@ public class GameManager : MonoBehaviour {
         nextTurn();
     }
 
+    //TODO add context dependent actions for unit clicks
+    public void UnitClicked(Unit unit)
+    {
+
+    }
+
+    //add short range module to active unit
+    public void addShortRangeModule()
+    {
+        activeUnit.addModule(new Module(ModuleName.shortRange));
+        Debug.Log("HP:" + activeUnit.getHP() + "  Mass:" + activeUnit.getMass() + "  Attack:" + activeUnit.getAttack());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //remove short ranged module from active unit
+    public void removeShortRangeModule()
+    {
+        activeUnit.removeModule(ModuleName.shortRange);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //remove all modules from active unit
+    public void removeAllModules()
+    {
+        activeUnit.removeAllModules();
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //DEPRICATED use Map.GetTilesInRange instead
+    ////Takes a unit and finds all tiles they could possibly move to
+    //public List<Tile> GetPossibleMoves(Unit unit)
+    //{
+    //    HashSet<Tile> possibleMoves = new HashSet<Tile>();
+    //    Queue<Tile> tileQueue = new Queue<Tile>();
+    //    int movementRange = unit.GetMovementRange();
+
+    //    //Add starting tile and reset tiles to unvisited
+    //    tileQueue.Enqueue(unit.CurrentTile);
+    //    map.ResetVisited();
+
+    //    //Loop while there are tiles to examine within range
+    //    while (movementRange > 0 && tileQueue.Count > 0)
+    //    {
+    //        List<Tile> currentTiles = new List<Tile>();
+    //        while (tileQueue.Count > 0)
+    //        {
+    //            Tile tileToExamine = tileQueue.Dequeue();
+    //            tileToExamine.Visted = true;
+    //            List<Tile> surroundTiles = map.GetSurroundingTiles(tileToExamine);
+    //            foreach (Tile tile in surroundTiles)
+    //            {
+    //                //TODO adjust to account for terrain and for other units in path
+    //                if (!possibleMoves.Contains(tile))
+    //                {
+    //                    possibleMoves.Add(tile);
+    //                    if (!tile.Visted)
+    //                        currentTiles.Add(tile);
+    //                }
+    //            }
+    //        }
+    //        //Add next set of tiles to queue and decrement range
+    //        foreach (Tile tile in currentTiles)
+    //            tileQueue.Enqueue(tile);
+    //        movementRange--;
+    //    }
+
+    //    //Return tiles if there are any
+    //    List<Tile> posMoves = new List<Tile>(possibleMoves);
+    //    return posMoves.Count > 0 ? posMoves : null;
+    //}
+
     //DEPRECIATED refactered mouse enters and exits to a seperate highlighter script
     //public void TileMouseExit(Tile tile)
     //{
@@ -207,10 +211,4 @@ public class GameManager : MonoBehaviour {
     //    else
     //        tile.ResetTileMaterial();
     //}
-
-    //TODO add context dependent actions for unit clicks
-    public void UnitClicked(Unit unit)
-    {
-
-    }
 }

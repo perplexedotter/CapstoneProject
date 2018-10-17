@@ -5,44 +5,119 @@ using UnityEngine;
 [SelectionBase]
 public class Unit : MonoBehaviour {
 
+    //Needed to Detect Child Collision
+    [SerializeField] Collider collider;
+
     [Header("Transform Properties")]
     [SerializeField] protected Vector3 heightOffset;
     [SerializeField] protected Vector3 moveDestination;
-	[SerializeField] protected float moveSpeed = 10.0f;
+    [SerializeField] protected float moveSpeed = 10.0f;
     [SerializeField] protected float movementTolerance = .25f;
 
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
-    [SerializeField] protected int playerNumber;
+    [SerializeField] protected float playerNumber;
+    [SerializeField] protected float hitPoints;
+    [SerializeField] protected float damageTaken;
+    [SerializeField] protected float attack;
+    [SerializeField] protected float speed;
+    [SerializeField] protected float mass;
+    [SerializeField] protected float shields;
+    [SerializeField] protected float hardPoints;
 
-    //Contains Base Stats
-    [SerializeField] public baseCharStat DamageTaken { get; protected set; }
-    [SerializeField] public baseCharStat Hardpoints { get; protected set; }
-    [SerializeField] public baseCharStat Health { get; protected set; }
-    [SerializeField] public baseCharStat Attack { get; protected set; }
-    [SerializeField] public baseCharStat Speed { get; protected set; }
-    [SerializeField] public baseCharStat Mass { get; protected set; }
     protected unitType type;
-
-    //Contains modifications to stats
-    protected modCharStat healthMod;
-    protected modCharStat attackMod;
-    protected modCharStat massMod;
-
-    //Contains Stats with modifiers  
-    [SerializeField] protected float ModdedHealth;
-    [SerializeField] protected float ModdedAttack;
-    [SerializeField] protected float ModdedSpeed;
-    [SerializeField] protected float ModdedMass;
-    
-    //Two short range modules
-    public Module shortRange { get; protected set; }
-    protected int totalEquipped;
+    protected List<Module> modules;
 
     [SerializeField] private int movementRange = 4;
     private bool isMoving = false;
     protected bool movementFinished = false;
     Tile currentTile;
+
+    //based on unit type provide this will give base stats to unit
+    public void defineUnit(unitType Type)
+    {
+        modules = new List<Module>();
+
+        if (unitType.fighter == Type)
+        {
+            hitPoints = 100;
+            mass = 400;
+            hardPoints = 2;
+            speed = 100;
+            damageTaken = 0;
+            attack = 20;
+            type = Type;
+            shields = 0;
+        }
+    }
+
+    //Adds module to unit
+    public void addModule(Module module)
+    {
+        //can only have modules up to number of hardpoints
+        if (!(modules.Count >= hardPoints))
+        {
+            modules.Add(module);
+        }
+    }
+
+    //remove specific module from list (if it is in list)
+    public void removeModule(ModuleName module)
+    {
+        for(int i = 0; i < modules.Count; i++)
+        {
+            if(modules[i].moduleName == module)
+            {
+                modules.RemoveAt(i);
+                break;
+            }
+        }
+    }
+
+    //removes all modules from unit
+    public void removeAllModules()
+    {
+        modules.Clear();
+    }
+
+    //returns base hp + bonus from modules
+    public float getHP()
+    {
+        float moddedStat = hitPoints;
+
+        for (int i = 0; i < modules.Count; i++)
+        {
+            moddedStat += modules[i].hitPoints;
+        }
+
+        return moddedStat;
+    }
+
+    //returns base mass + bonus from modules
+    public float getMass()
+    {
+        float moddedStat = mass;
+
+        for (int i = 0; i < modules.Count; i++)
+        {
+            moddedStat += modules[i].mass;
+        }
+
+        return moddedStat;
+    }
+
+    //returns base attack + bonus from modules
+    public float getAttack()
+    {
+        float moddedStat = attack;
+
+        for (int i = 0; i < modules.Count; i++)
+        {
+            moddedStat += modules[i].attack;
+        }
+
+        return moddedStat;
+    }
 
     public Tile CurrentTile
     {
@@ -69,10 +144,10 @@ public class Unit : MonoBehaviour {
             isMoving = value;
         }
     }
-    
+
     void Awake () {
 		moveDestination = transform.position;
-    }
+	}
 	// Use this for initialization
 	void Start () {
 		
@@ -82,36 +157,6 @@ public class Unit : MonoBehaviour {
 	void Update ()
     {
         ProcessMovement();
-    }
-    
-    //called to define base stats of unit
-    //allows for future unit types to be called
-    public void defineUnit(unitType Type)
-    {
-        if (unitType.fighter == Type)
-        {
-            //Base Stats for fighter
-            Health = new baseCharStat(100);
-            Mass = new baseCharStat(400);
-            ModdedMass = Mass.baseStat;
-            Hardpoints = new baseCharStat(2);
-            Speed = new baseCharStat(100);
-            DamageTaken = new baseCharStat(0);
-            Attack = new baseCharStat(20);
-            type = Type;
-            shortRange = new Module(ModuleName.shortRange);
-            GetFinalStat();
-        }
-    }
-
-    //Get the Final stats (base + modifiers)
-    public void GetFinalStat()
-    {
-        ModdedHealth = Health.getModdedValue();
-        ModdedAttack = Attack.getModdedValue();
-        ModdedSpeed = Speed.getModdedValue();
-        ModdedMass = Mass.getModdedValue();
-
     }
 
     private void ProcessMovement()
@@ -129,9 +174,9 @@ public class Unit : MonoBehaviour {
 
 	}
 
-    // (1000 - Mass) / 100 = movement
-    public int GetMovementRange()
-    {
+    //returns movement after calculation based on unit mass
+    public int GetMovementRange() {
+        float ModdedMass = getMass();
         movementRange = (int)((1000 - ModdedMass) / 100);
         return movementRange;
     }
@@ -144,10 +189,18 @@ public class Unit : MonoBehaviour {
     {
         if (tile != null)
         {
+            UpdateTile(tile);
             moveDestination = tile.transform.position + heightOffset;
-            currentTile = tile;
             isMoving = true;
         }
+    }
+
+    private void UpdateTile(Tile tile)
+    {
+        if(currentTile != null)
+            currentTile.UnitOnTile = null;
+        currentTile = tile;
+        currentTile.UnitOnTile = this;
     }
 
     protected void MoveCharacter()
@@ -171,7 +224,7 @@ public class Unit : MonoBehaviour {
         if(tile != null)
         {
             moveDestination = transform.position = tile.transform.position + heightOffset;
-            currentTile = tile;
+            UpdateTile(tile);
         }
     }
 
@@ -183,58 +236,6 @@ public class Unit : MonoBehaviour {
     private void StopHighlightAnimation()
     {
 
-    }
-
-    //equips short range module
-    private void addShort(Unit c)
-    {
-        shortRange.equip();
-        totalEquipped += 1;
-        healthMod = new modCharStat(0.25f, StatIdentifier.Addition_Percent, 200, this);
-        c.Health.PlusModStat(healthMod);
-
-        attackMod = new modCharStat(15, StatIdentifier.basic, 100, this);
-        c.Attack.PlusModStat(attackMod);
-
-        massMod = new modCharStat(100, StatIdentifier.basic, 100, this);
-        c.Mass.PlusModStat(massMod);
-    }
-
-    //will handle adding modules to units
-    //in the future we can add other units besides fighter
-    public bool addModule(ModuleName module, Unit c)
-    {
-        if (c.type == unitType.fighter)
-        {
-            if (module == ModuleName.shortRange)
-            {
-                if (shortRange.equipped == 0 && totalEquipped < 2)
-                {
-                    addShort(c);
-                    return false;
-                }
-                else if (shortRange.equipped == 1 && totalEquipped < 2)
-                {
-                    addShort(c);
-                    return false;
-                }
-                else
-                {
-                    Debug.Log("You can't equip more than 2 short range modules to fighter");
-                }
-            }
-        }
-        return true;
-    }
-
-    //unequips everything
-    public void removeAllModules(Unit c)
-    {
-        shortRange.unequip();
-        totalEquipped = 0;
-        c.Health.DeleteAllMods(this);
-        c.Attack.DeleteAllMods(this);
-        c.Mass.DeleteAllMods(this);
     }
 }
 
