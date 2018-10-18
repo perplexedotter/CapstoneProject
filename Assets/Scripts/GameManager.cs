@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour {
     //add short range module to active unit
     public void addShortRangeModule()
     {
-        activeUnit.AddModule(new ActiveModule(ModuleName.shortRange));
+        activeUnit.AddModule(new MeleeAttackModule());
         Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
