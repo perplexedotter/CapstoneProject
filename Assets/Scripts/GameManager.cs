@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour {
 
     private List<Tile> activeUnitPosMoves;
 
-    //Create tile and char lists
 	List<Unit> units = new List<Unit>();
     Unit activeUnit;
 	int unitIndex = 0;
@@ -69,30 +68,28 @@ public class GameManager : MonoBehaviour {
 	//this will create the units on the map for this level
 	void GenerateUnits(){
 		Unit unit;
-        //NonPlayerUnit npc;
+        //Unit 0
         GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
         obj.transform.parent = transform;
         unit = obj.GetComponent<Unit>();
-		//unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
 
         //makes the unit a fighter
         unit.DefineUnit(UnitType.fighter);
 
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
         units.Add(unit);
+
+        //Unit 1
+        obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+        obj.transform.parent = transform;
+        unit = obj.GetComponent<Unit>();
+
+        //makes the unit a fighter
+        unit.DefineUnit(UnitType.fighter);
+
+        unit.PlaceOnTile(map.GetTileByCoord(1, 1));
+        units.Add(unit);
         nextTurn();
-
-        //unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -(mapSize - 1) + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerUnit>();
-        //unit.MoveToTile(map.GetTileByCoord(0, 0));
-        //units.Add(unit);
-
-        //Removed Extra units for clarity
-
-        //unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerUnit>();			
-        //units.Add(unit);
-
-        //npc = ((GameObject)Instantiate(NonPlayerUnitPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerUnit>();			
-        //units.Add(npc);
     }
 
     
@@ -114,7 +111,9 @@ public class GameManager : MonoBehaviour {
     public void TileClicked(Tile tile)
     {
         //TODO Add logic for attacking and abilities
-        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving && tile != activeUnit.CurrentTile)
+        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) 
+            && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
+            && tile.UnitOnTile == null)
         {
             activeUnit.TraversePath(map.GetPath(activeUnit.CurrentTile, tile));
             //activeUnit.MoveToTile(tile);
