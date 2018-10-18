@@ -123,6 +123,9 @@ public class GameManager : MonoBehaviour {
 
     public void FinishedMovement()
     {
+        //decrements that status of active unit
+        activeUnit.DecrementStatuses();
+       
         nextTurn();
     }
 
@@ -159,6 +162,17 @@ public class GameManager : MonoBehaviour {
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
     }
+
+    //Example of how to add status effect 
+    public void addStatusEffect()
+    {
+        //for testing
+        activeUnit.AddStatus(new StatusEffects(5, 100, statusType.mass));
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
 
     //DEPRICATED use Map.GetTilesInRange instead
     ////Takes a unit and finds all tiles they could possibly move to
