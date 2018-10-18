@@ -25,6 +25,7 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected float mass;
     [SerializeField] protected float shields;
     [SerializeField] protected float hardPoints;
+    [SerializeField] protected int movementRange;
 
     protected UnitType type;
     protected List<Module> modules;
@@ -218,12 +219,6 @@ public class Unit : MonoBehaviour {
 
 	}
 
-    //returns movement after calculation based on unit mass
-    public int GetMovementRange() {
-        float moddedMass = GetMass();
-        int movementRange = (int)((1000 - moddedMass) / 100);
-        return movementRange;
-    }
 
     private void ProcessMovement()
     {
@@ -238,13 +233,9 @@ public class Unit : MonoBehaviour {
         }
     }
 
-<<<<<<< HEAD
-    public virtual void TurnUpdate(){
-
-	}
-
     //returns movement after calculation based on unit mass
-    public int GetMovementRange() {
+    public int GetMovementRange()
+    {
         float moddedMass = GetMass();
         movementRange = (int)((1000 - moddedMass) / 100);
 
@@ -253,7 +244,8 @@ public class Unit : MonoBehaviour {
             movementRange = 1;
         }
         return movementRange;
-=======
+    }
+
     public void TraversePath(List<Tile> path)
     {
         if(path != null)
@@ -262,7 +254,6 @@ public class Unit : MonoBehaviour {
             isMoving = true;
             pathIndex = 0;
         }
->>>>>>> upstream/master
     }
 
     private void ContinuePathTraversal()
