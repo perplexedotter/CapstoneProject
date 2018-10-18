@@ -4,21 +4,23 @@ using UnityEngine;
 
 public class Module : MonoBehaviour {
     public int HitPoints { get; protected set; }
-    public int Attack { get; protected set; }
     public int Mass { get; protected set; }
+    public Target moduleTarget { get; protected set; }
     public ModuleName ModuleName { get; protected set; }
+    public Action action { get; protected set; }
 
-    //basic constructor (give name)
-    public Module(ModuleName name)
+    //virtual GetAction
+    public virtual Action GetAction()
     {
-        //give stats to module based on type          
-        if (name == ModuleName.shortRange)
-        {
-            HitPoints = 25;
-            Attack = 15;
-            Mass = 100;
-        }
+        return null;
     }
+
+    //set action of module
+    public void SetAction(Action action)
+    {
+        this.action = action;
+    }
+    
     // Use this for initialization
     void Start () {
 		
@@ -33,5 +35,14 @@ public class Module : MonoBehaviour {
 //used to name module
 public enum ModuleName
 {
-    shortRange,
+    shortRange, longRange, heal, slow,
+}
+
+//used for choosing target
+public enum Target
+{
+    ally, 
+    enemy,
+    self,
+    everyone,
 }
