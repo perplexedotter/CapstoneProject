@@ -15,10 +15,11 @@ public class Unit : MonoBehaviour {
     //[SerializeField] protected Vector3 moveDestination;
     [SerializeField] protected float moveSpeed = 10.0f;
     [SerializeField] protected float movementTolerance = 1f;
+    [SerializeField] Tile currentTile;
 
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
-    [SerializeField] protected float playerNumber;
+    [SerializeField] protected int playerNumber;
     [SerializeField] protected float hitPoints;
     [SerializeField] protected float damageTaken;
     [SerializeField] protected float attack;
@@ -34,7 +35,6 @@ public class Unit : MonoBehaviour {
     //[SerializeField] private int movementRange = 4;
     private bool isMoving = false;
     protected bool movementFinished = false;
-    Tile currentTile;
     private List<Tile> path;
     private int pathIndex;
 
@@ -244,6 +244,18 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    public int PlayerNumber
+    {
+        get
+        {
+            return playerNumber;
+        }
+        set
+        {
+            playerNumber = value;
+        }
+    }
+
     public virtual void TurnUpdate(){
 
 	}
@@ -307,8 +319,9 @@ public class Unit : MonoBehaviour {
                 pathIndex++;
             }
         }
-        else
+        else //Finish the units movement
         {
+            UpdateTile(path[pathIndex]); //MakeSure the unit is on the tile
             transform.position = currentTile.transform.position;
             movementFinished = true;
             isMoving = false;
@@ -317,10 +330,11 @@ public class Unit : MonoBehaviour {
 
     private void UpdateTile(Tile tile)
     {
-        if(currentTile != null)
+        if(currentTile != null && currentTile.UnitOnTile == this) //Don't remove units other then yourself from the tile
             currentTile.UnitOnTile = null;
         currentTile = tile;
-        currentTile.UnitOnTile = this;
+        if(currentTile.UnitOnTile == null) //Only add yourself to an empty tile
+            currentTile.UnitOnTile = this;
     }
 
     //Places the unit on a tile instantly (No Visual Movment)

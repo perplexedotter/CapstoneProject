@@ -12,14 +12,12 @@ public class Tile : MonoBehaviour {
 
     private Vector2Int gridPos;
 
+    [SerializeField] Unit unitOnTile;
+
     [Header("Material Colors")]
     [SerializeField] Color baseColor;
     [SerializeField] Color moveRangeColor;
     [SerializeField] Color attackRangeColor;
-
-
-    //TODO Possibly remove this. Tile may not need to care if unit is there and GameManager can handle that
-    private Unit unitOnTile;
 
     Renderer[] childrenRenderers;
 
@@ -99,6 +97,7 @@ public class Tile : MonoBehaviour {
         );
     }
 
+    //TODO Convert to SendMessageUpwards
     void OnMouseDown(){
         GameManager.instance.TileClicked(this);
 	}

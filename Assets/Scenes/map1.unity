@@ -3655,6 +3655,8 @@ MonoBehaviour:
   map: {fileID: 1645087134}
   PlayerUnitPreFab: {fileID: 1781235026215494, guid: f2e9cf4ae9d8c0d409c97766e62772a6,
     type: 2}
+  Player2UnitPreFab: {fileID: 1355556923035912, guid: e37c5cb8f3913e4498aaab2a771ffb12,
+    type: 2}
 --- !u!4 &982764463
 Transform:
   m_ObjectHideFlags: 0
@@ -4275,6 +4277,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 23603768544971170, guid: f2e9cf4ae9d8c0d409c97766e62772a6,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ea2a4912879b7d44eb34a5790722f8da, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
   m_IsPrefabAsset: 0

@@ -45,8 +45,19 @@ public class Map : MonoBehaviour {
 	
     //SEARCH FUNCTIONS
 
+    //Specialized BFS for unit movement
+    //private Dictionary<Tile, TileSearchField> MovementBFS(Unit unit)
+    //{
+
+    //}
+
+    private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range)
+    {
+        return RangeLimitedSearch(startTile, range, false, -1);
+    }
+
     //TODO Possibly Change to dijkstra
-    private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range){
+    private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range, bool movement, int playerNumber){
         if (range <= 0 || startTile == null)
             return null;
 
@@ -78,7 +89,9 @@ public class Map : MonoBehaviour {
                 {
                     //TODO Add accounting for Terrain may need to change algo
                     TileSearchField tsf = toSearch[t.GetGridPos()];
-                    if (!tsf.visited)
+                    //Only add a Tile if the tile has not been visited
+                    //If this is a movement search do not allow the search to pass through units the player doesn't own
+                    if (!tsf.visited && (!movement || tsf.Tile.UnitOnTile == null || tsf.Tile.UnitOnTile.PlayerNumber == playerNumber))
                     {
                         tsf.exploredFrom = tileToExamine.Tile;
                         currentTiles.Add(tsf);
@@ -120,11 +133,64 @@ public class Map : MonoBehaviour {
         return units.Count > 0 ? units : null;
     }
 
+
+
     //Returns a list of tiles that are within a given range
     public List<Tile> GetTilesInRange(Tile startTile, int range)
     {
         Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(startTile, range);
         return tileDict != null ? new List<Tile>(tileDict.Keys) : null;
+    }
+
+    public List<Tile> GetMovementRange(Unit unit)
+    {
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange(), true, unit.PlayerNumber);
+        if (tileDict == null)
+            return null;
+        List<Tile> tilesInRange = new List<Tile>();
+        foreach(var t in tileDict.Keys)
+        {
+            if (t.UnitOnTile == null)
+                tilesInRange.Add(t);
+        }
+        return tilesInRange.Count > 0 ? tilesInRange : null;
+    }
+
+    //TODO possibly make this a call to GetPath and possibly take a unit instead of playerNumber
+    public List<Tile> GetMovementPath(Unit unit, Tile end)
+    {
+        return GetMovementPath(unit.CurrentTile, end, unit.PlayerNumber);
+    }
+
+    public List<Tile> GetMovementPath(Tile start, Tile end, int playerNumber)
+    {
+        if (start == end)//Can't get a path from a tile to itself
+            return null;
+        //Use the size to ensure that range is unlimited regardless of the size of the map
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, mapDict.Count, true, playerNumber);
+        if (tileDict == null)
+            return null;
+
+        Tile nextTile = tileDict[end].exploredFrom;
+        List<Tile> path = new List<Tile>();
+        path.Add(end);
+        bool startFound = false;
+        while (nextTile != null && !startFound) //Walk back from end adding tiles to path
+        {
+            path.Add(nextTile);
+            if (nextTile == start)
+                startFound = true;
+            else
+                nextTile = tileDict[nextTile].exploredFrom;
+        }
+
+        if (startFound) //If path is valid reverse path and return
+        {
+            path.Reverse();
+            return path;
+        }
+        else
+            return null;
     }
 
     //Returns a list of tiles that represent a path from the start tile to the end tile

@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager instance;
 	[SerializeField] GameObject PlayerUnitPreFab;
+	[SerializeField] GameObject Player2UnitPreFab;
+
     //public GameObject TilePreFab;
     //public GameObject NonPlayerUnitPreFab;
 
@@ -64,9 +66,7 @@ public class GameManager : MonoBehaviour {
         activeUnit = units[unitIndex];
     }
 
- //   public void MoveCurrentPlayer(Tile destinationTile) {
- //       activeUnit.MoveToTile(destinationTile);
-	//}
+
 
 	//this will create the units on the map for this level
 	void GenerateUnits(){
@@ -90,6 +90,18 @@ public class GameManager : MonoBehaviour {
         //makes the unit a fighter
         unit.DefineUnit(UnitType.fighter);
 
+        unit.PlaceOnTile(map.GetTileByCoord(2, 2));
+        units.Add(unit);
+
+        //Unit 2
+        obj = Instantiate(Player2UnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+        obj.transform.parent = transform;
+        unit = obj.GetComponent<Unit>();
+
+        //makes the unit a fighter
+        unit.DefineUnit(UnitType.fighter);
+        unit.PlayerNumber = 1;
+
         unit.PlaceOnTile(map.GetTileByCoord(1, 1));
         units.Add(unit);
         nextTurn();
@@ -100,7 +112,8 @@ public class GameManager : MonoBehaviour {
     //Update the active Units possible moves
     public void UpdateCurrentPossibleMoves()
     {
-        activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
+        //activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
+        activeUnitPosMoves = map.GetMovementRange(activeUnit);
     }
 
     //Display the active Units possible moves
@@ -118,12 +131,12 @@ public class GameManager : MonoBehaviour {
             && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
             && tile.UnitOnTile == null)
         {
-            activeUnit.TraversePath(map.GetPath(activeUnit.CurrentTile, tile));
-            //activeUnit.MoveToTile(tile);
             //TODO Move this logic elsewhere
+            activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
         }
     }
 
+    //TODO Have Battle Manager record this and then determine what to do
     public void FinishedMovement()
     { 
         nextTurn();
@@ -186,6 +199,11 @@ public class GameManager : MonoBehaviour {
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
     }
+
+    //   public void MoveCurrentPlayer(Tile destinationTile) {
+    //       activeUnit.MoveToTile(destinationTile);
+    //}
+
     //DEPRICATED use Map.GetTilesInRange instead
     ////Takes a unit and finds all tiles they could possibly move to
     //public List<Tile> GetPossibleMoves(Unit unit)
