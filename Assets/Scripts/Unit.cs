@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [SelectionBase]
 public class Unit : MonoBehaviour {
@@ -25,10 +26,11 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected float mass;
     [SerializeField] protected float shields;
     [SerializeField] protected float hardPoints;
+    [SerializeField] protected int movementRange;
 
     protected UnitType type;
     protected List<Module> modules;
-
+    protected List<StatusEffects> statuses;
     //[SerializeField] private int movementRange = 4;
     private bool isMoving = false;
     protected bool movementFinished = false;
@@ -56,7 +58,7 @@ public class Unit : MonoBehaviour {
     public void DefineUnit(UnitType Type)
     {
         modules = new List<Module>();
-
+        statuses = new List<StatusEffects>();
         if (UnitType.fighter == Type)
         {
             hitPoints = 100;
@@ -70,6 +72,78 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    //Unit will take damage
+    public float TakeDamage(float dmg)
+    {
+        damageTaken += dmg;
+        return(GetHP() - damageTaken);
+    }
+    //returns list of actions
+    //will combine actions into more powerful one
+    public List<Action> getActions()
+    {
+        List<Action> actions = new List<Action>();
+        List<Action> actionsSorted = new List<Action>();
+
+        for (int i = 0; i < modules.Count; i++)
+        {
+            actions.Add(modules[i].action);
+        }
+
+        actionsSorted = actions.OrderBy(o => o.Type).ToList();
+        for (int i = 0; i < actionsSorted.Count; i++)
+        {
+            if(i != actionsSorted.Count - 1)
+            {
+                if(actionsSorted[i].Type == actionsSorted[i + 1].Type)
+                {
+                    actionsSorted[i+1] = actionsSorted[i].Combine(actionsSorted[i + 1]);
+                    actionsSorted.RemoveAt(i);
+                    i -= 1;
+                }
+            }
+        }
+        debugActions(actionsSorted);
+        return actionsSorted;
+    }
+    
+    //for testing getactions
+    public void debugActions(List<Action> debug)
+    {
+        for (int i = 0; i < debug.Count; i++)
+        {
+            Debug.Log(i + " " + debug[i].Type + " " + debug[i].Power);
+        }
+    }
+
+    //Adds status to list
+    public void AddStatus(StatusEffects status)
+    {
+        statuses.Add(status);
+    }
+
+    //decrease each status by one -- remove if duration reaches 0
+    public void DecrementStatuses()
+    {
+        for (int i = 0; i < statuses.Count; i++)
+        {
+            statuses[i].DecrementDuration();
+            if (statuses[i].duration == 1)
+            {
+                statuses.RemoveAt(i);
+                i -= 1;
+            }
+        }
+    }
+
+    //for testing
+    public void DebugStatuses()
+    {
+        for (int i = 0; i < statuses.Count; i++)
+        {
+            Debug.Log(statuses[i].statusName + " " + statuses[i].duration);
+        }
+    }
     //Adds module to unit
     public void AddModule(Module module)
     {
@@ -99,6 +173,11 @@ public class Unit : MonoBehaviour {
         modules.Clear();
     }
 
+    public float GetDamage()
+    {
+        return damageTaken;
+    }
+
     //returns base hp + bonus from modules
     public float GetHP()
     {
@@ -109,6 +188,13 @@ public class Unit : MonoBehaviour {
             moddedStat += modules[i].HitPoints;
         }
 
+        for (int i = 0; i < statuses.Count; i++)
+        {
+            if (statuses[i].statusName == statusType.hitPoints)
+            {
+                moddedStat += statuses[i].amount;
+            }
+        }
         return moddedStat;
     }
 
@@ -122,19 +208,13 @@ public class Unit : MonoBehaviour {
             moddedStat += modules[i].Mass;
         }
 
-        return moddedStat;
-    }
-
-    //returns base attack + bonus from modules
-    public float GetAttack()
-    {
-        float moddedStat = attack;
-
-        for (int i = 0; i < modules.Count; i++)
+        for (int i = 0; i < statuses.Count; i++)
         {
-            moddedStat += modules[i].Attack;
+            if (statuses[i].statusName == statusType.mass)
+            {
+                moddedStat += statuses[i].amount;
+            }
         }
-
         return moddedStat;
     }
 
@@ -168,12 +248,6 @@ public class Unit : MonoBehaviour {
 
 	}
 
-    //returns movement after calculation based on unit mass
-    public int GetMovementRange() {
-        float moddedMass = GetMass();
-        int movementRange = (int)((1000 - moddedMass) / 100);
-        return movementRange;
-    }
 
     private void ProcessMovement()
     {
@@ -186,6 +260,19 @@ public class Unit : MonoBehaviour {
             movementFinished = false;
             SendMessageUpwards("FinishedMovement");
         }
+    }
+
+    //returns movement after calculation based on unit mass
+    public int GetMovementRange()
+    {
+        float moddedMass = GetMass();
+        movementRange = (int)((1000 - moddedMass) / 100);
+
+        if (movementRange <= 0)
+        {
+            movementRange = 1;
+        }
+        return movementRange;
     }
 
     public void TraversePath(List<Tile> path)
