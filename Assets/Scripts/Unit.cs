@@ -274,7 +274,7 @@ public class Unit : MonoBehaviour {
         }
     }
 
-    //returns movement after calculation based on unit mass
+    returns movement after calculation based on unit mass
     public int GetMovementRange()
     {
         float moddedMass = GetMass();
@@ -286,6 +286,7 @@ public class Unit : MonoBehaviour {
         }
         return movementRange;
     }
+
 
     public void TraversePath(List<Tile> path)
     {

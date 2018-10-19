@@ -6,7 +6,7 @@ using UnityEngine;
 [SelectionBase]
 public class Tile : MonoBehaviour {
 
-    public enum TileColors { standard, move, attack }
+    public enum TileColors { standard, move, attack, ally }
 
     private const int gridSize = 10;
 
@@ -18,6 +18,8 @@ public class Tile : MonoBehaviour {
     [SerializeField] Color baseColor;
     [SerializeField] Color moveRangeColor;
     [SerializeField] Color attackRangeColor;
+    [SerializeField] Color enemyColor;
+    [SerializeField] Color allyColor;
 
     Renderer[] childrenRenderers;
 
@@ -123,6 +125,9 @@ public class Tile : MonoBehaviour {
                 break;
             case TileColors.attack:
                 SetColor(attackRangeColor);
+                break;
+            case TileColors.ally:
+                SetColor(allyColor);
                 break;
             default:
                 SetColor(baseColor);

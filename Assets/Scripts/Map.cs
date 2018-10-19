@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -74,7 +75,7 @@ public class Map : MonoBehaviour {
         tileQueue.Enqueue(toSearch[startTile.GetGridPos()]);
 
         //While there are tiles to search and range hasn't been exceed loop
-        while (range >= 0 && tileQueue.Count > 0)
+        while (range > 0 && tileQueue.Count > 0)
         {
             //Create a list of tiles to be added at this range increment
             List<TileSearchField> currentTiles = new List<TileSearchField>();
@@ -82,7 +83,7 @@ public class Map : MonoBehaviour {
             {
                 TileSearchField tileToExamine = tileQueue.Dequeue();
                 tileToExamine.visited = true;
-                tilesInRange.Add(tileToExamine);
+                //tilesInRange.Add(tileToExamine);
 
                 //Get appropriate TileSearchFields
                 foreach (var t in GetSurroundingTiles(tileToExamine.Tile))
@@ -93,8 +94,20 @@ public class Map : MonoBehaviour {
                     //If this is a movement search do not allow the search to pass through units the player doesn't own
                     if (!tsf.visited && (!movement || tsf.Tile.UnitOnTile == null || tsf.Tile.UnitOnTile.PlayerNumber == playerNumber))
                     {
+                        
                         tsf.exploredFrom = tileToExamine.Tile;
+                        tilesInRange.Add(tsf);
                         currentTiles.Add(tsf);
+                    }
+                    /*If this is a movement search and there is an enemy on the tile add it to the tilesInRange
+                     *But mark it as visited so that it won't be counted for movement but will be accounted for
+                     *this will be useful for determining melee range. The function that gets movement will remove this tile before
+                     *returning the list it creates
+                     */
+                    else if (!tsf.visited && movement && tsf.Tile.UnitOnTile != null && tsf.Tile.UnitOnTile.PlayerNumber != playerNumber)
+                    {
+                        tsf.visited = true;
+                        tilesInRange.Add(tsf);
                     }
                 }
             }
@@ -103,44 +116,19 @@ public class Map : MonoBehaviour {
                 tileQueue.Enqueue(tile);
             range--;
         }
-        if (tilesInRange.Count <= 0)
-            return null;
-        else
+
+        //Convert HashSet to dictionary for use in other functions
+        Dictionary<Tile, TileSearchField> result = new Dictionary<Tile, TileSearchField>();
+        foreach(var t in tilesInRange)
         {
-            //Convert HashSet to dictionary for use in other functions
-            Dictionary<Tile, TileSearchField> result = new Dictionary<Tile, TileSearchField>();
-            foreach(var t in tilesInRange)
-            {
-                result.Add(t.Tile, t);
-            }
-            return result;
+            result.Add(t.Tile, t);
         }
-    }
+        return result;
 
-    //Returns a list of all units in range passed including on the start tile
-    public List<Unit> GetUnitsInRange(Tile startTile, int range)
-    {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(startTile, range);
-        List<Unit> units = new List<Unit>();
-        List<Tile> tiles = null;
-        if (tileDict != null)
-            tiles = new List<Tile>(tileDict.Keys);
-        foreach(var t in tiles)
-        {
-            if (t.UnitOnTile != null)
-                units.Add(t.UnitOnTile);
-        }
-        return units.Count > 0 ? units : null;
     }
 
 
-
-    //Returns a list of tiles that are within a given range
-    public List<Tile> GetTilesInRange(Tile startTile, int range)
-    {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(startTile, range);
-        return tileDict != null ? new List<Tile>(tileDict.Keys) : null;
-    }
+    //RANGE FUNCTIONS (MOVEMENT BASED)
 
     public List<Tile> GetMovementRange(Unit unit)
     {
@@ -153,7 +141,7 @@ public class Map : MonoBehaviour {
             if (t.UnitOnTile == null)
                 tilesInRange.Add(t);
         }
-        return tilesInRange.Count > 0 ? tilesInRange : null;
+        return tilesInRange;
     }
 
     //TODO possibly make this a call to GetPath and possibly take a unit instead of playerNumber
@@ -193,9 +181,95 @@ public class Map : MonoBehaviour {
             return null;
     }
 
+    
+    //MELEE RANGE FUNCTIONS (MOVEMENT BASED)
+
+    public List<Tile> GetMeleeRange(Unit unit)
+    {
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange() + 1, true, unit.PlayerNumber);
+        return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
+    }
+
+    public List<Unit> GetUnitsInMeleeRange(Unit unit)
+    {
+        List<Tile> tilesInMeleeRange = GetMeleeRange(unit);
+        if (tilesInMeleeRange == null)
+            return null;
+        List<Unit> unitsInMeleeRange = new List<Unit>();
+        foreach(var t in tilesInMeleeRange)
+        {
+            if (t.UnitOnTile != null)
+                unitsInMeleeRange.Add(t.UnitOnTile);
+        }
+
+        return unitsInMeleeRange;
+    }
+
+    public List<Unit> GetEnemyUnitsInMeleeRange(Unit unit)
+    {
+        List<Unit> unitsInRange = GetUnitsInMeleeRange(unit);
+        List<Unit> enemiesInRange = new List<Unit>();
+        foreach(var u in unitsInRange)
+        {
+            if (u.PlayerNumber != unit.PlayerNumber)
+                enemiesInRange.Add(u);
+        }
+        return enemiesInRange;
+    }
+
+    public List<Unit> GetAllyUnitsInMeleeRange(Unit unit)
+    {
+        List<Unit> unitsInRange = GetUnitsInMeleeRange(unit);
+        List<Unit> enemiesInRange = new List<Unit>();
+        foreach (var u in unitsInRange)
+        {
+            if (u.PlayerNumber == unit.PlayerNumber)
+                enemiesInRange.Add(u);
+        }
+        return enemiesInRange;
+    }
+
+    //private List<Unit> GetUnitsInMeleeRange(Tile start, int range, int playerNumber)
+    //{
+    //    //Get the tiles within the range
+    //    Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, range, true, playerNumber);
+    //    if (tileDict == null)
+    //        return null;
+
+
+    //    return null;
+    //}
+
+    
+    //RANGE FUNCTIONS (NOT MOVEMENT BASED)
+
+
+    //Returns a list of all units in range passed including on the start tile
+    public List<Unit> GetUnitsInRange(Tile startTile, int range)
+    {
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(startTile, range);
+        List<Unit> units = new List<Unit>();
+        List<Tile> tiles = null;
+        if (tileDict != null)
+            tiles = new List<Tile>(tileDict.Keys);
+        foreach (var t in tiles)
+        {
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        }
+        return units;
+    }
+
+    //Returns a list of tiles that are within a given range
+    public List<Tile> GetTilesInRange(Tile startTile, int range)
+    {
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(startTile, range);
+        return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
+    }
+
     //Returns a list of tiles that represent a path from the start tile to the end tile
     public List<Tile> GetPath(Tile start, Tile end)
-    {     
+    {
         if (start == end)//Can't get a path from a tile to itself
             return null;
         //Use the size to ensure that range is unlimited regardless of the size of the map
@@ -207,7 +281,7 @@ public class Map : MonoBehaviour {
         List<Tile> path = new List<Tile>();
         path.Add(end);
         bool startFound = false;
-        while(nextTile != null && !startFound) //Walk back from end adding tiles to path
+        while (nextTile != null && !startFound) //Walk back from end adding tiles to path
         {
             path.Add(nextTile);
             if (nextTile == start)
@@ -260,10 +334,8 @@ public class Map : MonoBehaviour {
         if (adjacentTile)
             tiles.Add(adjacentTile);
 
-        //If there are tiles return them, else return null
-        return tiles.Count > 0 ? tiles : null;
+        return tiles;
     }
-
 
     //Resets all tiles in map to base color
     public void ResetTileColors()

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
@@ -75,6 +76,8 @@ public class GameManager : MonoBehaviour {
         GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
         obj.transform.parent = transform;
         unit = obj.GetComponent<Unit>();
+        unit.PlayerNumber = 0;
+
 
         //makes the unit a fighter
         unit.DefineUnit(UnitType.fighter);
@@ -86,6 +89,7 @@ public class GameManager : MonoBehaviour {
         obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
         obj.transform.parent = transform;
         unit = obj.GetComponent<Unit>();
+        unit.PlayerNumber = 0;
 
         //makes the unit a fighter
         unit.DefineUnit(UnitType.fighter);
@@ -119,6 +123,7 @@ public class GameManager : MonoBehaviour {
     //Display the active Units possible moves
     public void ShowCurrentPossibleMoves()
     {
+        //map.ResetTileColors();
         foreach (Tile tile in activeUnitPosMoves)
             tile.SetTileColor(Tile.TileColors.move);
     }
@@ -198,6 +203,37 @@ public class GameManager : MonoBehaviour {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
+    }
+
+
+    //TEST FUNCTIONS
+
+    public void DisplayMeleeRange()
+    {
+        map.ResetTileColors();
+        List<Tile> meleeRange = map.GetMeleeRange(activeUnit);
+        ColorTiles(meleeRange, Tile.TileColors.attack);
+        //ShowCurrentPossibleMoves();
+
+        List<Unit> allysInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
+        List<Unit> enemiesInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
+        foreach(var u in allysInRange)
+        {
+            u.CurrentTile.SetTileColor(Tile.TileColors.ally);
+        }
+    }
+
+    public void ColorTiles(List<Tile> tiles, Tile.TileColors color)
+    {
+        foreach(var t in tiles)
+        {
+            t.SetTileColor(color);
+        }
+    }
+
+    public void DisplayMovementRange()
+    {
+        ShowCurrentPossibleMoves();
     }
 
     //   public void MoveCurrentPlayer(Tile destinationTile) {
