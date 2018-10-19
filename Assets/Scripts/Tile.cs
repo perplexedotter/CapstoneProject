@@ -100,7 +100,7 @@ public class Tile : MonoBehaviour {
     }
 
     void OnMouseDown(){
-        GameManager.instance.TileClicked(this);
+        BattleManager.instance.TileClicked(this);
 	}
 
 

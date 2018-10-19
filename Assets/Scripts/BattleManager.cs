@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class BattleManager : MonoBehaviour {
 
     //Make avaliable in the editor
     [Header("Map Properties")]
@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
 
-    public static GameManager instance;
+    public static BattleManager instance;
 	[SerializeField] GameObject PlayerUnitPreFab;
     //public GameObject TilePreFab;
     //public GameObject NonPlayerUnitPreFab;
