@@ -18,7 +18,7 @@ public class Tile : MonoBehaviour {
     [SerializeField] Color attackRangeColor;
 
 
-    //TODO Possibly remove this. Tile may not need to care if unit is there and GameManager can handle that
+    //TODO Possibly remove this. Tile may not need to care if unit is there and BattleManager can handle that
     private Unit unitOnTile;
 
     Renderer[] childrenRenderers;
@@ -100,7 +100,7 @@ public class Tile : MonoBehaviour {
     }
 
     void OnMouseDown(){
-        GameManager.instance.TileClicked(this);
+        BattleManager.instance.TileClicked(this);
 	}
 
 
