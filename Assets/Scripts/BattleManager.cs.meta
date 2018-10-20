@@ -3,7 +3,13 @@ guid: b15808d886dfed24db50a0141617b310
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - map: {instanceID: 0}
+  - PlayerUnitPreFab: {instanceID: 0}
+  - NormalTilePreFab: {instanceID: 0}
+  - AsteroidTilePreFab: {fileID: 1417412251040802, guid: 27bc953f7e403044c83fa09287a1cfab,
+      type: 2}
+  - DebrisTilePreFab: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

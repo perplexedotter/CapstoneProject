@@ -7,11 +7,18 @@ public class BattleManager : MonoBehaviour {
     //Make avaliable in the editor
     [Header("Map Properties")]
     [SerializeField] int mapSize = 11;
+    [SerializeField] int numAsteroids = 3;
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
 
     public static BattleManager instance;
 	[SerializeField] GameObject PlayerUnitPreFab;
+
+    //prefabs for swapping tiles for new
+	[SerializeField] GameObject NormalTilePreFab;
+	[SerializeField] GameObject AsteroidTilePreFab;
+	[SerializeField] GameObject DebrisTilePreFab;
+
     //public GameObject TilePreFab;
     //public GameObject NonPlayerUnitPreFab;
 
@@ -38,6 +45,9 @@ public class BattleManager : MonoBehaviour {
 	void Start () {
 		GenerateUnits();
         activeUnit = units[unitIndex];
+        GameObject[] Tilelist;
+        Tilelist = GameObject.FindGameObjectsWithTag("Tile");
+        SwapPrefabs(Tilelist[Random.Range(0,Tilelist.Length)]);
 	}
 	
 	// Update is called once per frame
@@ -186,6 +196,29 @@ public class BattleManager : MonoBehaviour {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
+    }
+
+    // Swaps the desired oldGameObject for a newPrefab
+    // The old game object
+    void SwapPrefabs(GameObject oldGameObject)
+    {
+        // Determine the rotation and position values of the old game object.
+        // Replace rotation with Quaternion.identity if you do not wish to keep rotation.
+        Quaternion rotation = oldGameObject.transform.rotation;
+        Vector3 position = oldGameObject.transform.position;
+        // Instantiate the new game object at the old game objects position and rotation.
+        GameObject newGameObject = Instantiate(AsteroidTilePreFab, position, rotation);
+        // If the old game object has a valid parent transform,
+        // (You can remove this entire if statement if you do not wish to ensure your
+        // new game object does not keep the parent of the old game object.
+        if (oldGameObject.transform.parent != null)
+        {
+            // Set the new game object parent as the old game objects parent.
+            newGameObject.transform.SetParent(oldGameObject.transform.parent);
+        }
+
+        // Destroy the old game object, immediately, so it takes effect in the editor.
+        DestroyImmediate(oldGameObject);
     }
     //DEPRICATED use Map.GetTilesInRange instead
     ////Takes a unit and finds all tiles they could possibly move to

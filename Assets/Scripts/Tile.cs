@@ -7,7 +7,8 @@ using UnityEngine;
 public class Tile : MonoBehaviour {
 
     public enum TileColors { standard, move, attack }
-
+    public enum TileType { normal, asteroid }
+    
     private const int gridSize = 10;
 
     private Vector2Int gridPos;
@@ -16,6 +17,11 @@ public class Tile : MonoBehaviour {
     [SerializeField] Color baseColor;
     [SerializeField] Color moveRangeColor;
     [SerializeField] Color attackRangeColor;
+
+    [Header("Tile Prefabs")]
+    [SerializeField] GameObject normal;
+    [SerializeField] GameObject asteroid;
+    [SerializeField] GameObject debris;
 
 
     //TODO Possibly remove this. Tile may not need to care if unit is there and BattleManager can handle that

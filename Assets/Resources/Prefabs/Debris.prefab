@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 65693544023135266}
   - component: {fileID: 114334998026443132}
   m_Layer: 0
-  m_Name: Asteroid
+  m_Name: Debris
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -281,7 +281,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bda86cf283179534ebbb6c3062523872, type: 2}
+  - {fileID: 2100000, guid: 11c8405faff35234180132cf722e6fd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -316,7 +316,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bda86cf283179534ebbb6c3062523872, type: 2}
+  - {fileID: 2100000, guid: 11c8405faff35234180132cf722e6fd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -386,7 +386,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bda86cf283179534ebbb6c3062523872, type: 2}
+  - {fileID: 2100000, guid: 11c8405faff35234180132cf722e6fd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -421,7 +421,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bda86cf283179534ebbb6c3062523872, type: 2}
+  - {fileID: 2100000, guid: 11c8405faff35234180132cf722e6fd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -456,7 +456,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bda86cf283179534ebbb6c3062523872, type: 2}
+  - {fileID: 2100000, guid: 11c8405faff35234180132cf722e6fd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -491,7 +491,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: bda86cf283179534ebbb6c3062523872, type: 2}
+  - {fileID: 2100000, guid: 11c8405faff35234180132cf722e6fd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -696,8 +696,8 @@ MonoBehaviour:
   moveRangeColor: {r: 0, g: 0.9811321, b: 0.108579166, a: 0.5647059}
   attackRangeColor: {r: 1, g: 0, b: 0, a: 0.5803922}
   normal: {fileID: 1417412251040802, guid: a016727452de7bf49aeb5694f0b9145b, type: 2}
-  asteroid: {fileID: 1417412251040802}
-  debris: {fileID: 1417412251040802, guid: 2fed31a24bd2dfe4daffc4e38dc1e304, type: 2}
+  asteroid: {fileID: 1417412251040802, guid: 27bc953f7e403044c83fa09287a1cfab, type: 2}
+  debris: {fileID: 1417412251040802}
 --- !u!114 &114334998026443132
 MonoBehaviour:
   m_ObjectHideFlags: 1

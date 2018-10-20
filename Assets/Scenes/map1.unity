@@ -3668,9 +3668,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSize: 13
+  numAsteroids: 3
   unitHeightOffset: 1.5
   map: {fileID: 1645087134}
   PlayerUnitPreFab: {fileID: 1781235026215494, guid: f2e9cf4ae9d8c0d409c97766e62772a6,
+    type: 2}
+  NormalTilePreFab: {fileID: 1417412251040802, guid: a016727452de7bf49aeb5694f0b9145b,
+    type: 2}
+  AsteroidTilePreFab: {fileID: 1417412251040802, guid: 27bc953f7e403044c83fa09287a1cfab,
+    type: 2}
+  DebrisTilePreFab: {fileID: 1417412251040802, guid: 2fed31a24bd2dfe4daffc4e38dc1e304,
     type: 2}
 --- !u!4 &982764463
 Transform:
