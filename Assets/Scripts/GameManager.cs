@@ -51,6 +51,9 @@ public class GameManager : MonoBehaviour {
         UpdateActiveUnit();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
+
+        //decrements that status of active unit
+        activeUnit.DecrementStatuses();
     }
 
     private void UpdateActiveUnit()
@@ -62,22 +65,22 @@ public class GameManager : MonoBehaviour {
         activeUnit = units[unitIndex];
     }
 
-    public void MoveCurrentPlayer(Tile destinationTile) {
-        activeUnit.MoveToTile(destinationTile);
-	}
+ //   public void MoveCurrentPlayer(Tile destinationTile) {
+ //       activeUnit.MoveToTile(destinationTile);
+	//}
 
 	//this will create the units on the map for this level
 	void GenerateUnits(){
 		Unit unit;
-		//NonPlayerUnit npc;
-
-		unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(0-Mathf.Floor(MapSize/2), 1.5f, 0+Mathf.Floor(MapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+        //NonPlayerUnit npc;
+        GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+        obj.transform.parent = transform;
+        unit = obj.GetComponent<Unit>();
+		//unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
 
         //makes the unit a fighter
-        unit.defineUnit(unitType.fighter);
+        unit.DefineUnit(UnitType.fighter);
 
-        //Test Map System
-        //unit.MoveToTile(map.GetTileByCoord(5, 5));
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
         units.Add(unit);
         nextTurn();
@@ -116,13 +119,14 @@ public class GameManager : MonoBehaviour {
         //TODO Add logic for attacking and abilities
         if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving && tile != activeUnit.CurrentTile)
         {
-            activeUnit.MoveToTile(tile);
+            activeUnit.TraversePath(map.GetPath(activeUnit.CurrentTile, tile));
+            //activeUnit.MoveToTile(tile);
             //TODO Move this logic elsewhere
         }
     }
 
     public void FinishedMovement()
-    {
+    { 
         nextTurn();
     }
 
@@ -135,8 +139,8 @@ public class GameManager : MonoBehaviour {
     //add short range module to active unit
     public void addShortRangeModule()
     {
-        activeUnit.addModule(new Module(ModuleName.shortRange));
-        Debug.Log("HP:" + activeUnit.getHP() + "  Mass:" + activeUnit.getMass() + "  Attack:" + activeUnit.getAttack());
+        activeUnit.AddModule(new MeleeAttackModule());
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -145,7 +149,7 @@ public class GameManager : MonoBehaviour {
     //remove short ranged module from active unit
     public void removeShortRangeModule()
     {
-        activeUnit.removeModule(ModuleName.shortRange);
+        activeUnit.RemoveModule(ModuleName.shortRange);
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -154,12 +158,35 @@ public class GameManager : MonoBehaviour {
     //remove all modules from active unit
     public void removeAllModules()
     {
-        activeUnit.removeAllModules();
+        activeUnit.RemoveAllModules();
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
     }
 
+    //Example of how to add status effect 
+    public void addStatusEffect()
+    {
+        //for testing
+        activeUnit.AddStatus(new StatusEffects(5, 100, statusType.mass));
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //for testing getAction of activeUnit
+    public void getActions()
+    {
+        List<Action> action = activeUnit.getActions();
+    }
+
+    //for testing taking damage
+    public void takeDamage()
+    {
+        Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
+        activeUnit.TakeDamage(50);
+        Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
+    }
     //DEPRICATED use Map.GetTilesInRange instead
     ////Takes a unit and finds all tiles they could possibly move to
     //public List<Tile> GetPossibleMoves(Unit unit)

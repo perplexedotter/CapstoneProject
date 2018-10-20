@@ -143,7 +143,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  childRenderers: []
 --- !u!114 &114721051503195952
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -155,13 +154,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b1a0b2dacdb3045a0fb90ae0a63f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heightOffset: {x: 0, y: 0, z: 0}
-  moveDestination: {x: 0, y: 0, z: 0}
+  collider: {fileID: 136690161165329542}
   moveSpeed: 100
-  movementTolerance: 0.25
+  movementTolerance: 1
   playerNumber: 0
   hitPoints: 0
-  collider: {fileID: 136690161165329542}
+  damageTaken: 0
+  attack: 0
+  speed: 0
+  mass: 0
+  shields: 0
+  hardPoints: 0
 --- !u!136 &136690161165329542
 CapsuleCollider:
   m_ObjectHideFlags: 1
