@@ -7,7 +7,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour {
 
     public enum TileColors { standard, move, attack }
-    public enum TileType { normal, asteroid }
+    public enum TileType { normal, asteroid, debris }
     
     private const int gridSize = 10;
 
