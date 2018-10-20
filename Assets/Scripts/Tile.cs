@@ -19,9 +19,7 @@ public class Tile : MonoBehaviour {
     [SerializeField] Color attackRangeColor;
 
     [Header("Tile Prefabs")]
-    [SerializeField] GameObject normal;
-    [SerializeField] GameObject asteroid;
-    [SerializeField] GameObject debris;
+    [SerializeField] TileType type;
 
 
     //TODO Possibly remove this. Tile may not need to care if unit is there and BattleManager can handle that
