@@ -73,6 +73,7 @@ public class Map : MonoBehaviour {
         HashSet<TileSearchField> tilesInRange = new HashSet<TileSearchField>();
         Queue<TileSearchField> tileQueue = new Queue<TileSearchField>();
         tileQueue.Enqueue(toSearch[startTile.GetGridPos()]);
+        tilesInRange.Add(toSearch[startTile.GetGridPos()]);
 
         //While there are tiles to search and range hasn't been exceed loop
         while (range > 0 && tileQueue.Count > 0)
