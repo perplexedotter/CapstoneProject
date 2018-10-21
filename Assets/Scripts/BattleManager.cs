@@ -159,7 +159,6 @@ public class BattleManager : MonoBehaviour {
     public void FinishedMovement()
     {
         //TODO AI won't move unit directly this is just a test
-        //if(ai.FinishedMovement())
         //if (activeUnit.AIUnit)
         //    ai.FinishedMovement();
         NextTurn();
@@ -184,7 +183,7 @@ public class BattleManager : MonoBehaviour {
     //remove short ranged module from active unit
     public void removeShortRangeModule()
     {
-        activeUnit.RemoveModule(ModuleName.shortRange);
+        activeUnit.RemoveModule(ModuleType.shortRange);
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -212,7 +211,7 @@ public class BattleManager : MonoBehaviour {
     //for testing getAction of activeUnit
     public void getActions()
     {
-        List<Action> action = activeUnit.getActions();
+        List<Action> action = activeUnit.GetActions();
     }
 
     //for testing taking damage

@@ -8,15 +8,15 @@ public class SlowModule : Module {
     //We can change stats as necessary for balance
     public SlowModule()
     {
-        ModuleName = ModuleName.slow;
+        ModuleType = ModuleType.slow;
         HitPoints = 25;
         Mass = 100;
-        action = new Action(ActionType.Slow, 0, 1);
+        Action = new Action(ActionType.Slow, 0, 1);
     }
 
     public override Action GetAction()
     {
-        return action;
+        return Action;
     }
     // Use this for initialization
     void Start () {

@@ -358,6 +358,23 @@ public class Map : MonoBehaviour {
         return adjacent;
     }
 
+    public List<Unit> GetAdjacentUnits(Unit unit)
+    {
+        return GetAdjacentUnits(unit.CurrentTile);
+    }
+
+    public List<Unit> GetAdjacentUnits(Tile tile)
+    {
+        List<Tile> tilesAroundUnit = GetSurroundingTiles(tile);
+        List<Unit> units = new List<Unit>();
+        foreach (var t in tilesAroundUnit)
+        {
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        }
+        return units;
+    }
+
     //Resets all tiles in map to base color
     public void ResetTileColors()
     {

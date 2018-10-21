@@ -8,15 +8,15 @@ public class MeleeAttackModule : Module {
     //We can change stats as necessary for balance
     public MeleeAttackModule()
     {
-        ModuleName = ModuleName.shortRange;
+        ModuleType = ModuleType.shortRange;
         HitPoints = 25;
         Mass = 100;
-        action = new Action(ActionType.ShortAttack, 25, 1);
+        Action = new Action(ActionType.ShortAttack, 25, 1);
     }
 
     public override Action GetAction()
     {
-        return action;
+        return Action;
     }
     // Use this for initialization
     void Start () {

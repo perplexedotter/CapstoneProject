@@ -81,16 +81,27 @@ public class Unit : MonoBehaviour {
         damageTaken += dmg;
         return(GetHP() - damageTaken);
     }
+
+    public List<ModuleType> GetModuleTypes()
+    {
+        HashSet<ModuleType> moduleTypes = new HashSet<ModuleType>();
+        foreach(var m in modules)
+        {
+            moduleTypes.Add(m.ModuleType);
+        }
+        return new List<ModuleType>(moduleTypes);
+    }
+
     //returns list of actions
     //will combine actions into more powerful one
-    public List<Action> getActions()
+    public List<Action> GetActions()
     {
         List<Action> actions = new List<Action>();
         List<Action> actionsSorted = new List<Action>();
 
         for (int i = 0; i < modules.Count; i++)
         {
-            actions.Add(modules[i].action);
+            actions.Add(modules[i].Action);
         }
 
         actionsSorted = actions.OrderBy(o => o.Type).ToList();
@@ -158,11 +169,11 @@ public class Unit : MonoBehaviour {
     }
 
     //remove specific module from list (if it is in list)
-    public void RemoveModule(ModuleName module)
+    public void RemoveModule(ModuleType module)
     {
         for(int i = 0; i < modules.Count; i++)
         {
-            if(modules[i].ModuleName == module)
+            if(modules[i].ModuleType == module)
             {
                 modules.RemoveAt(i);
                 break;
