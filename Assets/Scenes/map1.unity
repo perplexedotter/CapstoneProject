@@ -6427,9 +6427,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTarget: {x: 45, y: 0, z: 45}
-  zoomSpeed: 1
-  minZoom: 40
-  maxZoom: 100
+  zoomSpeed: 20
+  panSpeed: 20
+  minZoom: 20
+  maxZoom: 60
 --- !u!1001 &1503790944
 Prefab:
   m_ObjectHideFlags: 0
