@@ -109,11 +109,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b1a0b2dacdb3045a0fb90ae0a63f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heightOffset: {x: 0, y: 0, z: 0}
-  moveDestination: {x: 0, y: 0, z: 0}
+  collider: {fileID: 0}
   moveSpeed: 50
+  movementTolerance: 1
+  currentTile: {fileID: 0}
   playerNumber: 0
   hitPoints: 0
+  damageTaken: 0
+  attack: 0
+  speed: 0
+  mass: 0
+  shields: 0
+  hardPoints: 0
+  movementRange: 0
 --- !u!136 &136296572209650672
 CapsuleCollider:
   m_ObjectHideFlags: 1

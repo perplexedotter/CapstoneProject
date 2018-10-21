@@ -54,11 +54,11 @@ public class Map : MonoBehaviour {
 
     private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range)
     {
-        return RangeLimitedSearch(startTile, range, false, -1);
+        return RangeLimitedSearch(startTile, range, false, true, -1);
     }
 
     //TODO Possibly Change to dijkstra
-    private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range, bool movement, int playerNumber){
+    private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range, bool movement, bool traverseAsteroid, int playerNumber){
         if (range <= 0 || startTile == null)
             return null;
 
@@ -95,10 +95,15 @@ public class Map : MonoBehaviour {
                     //If this is a movement search do not allow the search to pass through units the player doesn't own
                     if (!tsf.visited && (!movement || tsf.Tile.UnitOnTile == null || tsf.Tile.UnitOnTile.PlayerNumber == playerNumber))
                     {
-                        
-                        tsf.exploredFrom = tileToExamine.Tile;
-                        tilesInRange.Add(tsf);
-                        currentTiles.Add(tsf);
+                        //If the search can traverse Asteroids or the tile is not an Asteroid add to range
+                        //TODO expand to better account for asteroids and other tiles if needed
+                        if(traverseAsteroid || tsf.Tile.Type != Tile.TileType.asteroid)
+                        {
+                            tsf.exploredFrom = tileToExamine.Tile;
+                            tilesInRange.Add(tsf);
+                            currentTiles.Add(tsf);
+                        }
+
                     }
                     /*If this is a movement search and there is an enemy on the tile add it to the tilesInRange
                      *But mark it as visited so that it won't be counted for movement but will be accounted for
@@ -133,7 +138,7 @@ public class Map : MonoBehaviour {
 
     public List<Tile> GetMovementRange(Unit unit)
     {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange(), true, unit.PlayerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange(), true, false, unit.PlayerNumber);
         if (tileDict == null)
             return null;
         List<Tile> tilesInRange = new List<Tile>();
@@ -156,7 +161,7 @@ public class Map : MonoBehaviour {
         if (start == end)//Can't get a path from a tile to itself
             return null;
         //Use the size to ensure that range is unlimited regardless of the size of the map
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, mapDict.Count, true, playerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, mapDict.Count, true, false, playerNumber);
         if (tileDict == null)
             return null;
 
@@ -187,7 +192,7 @@ public class Map : MonoBehaviour {
 
     public List<Tile> GetMeleeRange(Unit unit)
     {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange() + 1, true, unit.PlayerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange() + 1, true, false, unit.PlayerNumber);
         return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
     }
 
@@ -229,17 +234,6 @@ public class Map : MonoBehaviour {
         }
         return enemiesInRange;
     }
-
-    //private List<Unit> GetUnitsInMeleeRange(Tile start, int range, int playerNumber)
-    //{
-    //    //Get the tiles within the range
-    //    Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, range, true, playerNumber);
-    //    if (tileDict == null)
-    //        return null;
-
-
-    //    return null;
-    //}
 
     
     //RANGE FUNCTIONS (NOT MOVEMENT BASED)
