@@ -19,20 +19,22 @@ public class Unit : MonoBehaviour {
 
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
-    [SerializeField] protected int playerNumber;
-    [SerializeField] protected float hitPoints;
-    [SerializeField] protected float damageTaken;
-    [SerializeField] protected float attack;
-    [SerializeField] protected float speed;
-    [SerializeField] protected float mass;
-    [SerializeField] protected float shields;
-    [SerializeField] protected float hardPoints;
+    [SerializeField] protected int playerNumber = 0;
+    [SerializeField] protected UnitType type;
+    [SerializeField] protected float hitPoints = 100;
+    [SerializeField] protected float damageTaken = 0;
+    [SerializeField] protected float attack = 0;
+    [SerializeField] protected float speed = 100;
+    [SerializeField] protected float mass = 400;
+    [SerializeField] protected float shields = 0;
+    [SerializeField] protected float hardPoints = 0;
     [SerializeField] protected int movementRange;
 
-    protected UnitType type;
-    protected List<Module> modules;
-    protected List<StatusEffects> statuses;
-    //[SerializeField] private int movementRange = 4;
+    [Header("Modules and Statuses")]
+    [SerializeField] protected List<Module> modules;
+    [SerializeField] protected List<StatusEffects> statuses;
+
+    //Movement fields
     private bool isMoving = false;
     protected bool movementFinished = false;
     private List<Tile> path;

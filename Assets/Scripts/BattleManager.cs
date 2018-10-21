@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] int mapSize = 11;
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
+    [SerializeField] AIController ai;
 
     public static BattleManager instance;
 	[SerializeField] GameObject PlayerUnitPreFab;
@@ -38,13 +40,19 @@ public class BattleManager : MonoBehaviour {
 		instance = this;		
 	}
 	void Start () {
-		GenerateUnits();
+        //GenerateUnits();
+        GetUnits();
         activeUnit = units[unitIndex];
 	}
-	
-	// Update is called once per frame
+
+    private void GetUnits()
+    {
+        throw new NotImplementedException();
+    }
+
+    // Update is called once per frame
     //TODO move this out of update
-	void Update () {
+    void Update () {
 		//units[unitIndex].TurnUpdate();
 	}
 	public void nextTurn()
