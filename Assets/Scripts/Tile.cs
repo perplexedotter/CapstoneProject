@@ -6,20 +6,29 @@ using UnityEngine;
 [SelectionBase]
 public class Tile : MonoBehaviour {
 
-    public enum TileColors { standard, move, attack }
+    public enum TileColor { standard, move, attack, ally }
+    public enum TileType { normal, asteroid, debris}
 
     private const int gridSize = 10;
 
     private Vector2Int gridPos;
 
+    [SerializeField] Unit unitOnTile;
+    [SerializeField] TileType type;
+
+
     [Header("Material Colors")]
     [SerializeField] Color baseColor;
     [SerializeField] Color moveRangeColor;
     [SerializeField] Color attackRangeColor;
+    [SerializeField] Color enemyColor;
+    [SerializeField] Color allyColor;
 
+    //[Header("Tile Type Prefabs")]
+    //[SerializeField] GameObject normalTilePrefab;
+    //[SerializeField] GameObject asteroidTilePrefab;
+    //[SerializeField] GameObject debrisTilePrefab;
 
-    //TODO Possibly remove this. Tile may not need to care if unit is there and GameManager can handle that
-    private Unit unitOnTile;
 
     Renderer[] childrenRenderers;
 
@@ -61,6 +70,19 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public TileType Type
+    {
+        get
+        {
+            return type;
+        }
+
+        set
+        {
+            type = value;
+        }
+    }
+
     //TODO Clean up coordianate systems
     private void Awake()
     {
@@ -99,8 +121,9 @@ public class Tile : MonoBehaviour {
         );
     }
 
+    //TODO Convert to SendMessageUpwards
     void OnMouseDown(){
-        GameManager.instance.TileClicked(this);
+        BattleManager.instance.TileClicked(this);
 	}
 
 
@@ -112,18 +135,21 @@ public class Tile : MonoBehaviour {
 
 
     //COLOR FUNCTIONS
-    public void SetTileColor(TileColors color)
+    public void SetTileColor(TileColor color)
     {
         switch (color)
         {
-            case TileColors.standard:
+            case TileColor.standard:
                 SetColor(baseColor);
                 break;
-            case TileColors.move:
+            case TileColor.move:
                 SetColor(moveRangeColor);
                 break;
-            case TileColors.attack:
+            case TileColor.attack:
                 SetColor(attackRangeColor);
+                break;
+            case TileColor.ally:
+                SetColor(allyColor);
                 break;
             default:
                 SetColor(baseColor);
