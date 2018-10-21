@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour {
@@ -12,12 +13,13 @@ public class BattleManager : MonoBehaviour {
 
     public static BattleManager instance;
 	[SerializeField] GameObject PlayerUnitPreFab;
+	[SerializeField] GameObject Player2UnitPreFab;
+
     //public GameObject TilePreFab;
     //public GameObject NonPlayerUnitPreFab;
 
     private List<Tile> activeUnitPosMoves;
 
-    //Create tile and char lists
 	List<Unit> units = new List<Unit>();
     Unit activeUnit;
 	int unitIndex = 0;
@@ -65,37 +67,48 @@ public class BattleManager : MonoBehaviour {
         activeUnit = units[unitIndex];
     }
 
- //   public void MoveCurrentPlayer(Tile destinationTile) {
- //       activeUnit.MoveToTile(destinationTile);
-	//}
+
 
 	//this will create the units on the map for this level
 	void GenerateUnits(){
 		Unit unit;
-        //NonPlayerUnit npc;
+        //Unit 0
         GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
         obj.transform.parent = transform;
         unit = obj.GetComponent<Unit>();
-		//unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()))).GetComponent<Unit>();
+        unit.PlayerNumber = 0;
+
 
         //makes the unit a fighter
         unit.DefineUnit(UnitType.fighter);
 
         unit.PlaceOnTile(map.GetTileByCoord(5, 1));
         units.Add(unit);
+
+        //Unit 1
+        obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+        obj.transform.parent = transform;
+        unit = obj.GetComponent<Unit>();
+        unit.PlayerNumber = 0;
+
+        //makes the unit a fighter
+        unit.DefineUnit(UnitType.fighter);
+
+        unit.PlaceOnTile(map.GetTileByCoord(2, 2));
+        units.Add(unit);
+
+        //Unit 2
+        obj = Instantiate(Player2UnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+        obj.transform.parent = transform;
+        unit = obj.GetComponent<Unit>();
+
+        //makes the unit a fighter
+        unit.DefineUnit(UnitType.fighter);
+        unit.PlayerNumber = 1;
+
+        unit.PlaceOnTile(map.GetTileByCoord(1, 1));
+        units.Add(unit);
         nextTurn();
-
-        //unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -(mapSize - 1) + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerUnit>();
-        //unit.MoveToTile(map.GetTileByCoord(0, 0));
-        //units.Add(unit);
-
-        //Removed Extra units for clarity
-
-        //unit = ((GameObject)Instantiate(PlayerUnitPreFab, new Vector3(4-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<PlayerUnit>();			
-        //units.Add(unit);
-
-        //npc = ((GameObject)Instantiate(NonPlayerUnitPreFab, new Vector3(12-Mathf.Floor(mapSize/2), 1.5f, -4+Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<NonPlayerUnit>();			
-        //units.Add(npc);
     }
 
     
@@ -103,12 +116,14 @@ public class BattleManager : MonoBehaviour {
     //Update the active Units possible moves
     public void UpdateCurrentPossibleMoves()
     {
-        activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
+        //activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
+        activeUnitPosMoves = map.GetMovementRange(activeUnit);
     }
 
     //Display the active Units possible moves
     public void ShowCurrentPossibleMoves()
     {
+        //map.ResetTileColors();
         foreach (Tile tile in activeUnitPosMoves)
             tile.SetTileColor(Tile.TileColors.move);
     }
@@ -117,14 +132,16 @@ public class BattleManager : MonoBehaviour {
     public void TileClicked(Tile tile)
     {
         //TODO Add logic for attacking and abilities
-        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) && !activeUnit.IsMoving && tile != activeUnit.CurrentTile)
+        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) 
+            && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
+            && tile.UnitOnTile == null)
         {
-            activeUnit.TraversePath(map.GetPath(activeUnit.CurrentTile, tile));
-            //activeUnit.MoveToTile(tile);
             //TODO Move this logic elsewhere
+            activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
         }
     }
 
+    //TODO Have Battle Manager record this and then determine what to do
     public void FinishedMovement()
     { 
         nextTurn();
@@ -187,6 +204,42 @@ public class BattleManager : MonoBehaviour {
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
     }
+
+
+    //TEST FUNCTIONS
+
+    public void DisplayMeleeRange()
+    {
+        map.ResetTileColors();
+        List<Tile> meleeRange = map.GetMeleeRange(activeUnit);
+        ColorTiles(meleeRange, Tile.TileColors.attack);
+        //ShowCurrentPossibleMoves();
+
+        List<Unit> allysInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
+        List<Unit> enemiesInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
+        foreach(var u in allysInRange)
+        {
+            u.CurrentTile.SetTileColor(Tile.TileColors.ally);
+        }
+    }
+
+    public void ColorTiles(List<Tile> tiles, Tile.TileColors color)
+    {
+        foreach(var t in tiles)
+        {
+            t.SetTileColor(color);
+        }
+    }
+
+    public void DisplayMovementRange()
+    {
+        ShowCurrentPossibleMoves();
+    }
+
+    //   public void MoveCurrentPlayer(Tile destinationTile) {
+    //       activeUnit.MoveToTile(destinationTile);
+    //}
+
     //DEPRICATED use Map.GetTilesInRange instead
     ////Takes a unit and finds all tiles they could possibly move to
     //public List<Tile> GetPossibleMoves(Unit unit)

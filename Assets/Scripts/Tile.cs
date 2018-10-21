@@ -6,20 +6,26 @@ using UnityEngine;
 [SelectionBase]
 public class Tile : MonoBehaviour {
 
-    public enum TileColors { standard, move, attack }
+    public enum TileColors { standard, move, attack, ally }
+    public enum TileTypes { normal, asteroid, debris}
 
     private const int gridSize = 10;
 
     private Vector2Int gridPos;
 
+    [SerializeField] Unit unitOnTile;
+
     [Header("Material Colors")]
     [SerializeField] Color baseColor;
     [SerializeField] Color moveRangeColor;
     [SerializeField] Color attackRangeColor;
+    [SerializeField] Color enemyColor;
+    [SerializeField] Color allyColor;
 
-
-    //TODO Possibly remove this. Tile may not need to care if unit is there and GameManager can handle that
-    private Unit unitOnTile;
+    [Header("Tile Type Prefabs")]
+    [SerializeField] GameObject normalTilePrefab;
+    [SerializeField] GameObject asteroidTilePrefab;
+    [SerializeField] GameObject debrisTilePrefab;
 
     Renderer[] childrenRenderers;
 
@@ -99,6 +105,7 @@ public class Tile : MonoBehaviour {
         );
     }
 
+    //TODO Convert to SendMessageUpwards
     void OnMouseDown(){
         BattleManager.instance.TileClicked(this);
 	}
@@ -124,6 +131,9 @@ public class Tile : MonoBehaviour {
                 break;
             case TileColors.attack:
                 SetColor(attackRangeColor);
+                break;
+            case TileColors.ally:
+                SetColor(allyColor);
                 break;
             default:
                 SetColor(baseColor);
