@@ -125,7 +125,7 @@ public class BattleManager : MonoBehaviour {
     {
         //map.ResetTileColors();
         foreach (Tile tile in activeUnitPosMoves)
-            tile.SetTileColor(Tile.TileColors.move);
+            tile.SetTileColor(Tile.TileColor.move);
     }
 
     //Respond to use clicking on a tile
@@ -212,18 +212,18 @@ public class BattleManager : MonoBehaviour {
     {
         map.ResetTileColors();
         List<Tile> meleeRange = map.GetMeleeRange(activeUnit);
-        ColorTiles(meleeRange, Tile.TileColors.attack);
+        ColorTiles(meleeRange, Tile.TileColor.attack);
         //ShowCurrentPossibleMoves();
 
         List<Unit> allysInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
         List<Unit> enemiesInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
         foreach(var u in allysInRange)
         {
-            u.CurrentTile.SetTileColor(Tile.TileColors.ally);
+            u.CurrentTile.SetTileColor(Tile.TileColor.ally);
         }
     }
 
-    public void ColorTiles(List<Tile> tiles, Tile.TileColors color)
+    public void ColorTiles(List<Tile> tiles, Tile.TileColor color)
     {
         foreach(var t in tiles)
         {

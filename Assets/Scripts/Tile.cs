@@ -6,14 +6,16 @@ using UnityEngine;
 [SelectionBase]
 public class Tile : MonoBehaviour {
 
-    public enum TileColors { standard, move, attack, ally }
-    public enum TileTypes { normal, asteroid, debris}
+    public enum TileColor { standard, move, attack, ally }
+    public enum TileType { normal, asteroid, debris}
 
     private const int gridSize = 10;
 
     private Vector2Int gridPos;
 
     [SerializeField] Unit unitOnTile;
+    [SerializeField] TileType type;
+
 
     [Header("Material Colors")]
     [SerializeField] Color baseColor;
@@ -22,10 +24,11 @@ public class Tile : MonoBehaviour {
     [SerializeField] Color enemyColor;
     [SerializeField] Color allyColor;
 
-    [Header("Tile Type Prefabs")]
-    [SerializeField] GameObject normalTilePrefab;
-    [SerializeField] GameObject asteroidTilePrefab;
-    [SerializeField] GameObject debrisTilePrefab;
+    //[Header("Tile Type Prefabs")]
+    //[SerializeField] GameObject normalTilePrefab;
+    //[SerializeField] GameObject asteroidTilePrefab;
+    //[SerializeField] GameObject debrisTilePrefab;
+
 
     Renderer[] childrenRenderers;
 
@@ -64,6 +67,19 @@ public class Tile : MonoBehaviour {
         set
         {
             unitOnTile = value;
+        }
+    }
+
+    public TileType Type
+    {
+        get
+        {
+            return type;
+        }
+
+        set
+        {
+            type = value;
         }
     }
 
@@ -119,20 +135,20 @@ public class Tile : MonoBehaviour {
 
 
     //COLOR FUNCTIONS
-    public void SetTileColor(TileColors color)
+    public void SetTileColor(TileColor color)
     {
         switch (color)
         {
-            case TileColors.standard:
+            case TileColor.standard:
                 SetColor(baseColor);
                 break;
-            case TileColors.move:
+            case TileColor.move:
                 SetColor(moveRangeColor);
                 break;
-            case TileColors.attack:
+            case TileColor.attack:
                 SetColor(attackRangeColor);
                 break;
-            case TileColors.ally:
+            case TileColor.ally:
                 SetColor(allyColor);
                 break;
             default:
