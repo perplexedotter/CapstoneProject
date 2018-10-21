@@ -86,7 +86,7 @@ public class Tile : MonoBehaviour {
     //TODO Clean up coordianate systems
     private void Awake()
     {
-        UnitOnTile = null;
+        //UnitOnTile = null;
         gridPos = GetGridPos();
     }
 

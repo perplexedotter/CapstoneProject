@@ -20,6 +20,7 @@ public class Unit : MonoBehaviour {
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
     [SerializeField] protected int playerNumber = 0;
+    [SerializeField] private bool aIUnit = false;
     [SerializeField] protected UnitType type;
     [SerializeField] protected float hitPoints = 100;
     [SerializeField] protected float damageTaken = 0;
@@ -31,8 +32,8 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected int movementRange;
 
     [Header("Modules and Statuses")]
-    [SerializeField] protected List<Module> modules;
-    [SerializeField] protected List<StatusEffects> statuses;
+    [SerializeField] protected List<Module> modules = new List<Module>();
+    [SerializeField] protected List<StatusEffects> statuses = new List<StatusEffects>();
 
     //Movement fields
     private bool isMoving = false;
@@ -59,8 +60,8 @@ public class Unit : MonoBehaviour {
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
     {
-        modules = new List<Module>();
-        statuses = new List<StatusEffects>();
+        //modules = new List<Module>();
+        //statuses = new List<StatusEffects>();
         if (UnitType.fighter == Type)
         {
             hitPoints = 100;
@@ -255,6 +256,14 @@ public class Unit : MonoBehaviour {
         set
         {
             playerNumber = value;
+        }
+    }
+
+    public bool AIUnit
+    {
+        get
+        {
+            return aIUnit;
         }
     }
 

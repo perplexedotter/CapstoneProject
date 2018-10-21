@@ -41,13 +41,16 @@ public class BattleManager : MonoBehaviour {
 	}
 	void Start () {
         //GenerateUnits();
-        GetUnits();
+        AddUnitsFromMap();
+        NextTurn();
         activeUnit = units[unitIndex];
 	}
 
-    private void GetUnits()
+    private void AddUnitsFromMap()
     {
-        throw new NotImplementedException();
+        List<Unit> unitsFromMap = map.GetAllUnits();
+        foreach (var u in unitsFromMap)
+            units.Add(u);
     }
 
     // Update is called once per frame
@@ -55,13 +58,16 @@ public class BattleManager : MonoBehaviour {
     void Update () {
 		//units[unitIndex].TurnUpdate();
 	}
-	public void nextTurn()
+	public void NextTurn()
     {
         map.ResetTileColors();
         UpdateActiveUnit();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
-
+        if (activeUnit.AIUnit)
+        {
+            ai.GetAIActions(activeUnit);
+        }
         //decrements that status of active unit
         activeUnit.DecrementStatuses();
     }
@@ -116,7 +122,7 @@ public class BattleManager : MonoBehaviour {
 
         unit.PlaceOnTile(map.GetTileByCoord(1, 1));
         units.Add(unit);
-        nextTurn();
+        NextTurn();
     }
 
     
@@ -142,7 +148,7 @@ public class BattleManager : MonoBehaviour {
         //TODO Add logic for attacking and abilities
         if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) 
             && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
-            && tile.UnitOnTile == null)
+            && tile.UnitOnTile == null && !activeUnit.AIUnit)
         {
             //TODO Move this logic elsewhere
             activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
@@ -151,8 +157,12 @@ public class BattleManager : MonoBehaviour {
 
     //TODO Have Battle Manager record this and then determine what to do
     public void FinishedMovement()
-    { 
-        nextTurn();
+    {
+        //TODO AI won't move unit directly this is just a test
+        //if(ai.FinishedMovement())
+        //if (activeUnit.AIUnit)
+        //    ai.FinishedMovement();
+        NextTurn();
     }
 
     //TODO add context dependent actions for unit clicks
