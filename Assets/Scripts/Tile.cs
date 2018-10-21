@@ -7,6 +7,7 @@ using UnityEngine;
 public class Tile : MonoBehaviour {
 
     public enum TileColors { standard, move, attack, ally }
+    public enum TileTypes { normal, asteroid, debris}
 
     private const int gridSize = 10;
 
@@ -20,6 +21,11 @@ public class Tile : MonoBehaviour {
     [SerializeField] Color attackRangeColor;
     [SerializeField] Color enemyColor;
     [SerializeField] Color allyColor;
+
+    [Header("Tile Type Prefabs")]
+    [SerializeField] GameObject normalTilePrefab;
+    [SerializeField] GameObject asteroidTilePrefab;
+    [SerializeField] GameObject debrisTilePrefab;
 
     Renderer[] childrenRenderers;
 
@@ -101,7 +107,7 @@ public class Tile : MonoBehaviour {
 
     //TODO Convert to SendMessageUpwards
     void OnMouseDown(){
-        GameManager.instance.TileClicked(this);
+        BattleManager.instance.TileClicked(this);
 	}
 
 
