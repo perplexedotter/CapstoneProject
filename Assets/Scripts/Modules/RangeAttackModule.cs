@@ -8,15 +8,15 @@ public class RangeAttackModule : Module {
     //We can change stats as necessary for balance
     public RangeAttackModule()
     {
-        ModuleName = ModuleName.longRange;
+        ModuleType = ModuleType.longRange;
         HitPoints = 0;
         Mass = 200;
-        action = new Action(ActionType.LongAttack, 25, 2);
+        Action = new Action(ActionType.LongAttack, 25, 2);
     }
 
     public override Action GetAction()
     {
-        return action;
+        return Action;
     }
     // Use this for initialization
     void Start () {

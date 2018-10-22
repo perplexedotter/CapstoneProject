@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] int mapSize = 11;
     [SerializeField] float unitHeightOffset = 1.5f;
     [SerializeField] Map map;
+    [SerializeField] AIController ai;
 
     public static BattleManager instance;
 	[SerializeField] GameObject PlayerUnitPreFab;
@@ -38,22 +40,34 @@ public class BattleManager : MonoBehaviour {
 		instance = this;		
 	}
 	void Start () {
-		GenerateUnits();
+        //GenerateUnits();
+        AddUnitsFromMap();
+        NextTurn();
         activeUnit = units[unitIndex];
 	}
-	
-	// Update is called once per frame
+
+    private void AddUnitsFromMap()
+    {
+        List<Unit> unitsFromMap = map.GetAllUnits();
+        foreach (var u in unitsFromMap)
+            units.Add(u);
+    }
+
+    // Update is called once per frame
     //TODO move this out of update
-	void Update () {
+    void Update () {
 		//units[unitIndex].TurnUpdate();
 	}
-	public void nextTurn()
+	public void NextTurn()
     {
         map.ResetTileColors();
         UpdateActiveUnit();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
-
+        if (activeUnit.AIUnit)
+        {
+            ai.GetAIActions(activeUnit);
+        }
         //decrements that status of active unit
         activeUnit.DecrementStatuses();
     }
@@ -108,7 +122,7 @@ public class BattleManager : MonoBehaviour {
 
         unit.PlaceOnTile(map.GetTileByCoord(1, 1));
         units.Add(unit);
-        nextTurn();
+        NextTurn();
     }
 
     
@@ -134,7 +148,7 @@ public class BattleManager : MonoBehaviour {
         //TODO Add logic for attacking and abilities
         if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) 
             && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
-            && tile.UnitOnTile == null)
+            && tile.UnitOnTile == null && !activeUnit.AIUnit)
         {
             //TODO Move this logic elsewhere
             activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
@@ -143,8 +157,11 @@ public class BattleManager : MonoBehaviour {
 
     //TODO Have Battle Manager record this and then determine what to do
     public void FinishedMovement()
-    { 
-        nextTurn();
+    {
+        //TODO AI won't move unit directly this is just a test
+        //if (activeUnit.AIUnit)
+        //    ai.FinishedMovement();
+        NextTurn();
     }
 
     //TODO add context dependent actions for unit clicks
@@ -166,7 +183,7 @@ public class BattleManager : MonoBehaviour {
     //remove short ranged module from active unit
     public void removeShortRangeModule()
     {
-        activeUnit.RemoveModule(ModuleName.shortRange);
+        activeUnit.RemoveModule(ModuleType.shortRange);
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -194,7 +211,7 @@ public class BattleManager : MonoBehaviour {
     //for testing getAction of activeUnit
     public void getActions()
     {
-        List<Action> action = activeUnit.getActions();
+        List<Action> action = activeUnit.GetActions();
     }
 
     //for testing taking damage

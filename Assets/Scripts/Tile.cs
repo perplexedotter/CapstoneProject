@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour {
 
     [SerializeField] Unit unitOnTile;
     [SerializeField] TileType type;
+    [SerializeField] Collider collider;
 
 
     [Header("Material Colors")]
@@ -86,13 +87,14 @@ public class Tile : MonoBehaviour {
     //TODO Clean up coordianate systems
     private void Awake()
     {
-        UnitOnTile = null;
+        //UnitOnTile = null;
         gridPos = GetGridPos();
+        childrenRenderers = GetComponentsInChildren<Renderer>();
     }
 
     // Use this for initialization
     void Start () {
-        childrenRenderers = GetComponentsInChildren<Renderer>();
+
 	}
 	
 	// Update is called once per frame

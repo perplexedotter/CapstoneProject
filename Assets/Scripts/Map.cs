@@ -296,6 +296,17 @@ public class Map : MonoBehaviour {
 
 
     //UTILITY FUNCTIONS
+
+    //Returns a list of all units that are on the map
+    public List<Unit> GetAllUnits()
+    {
+        List<Unit> units = new List<Unit>();
+        foreach (var t in mapDict.Values)
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        return units;
+    }
+
     public Tile GetTileByCoord(int x, int y)
     {
         return GetTileByVector(new Vector2Int(x, y));
@@ -330,6 +341,38 @@ public class Map : MonoBehaviour {
             tiles.Add(adjacentTile);
 
         return tiles;
+    }
+
+    //Checks if units are adjacent to each other
+    public bool UnitsAreAdjacent(Unit u1, Unit u2)
+    {
+        if (u1 == null || u2 == null || u1.CurrentTile == null || u2.CurrentTile == null)
+            return false;
+        bool adjacent = false;
+        List<Tile> tilesAroundU1 = GetSurroundingTiles(u1.CurrentTile);
+        foreach (var t in tilesAroundU1)
+        {
+            if (u2.CurrentTile == t)
+                adjacent = true;
+        }
+        return adjacent;
+    }
+
+    public List<Unit> GetAdjacentUnits(Unit unit)
+    {
+        return GetAdjacentUnits(unit.CurrentTile);
+    }
+
+    public List<Unit> GetAdjacentUnits(Tile tile)
+    {
+        List<Tile> tilesAroundUnit = GetSurroundingTiles(tile);
+        List<Unit> units = new List<Unit>();
+        foreach (var t in tilesAroundUnit)
+        {
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        }
+        return units;
     }
 
     //Resets all tiles in map to base color

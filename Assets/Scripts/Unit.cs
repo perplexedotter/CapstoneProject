@@ -13,26 +13,29 @@ public class Unit : MonoBehaviour {
     [Header("Transform Properties")]
     //[SerializeField] protected Vector3 heightOffset;
     //[SerializeField] protected Vector3 moveDestination;
-    [SerializeField] protected float moveSpeed = 10.0f;
-    [SerializeField] protected float movementTolerance = 1f;
+    //[SerializeField] protected float movementTolerance = 1f;
+    [SerializeField] protected float moveSpeed = 75.0f;
     [SerializeField] Tile currentTile;
 
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
-    [SerializeField] protected int playerNumber;
-    [SerializeField] protected float hitPoints;
-    [SerializeField] protected float damageTaken;
-    [SerializeField] protected float attack;
-    [SerializeField] protected float speed;
-    [SerializeField] protected float mass;
-    [SerializeField] protected float shields;
-    [SerializeField] protected float hardPoints;
+    [SerializeField] protected int playerNumber = 0;
+    [SerializeField] private bool aIUnit = false;
+    [SerializeField] protected UnitType type;
+    [SerializeField] protected float hitPoints = 100;
+    [SerializeField] protected float damageTaken = 0;
+    [SerializeField] protected float attack = 0;
+    [SerializeField] protected float speed = 100;
+    [SerializeField] protected float mass = 400;
+    [SerializeField] protected float shields = 0;
+    [SerializeField] protected float hardPoints = 0;
     [SerializeField] protected int movementRange;
 
-    protected UnitType type;
-    protected List<Module> modules;
-    protected List<StatusEffects> statuses;
-    //[SerializeField] private int movementRange = 4;
+    [Header("Modules and Statuses")]
+    [SerializeField] protected List<Module> modules = new List<Module>();
+    [SerializeField] protected List<StatusEffects> statuses = new List<StatusEffects>();
+
+    //Movement fields
     private bool isMoving = false;
     protected bool movementFinished = false;
     private List<Tile> path;
@@ -57,8 +60,8 @@ public class Unit : MonoBehaviour {
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
     {
-        modules = new List<Module>();
-        statuses = new List<StatusEffects>();
+        //modules = new List<Module>();
+        //statuses = new List<StatusEffects>();
         if (UnitType.fighter == Type)
         {
             hitPoints = 100;
@@ -78,16 +81,27 @@ public class Unit : MonoBehaviour {
         damageTaken += dmg;
         return(GetHP() - damageTaken);
     }
+
+    public List<ModuleType> GetModuleTypes()
+    {
+        HashSet<ModuleType> moduleTypes = new HashSet<ModuleType>();
+        foreach(var m in modules)
+        {
+            moduleTypes.Add(m.ModuleType);
+        }
+        return new List<ModuleType>(moduleTypes);
+    }
+
     //returns list of actions
     //will combine actions into more powerful one
-    public List<Action> getActions()
+    public List<Action> GetActions()
     {
         List<Action> actions = new List<Action>();
         List<Action> actionsSorted = new List<Action>();
 
         for (int i = 0; i < modules.Count; i++)
         {
-            actions.Add(modules[i].action);
+            actions.Add(modules[i].Action);
         }
 
         actionsSorted = actions.OrderBy(o => o.Type).ToList();
@@ -155,11 +169,11 @@ public class Unit : MonoBehaviour {
     }
 
     //remove specific module from list (if it is in list)
-    public void RemoveModule(ModuleName module)
+    public void RemoveModule(ModuleType module)
     {
         for(int i = 0; i < modules.Count; i++)
         {
-            if(modules[i].ModuleName == module)
+            if(modules[i].ModuleType == module)
             {
                 modules.RemoveAt(i);
                 break;
@@ -256,6 +270,14 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    public bool AIUnit
+    {
+        get
+        {
+            return aIUnit;
+        }
+    }
+
     public virtual void TurnUpdate(){
 
 	}
@@ -305,15 +327,30 @@ public class Unit : MonoBehaviour {
             if (currentTile != path[pathIndex]) //If the current Tile isn't the same as the next tile
             {
                 Vector3 destination = path[pathIndex].transform.position;
-                if (Vector3.Distance(destination, transform.position) > movementTolerance) //May not need this if
+                float step = moveSpeed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, destination, step);
+                if (Vector3.Distance(destination, transform.position) <= 0) //If the unit is close enough call it good
                 {
-                    transform.position += (destination - transform.position).normalized * moveSpeed * Time.deltaTime;
-
-                    if (Vector3.Distance(destination, transform.position) <= movementTolerance) //If the unit is close enough call it good
-                    {
-                        UpdateTile(path[pathIndex]);
-                    }
+                    UpdateTile(path[pathIndex]);
+                    //int x = currentTile.GetCoords().x;
+                    //int z = currentTile.GetCoords().y;
+                    //transform.position = new Vector3((float)x, 0, (float)z);
                 }
+
+                //if (Vector3.Distance(destination, transform.position) > movementTolerance) //May not need this if
+                //{
+                //    //transform.position += (destination - transform.position).normalized * moveSpeed * Time.deltaTime;
+                //    float step = moveSpeed * Time.deltaTime;
+                //    transform.position = Vector3.MoveTowards(transform.position, destination, step);
+
+                //    if (Vector3.Distance(destination, transform.position) <= movementTolerance) //If the unit is close enough call it good
+                //    { 
+                //        UpdateTile(path[pathIndex]);
+                //        int x = currentTile.GetCoords().x;
+                //        int z = currentTile.GetCoords().y;
+                //        transform.position = new Vector3((float)x, 0, (float)z);
+                //    }
+                //}
             }
             else
             {
@@ -323,7 +360,10 @@ public class Unit : MonoBehaviour {
         else //Finish the units movement
         {
             UpdateTile(path[pathIndex]); //MakeSure the unit is on the tile
-            transform.position = currentTile.transform.position;
+            //int x = currentTile.GetCoords().x;
+            //int z = currentTile.GetCoords().y;
+            //transform.position = new Vector3((float) x, 0 , (float) z);
+            //transform.position = new Vector3(0, 0 , 0);
             movementFinished = true;
             isMoving = false;
         }
