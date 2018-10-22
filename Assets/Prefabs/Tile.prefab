@@ -90,6 +90,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4429949836186490}
+  - component: {fileID: 114021566875694224}
   - component: {fileID: 114193524029788770}
   - component: {fileID: 65693544023135266}
   - component: {fileID: 114334998026443132}
@@ -201,8 +202,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1417412251040802}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 50, y: -4.5, z: 80}
-  m_LocalScale: {x: 9, y: 9, z: 9}
+  m_LocalPosition: {x: 50, y: 0, z: 10}
+  m_LocalScale: {x: 9, y: 1, z: 9}
   m_Children:
   - {fileID: 4052380835484316}
   - {fileID: 4619688647473438}
@@ -280,7 +281,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -315,7 +316,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -385,7 +386,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -420,7 +421,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -455,7 +456,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -490,7 +491,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: a3fb8dc49f0b8a040b620f8280792dc9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -669,6 +670,17 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4278190080
+--- !u!114 &114021566875694224
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1417412251040802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46a84727ecb5a3b4da438b4aa6990d68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114193524029788770
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -682,6 +694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitOnTile: {fileID: 0}
   type: 0
+  collider: {fileID: 0}
   baseColor: {r: 1, g: 1, b: 1, a: 0.18039216}
   moveRangeColor: {r: 0, g: 0.9811321, b: 0.108579166, a: 0.5647059}
   attackRangeColor: {r: 1, g: 0, b: 0, a: 0.5803922}
