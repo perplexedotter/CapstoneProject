@@ -13,8 +13,8 @@ public class Unit : MonoBehaviour {
     [Header("Transform Properties")]
     //[SerializeField] protected Vector3 heightOffset;
     //[SerializeField] protected Vector3 moveDestination;
-    [SerializeField] protected float moveSpeed = 10.0f;
-    [SerializeField] protected float movementTolerance = 1f;
+    //[SerializeField] protected float movementTolerance = 1f;
+    [SerializeField] protected float moveSpeed = 75.0f;
     [SerializeField] Tile currentTile;
 
     [Header("Unit Stats")]
@@ -327,15 +327,30 @@ public class Unit : MonoBehaviour {
             if (currentTile != path[pathIndex]) //If the current Tile isn't the same as the next tile
             {
                 Vector3 destination = path[pathIndex].transform.position;
-                if (Vector3.Distance(destination, transform.position) > movementTolerance) //May not need this if
+                float step = moveSpeed * Time.deltaTime;
+                transform.position = Vector3.MoveTowards(transform.position, destination, step);
+                if (Vector3.Distance(destination, transform.position) <= 0) //If the unit is close enough call it good
                 {
-                    transform.position += (destination - transform.position).normalized * moveSpeed * Time.deltaTime;
-
-                    if (Vector3.Distance(destination, transform.position) <= movementTolerance) //If the unit is close enough call it good
-                    {
-                        UpdateTile(path[pathIndex]);
-                    }
+                    UpdateTile(path[pathIndex]);
+                    //int x = currentTile.GetCoords().x;
+                    //int z = currentTile.GetCoords().y;
+                    //transform.position = new Vector3((float)x, 0, (float)z);
                 }
+
+                //if (Vector3.Distance(destination, transform.position) > movementTolerance) //May not need this if
+                //{
+                //    //transform.position += (destination - transform.position).normalized * moveSpeed * Time.deltaTime;
+                //    float step = moveSpeed * Time.deltaTime;
+                //    transform.position = Vector3.MoveTowards(transform.position, destination, step);
+
+                //    if (Vector3.Distance(destination, transform.position) <= movementTolerance) //If the unit is close enough call it good
+                //    { 
+                //        UpdateTile(path[pathIndex]);
+                //        int x = currentTile.GetCoords().x;
+                //        int z = currentTile.GetCoords().y;
+                //        transform.position = new Vector3((float)x, 0, (float)z);
+                //    }
+                //}
             }
             else
             {
@@ -345,7 +360,10 @@ public class Unit : MonoBehaviour {
         else //Finish the units movement
         {
             UpdateTile(path[pathIndex]); //MakeSure the unit is on the tile
-            transform.position = currentTile.transform.position;
+            //int x = currentTile.GetCoords().x;
+            //int z = currentTile.GetCoords().y;
+            //transform.position = new Vector3((float) x, 0 , (float) z);
+            //transform.position = new Vector3(0, 0 , 0);
             movementFinished = true;
             isMoving = false;
         }
