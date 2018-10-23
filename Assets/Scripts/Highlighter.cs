@@ -44,13 +44,14 @@ public class Highlighter : MonoBehaviour {
         //Send a message to other scripts on object to begin animation
         SendMessage("StartHighlightAnimation");
     }
-    private void RemoveHighlight()
+    public void RemoveHighlight()
     {
         if (childRenderers != null)
         {
             foreach (Renderer r in childRenderers)
             {
-                r.material.color = childColors.Dequeue();
+                if(childColors != null && childColors.Count > 0)
+                    r.material.color = childColors.Dequeue();
             }
         }
         //Send a message to other scripts on object to stop animation

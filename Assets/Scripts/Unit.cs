@@ -371,7 +371,11 @@ public class Unit : MonoBehaviour {
 
     private void UpdateTile(Tile tile)
     {
-        if(currentTile != null && currentTile.UnitOnTile == this) //Don't remove units other then yourself from the tile
+        //Remove highlight
+        Highlighter highlighter = GetComponent<Highlighter>();
+        if (highlighter != null)
+            highlighter.RemoveHighlight();
+        if (currentTile != null && currentTile.UnitOnTile == this) //Don't remove units other then yourself from the tile
             currentTile.UnitOnTile = null;
         currentTile = tile;
         if(currentTile.UnitOnTile == null) //Only add yourself to an empty tile
