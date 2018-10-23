@@ -33,22 +33,6 @@ public class Tile : MonoBehaviour {
 
     Renderer[] childrenRenderers;
 
-    //MOVED TO MAP
-    ////TODO Move this to the search itself
-    //bool visted = false;
-
-    //public bool Visted
-    //{
-    //    get
-    //    {
-    //        return visted;
-    //    }
-
-    //    set
-    //    {
-    //        visted = value;
-    //    }
-    //}
 
     public static int GridSize
     {
@@ -84,10 +68,8 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    //TODO Clean up coordianate systems
     private void Awake()
     {
-        //UnitOnTile = null;
         gridPos = GetGridPos();
         childrenRenderers = GetComponentsInChildren<Renderer>();
     }
@@ -181,6 +163,24 @@ public class Tile : MonoBehaviour {
     {
 
     }
+
+
+    //MOVED TO MAP
+    ////TODO Move this to the search itself
+    //bool visted = false;
+
+    //public bool Visted
+    //{
+    //    get
+    //    {
+    //        return visted;
+    //    }
+
+    //    set
+    //    {
+    //        visted = value;
+    //    }
+    //}
 
     //DEPRECIATED
     //public void ResetTileSearchFields()

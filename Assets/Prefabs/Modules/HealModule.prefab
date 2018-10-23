@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4401674997904608}
   - component: {fileID: 114096656136581080}
   m_Layer: 0
-  m_Name: SlowModule
+  m_Name: HealModule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

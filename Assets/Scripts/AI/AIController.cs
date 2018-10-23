@@ -4,22 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AIController : MonoBehaviour {
-
-    public class Command
-    {
-        public enum CommandType {Move, Action};
-
-        public Tile target;
-        public CommandType commandType;
-        public Action action;
-    }
+    enum Team {Enemy, Ally};
 
     Unit aiUnit;
-    Unit closestEnemy;
     ModuleType moduleType;
-    //TODO replace with AIAction class
-    int actionsTaken;
-    bool moved;
 
     List<Command> commands;
 
@@ -34,64 +22,122 @@ public class AIController : MonoBehaviour {
             Destroy(gameObject);
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    //TODO expand this AI to other possiblities
-    //TODO make this return a list of actions instead of directly manipulating unit
-    public void GetAIActions(Unit unit)
+    public List<Command> GetAICommands(Unit unit)
     {
         this.aiUnit = unit;
-        actionsTaken = 0;
-        moved = false;
         commands = new List<Command>();
         GetAIUnitType();
-        if(moduleType == ModuleType.shortRange)
+        switch (moduleType)
         {
-            ProcessMeleeUnitTurn();
+            case ModuleType.shortRange:
+                commands = ProcessMeleeUnitTurn();
+                break;
         }
+        return commands;
     }
 
+    //AI TURN FUNCTIONS
 
-
-    private void ProcessMeleeUnitTurn()
+    private List<Command> ProcessMeleeUnitTurn()
     {
-        //TODO Add logic to determine if unit should move then attack or attack then move
-        //GetTileClosestToEnemy();
-        //TODO Replace This with a calculation based on threat enemies present
+        Action meleeAction = GetMeleeAction();
+        List<Command> commands = new List<Command>();
+        
+        //Determine if highest threat in melee range is adjacent
+        List<Unit> adjEnemies = GetAdjacentUnits(aiUnit.CurrentTile, Team.Enemy);
 
-        List<Unit> adjEnemies = GetAdjacentUnits(aiUnit.CurrentTile, true);
-        //If enemies are near by attack adjacent enemy then move (Will be changed with threat calc
-        if(adjEnemies.Count > 0)
+        //TODO make this actually threat based current (replace with commented out code)
+        Unit highestThreatUnit = adjEnemies.Count > 0 ? adjEnemies[0] : GetHighestThreat(map.GetEnemyUnitsInMeleeRange(aiUnit));
+        //Unit highestThreatUnit = GetHighestThreat(map.GetEnemyUnitsInMeleeRange(aiUnit));
+
+        //If the highest threat unit is in range attack it
+        if (highestThreatUnit != null && adjEnemies.Count > 0 && adjEnemies.Contains(highestThreatUnit))
         {
-            //Attack closest enemy for now
+            commands.Add(new Command(highestThreatUnit.CurrentTile, Command.CommandType.Action, meleeAction));
         }
         else
         {
-            //Move to closest enemy
+            //Unit closestEnemy = GetClosestUnit(aiUnit.CurrentTile, true);
+            //If there is not unit in melee range find the closest enemy and move to engage
+            if (highestThreatUnit == null)
+            {
+                highestThreatUnit = GetClosestUnit(aiUnit.CurrentTile, Team.Enemy);
+            }
+            //Move to the enemy with the highest threat
+            Tile closestTileToEnemy = GetClosestTile(map.GetMovementRange(aiUnit), highestThreatUnit.CurrentTile);
+            commands.Add(new Command(closestTileToEnemy, Command.CommandType.Move, null));
         }
-        Unit closestEnemy = GetClosestUnit(aiUnit.CurrentTile, true);
-        Tile closestTileToEnemy = GetClosestTile(map.GetMovementRange(aiUnit), closestEnemy.CurrentTile);
-        //TODO Replace this with the AI returning a move request
-        List<Tile> path = map.GetMovementPath(aiUnit, closestTileToEnemy);
-        aiUnit.TraversePath(path);
+        /*Check if the commands include a movement. If it doesn't unit has attacked without moving
+         * If this is the case move away to a lower threat location
+         */
+        if (!ContainsMove(commands))
+        {
+            //Move to a lower threat area
+        }
+        /* The unit has moved without attacking. Attack if possible*/
+        if (!ContainsAction(commands) && ContainsMove(commands))
+        {
+            //Get Enemies Adjacent to move
+            adjEnemies = GetAdjacentUnits(GetFirstMoveTile(commands), Team.Enemy);
+            Unit target = GetHighestThreat(adjEnemies);
+            if (target != null)
+                commands.Add(new Command(target.CurrentTile, Command.CommandType.Action, meleeAction));
+        }
 
+        return commands;
     }
 
-    //TODO remove this function AI will not handle movement
-    public void FinishedMovement()
-    {
-
-    }
 
     //UTILITY FUNCTIONS
+
+    //Returns the unit with highest threat from a list of units
+    private Unit GetHighestThreat(List<Unit> units)
+    {
+        Unit highestThreat = null;
+        //TODO Convert this to find highest threat unit
+        highestThreat = units.Count > 0 ? units[0] : null;
+        return highestThreat;
+    }
+
+    private Action GetMeleeAction()
+    {
+        List<Action> actions = aiUnit.GetActions();
+        Action bestMeleeAction = null;
+        foreach(var a in actions)
+        {
+            if(a.Type == ActionType.ShortAttack)
+            {
+                //There should be only one melee action but this will get the best if there is more then one
+                if(bestMeleeAction == null || bestMeleeAction.Power < a.Power)
+                    bestMeleeAction = a;
+            }
+        }
+        return bestMeleeAction;
+    }
+
+    private bool ContainsMove(List<Command> commands)
+    {
+        foreach (var c in commands)
+            if (c.commandType == Command.CommandType.Move)
+                return true;
+        return false;
+    }
+
+    private bool ContainsAction(List<Command> commands)
+    {
+        foreach (var c in commands)
+            if (c.commandType == Command.CommandType.Action)
+                return true;
+        return false;
+    }
+
+    private Tile GetFirstMoveTile(List<Command> commands)
+    {
+        foreach (var c in commands)
+            if (c.commandType == Command.CommandType.Move)
+                return c.target;
+        return null;
+    }
 
     //A ai unit without modules with break this which is fine because that unit wouldn't make sense in the current design
     private void GetAIUnitType()
@@ -99,12 +145,11 @@ public class AIController : MonoBehaviour {
         moduleType = aiUnit.GetModuleTypes()[0];
     }
 
-
     //Gets and returns the Unit that is closest to the specified Tile
     //If the enemy flag is set it will return the closest enemy
     //If the flag is not set it will return the closest ally
     //It will never return the current unit
-    private Unit GetClosestUnit(Tile tile, bool enemy)
+    private Unit GetClosestUnit(Tile tile, Team team)
     {
         int aiPlayerNumber = aiUnit.PlayerNumber;
         List<Unit> units = map.GetAllUnits();
@@ -112,7 +157,7 @@ public class AIController : MonoBehaviour {
         Unit closestUnit = null;
         foreach (var u in units)
         {
-            if (u != aiUnit && ((enemy && u.PlayerNumber != aiPlayerNumber) || (!enemy && u.PlayerNumber == aiPlayerNumber)))
+            if (u != aiUnit && ((team == Team.Enemy && u.PlayerNumber != aiPlayerNumber) || (team == Team.Ally && u.PlayerNumber == aiPlayerNumber)))
             {
                 float distToE = Vector2Int.Distance(u.CurrentTile.GetCoords(), aiUnit.CurrentTile.GetCoords());
                 if (distToE < closestDist)
@@ -125,12 +170,12 @@ public class AIController : MonoBehaviour {
         return closestUnit;
     }
 
-    List<Unit> GetAdjacentUnits(Tile tile, bool enemy)
+    List<Unit> GetAdjacentUnits(Tile tile, Team team)
     {
         List<Unit> units = map.GetAdjacentUnits(tile);
         List<Unit> adjacentUnits = new List<Unit>();
         foreach(var u in units)
-            if ((enemy && u.PlayerNumber != aiUnit.PlayerNumber) || (!enemy && u.PlayerNumber == aiUnit.PlayerNumber))
+            if ((team == Team.Enemy && u.PlayerNumber != aiUnit.PlayerNumber) || (team == Team.Ally && u.PlayerNumber == aiUnit.PlayerNumber))
                 adjacentUnits.Add(u);
         return adjacentUnits;
     }
@@ -156,7 +201,7 @@ public class AIController : MonoBehaviour {
      * If the flag is not set the ally with the highest threat will be retruned
      * If no units are in range that meet the selected critera null will be returned
      */
-    private Unit GetHighestThreatInMeleeRange(bool enemy)
+    private Unit GetHighestThreatInMeleeRange(Team team)
     {
 
         return null;
