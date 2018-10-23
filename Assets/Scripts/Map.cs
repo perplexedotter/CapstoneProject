@@ -150,7 +150,6 @@ public class Map : MonoBehaviour {
         return tilesInRange;
     }
 
-    //TODO possibly make this a call to GetPath and possibly take a unit instead of playerNumber
     public List<Tile> GetMovementPath(Unit unit, Tile end)
     {
         return GetMovementPath(unit.CurrentTile, end, unit.PlayerNumber);

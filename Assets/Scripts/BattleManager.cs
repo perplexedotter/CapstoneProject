@@ -228,12 +228,11 @@ public class BattleManager : MonoBehaviour {
             && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
             && tile.UnitOnTile == null && !activeUnit.AIUnit)
         {
-            //TODO Move this logic elsewhere
             MoveActiveUnitToTile(tile);
         }
     }
 
-    //TODO add context dependent actions for unit clicks
+    //TODO posible link unit and tile clicks together
     public void UnitClicked(Unit unit)
     {
 

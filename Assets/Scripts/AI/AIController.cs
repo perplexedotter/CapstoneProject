@@ -22,8 +22,6 @@ public class AIController : MonoBehaviour {
             Destroy(gameObject);
     }
 
-    //TODO expand this AI to other possiblities
-    //TODO make this return a list of actions instead of directly manipulating unit
     public List<Command> GetAICommands(Unit unit)
     {
         this.aiUnit = unit;
@@ -42,14 +40,10 @@ public class AIController : MonoBehaviour {
 
     private List<Command> ProcessMeleeUnitTurn()
     {
-        //TODO Add logic to determine if unit should move then attack or attack then move
-        //GetTileClosestToEnemy();
-        //TODO Replace This with a calculation based on threat enemies present
         Action meleeAction = GetMeleeAction();
         List<Command> commands = new List<Command>();
         
         //Determine if highest threat in melee range is adjacent
-        //TODO make this actually threat based
         List<Unit> adjEnemies = GetAdjacentUnits(aiUnit.CurrentTile, Team.Enemy);
 
         //TODO make this actually threat based current (replace with commented out code)
