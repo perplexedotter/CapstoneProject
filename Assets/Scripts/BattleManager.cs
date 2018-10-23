@@ -6,39 +6,43 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour {
 
-    //Make avaliable in the editor
-    [Header("Map Properties")]
-    [SerializeField] int mapSize = 11;
-    [SerializeField] float unitHeightOffset = 1.5f;
+    //[Header("Map Properties")]
     [SerializeField] Map map;
     [SerializeField] AIController ai;
 
     public static BattleManager instance;
-	[SerializeField] GameObject PlayerUnitPreFab;
-	[SerializeField] GameObject Player2UnitPreFab;
-
-    //public GameObject TilePreFab;
-    //public GameObject NonPlayerUnitPreFab;
 
     private List<Tile> activeUnitPosMoves;
 
+    //Units in battle
 	List<Unit> units = new List<Unit>();
     Unit activeUnit;
 	int unitIndex = 0;
 
+    //AI Commands
     List<Command> commands;
     int commandIndex = 0;
 
+    //Events this turn
     bool unitMoved;
     int actionsTaken;
 
-    public int MapSize
-    {
-        get
-        {
-            return mapSize;
-        }
-    }
+    //Menu statuses used to keep track of which menus are open
+    //This will determine what clicking on units and tiles does
+    bool baseMenuOpen;
+    bool moveMenuOpen;
+    bool attackMenuOpen;
+    bool specialMenuOpen;
+    bool specialSelected;
+
+    //[SerializeField] int mapSize = 11;
+    //[SerializeField] float unitHeightOffset = 1.5f;
+
+    //[SerializeField] GameObject PlayerUnitPreFab;
+    //[SerializeField] GameObject Player2UnitPreFab;
+
+    //public GameObject TilePreFab;
+    //public GameObject NonPlayerUnitPreFab;
 
     // Use this for initialization
     void Awake(){
@@ -65,14 +69,29 @@ public class BattleManager : MonoBehaviour {
 
     public void NextTurn()
     {
+        ResetForNextTurn();
+        activeUnit.DecrementStatuses(); //Decrement current units statues
+        UpdateActiveUnit(); //Update the current unit
+        ProcessTurn(); //Begin processing the next turn
+    }
+
+    private void ResetForNextTurn()
+    {
+        //Reset Turn Variables
         commands = null;
         commandIndex = 0;
         unitMoved = false;
         actionsTaken = 0;
-        map.ResetTileColors(); //Reset Map color for next turn
-        activeUnit.DecrementStatuses(); //Decrement current units statues
-        UpdateActiveUnit(); //Update the current unit
-        ProcessTurn(); //Begin processing the next turn
+
+        //Reset Menus
+        baseMenuOpen = false;
+        moveMenuOpen = false;
+        attackMenuOpen = false;
+        specialMenuOpen = false;
+        specialSelected = false;
+
+        //Reset Map
+        map.ResetTileColors();
     }
 
     private void UpdateActiveUnit()
@@ -84,7 +103,6 @@ public class BattleManager : MonoBehaviour {
         activeUnit = units[unitIndex];
     }
 
-    //TODO possibly move to NextTurn
     public void ProcessTurn()
     {
         if (activeUnit.AIUnit)
@@ -157,10 +175,7 @@ public class BattleManager : MonoBehaviour {
     public void FinishedMovement()
     {
         unitMoved = true;
-        if (activeUnit.AIUnit)
-            ProcessAITurn();
-        else
-            ProcessPlayerTurn();
+        ProcessTurn();
     }
 
 
@@ -278,6 +293,14 @@ public class BattleManager : MonoBehaviour {
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
     }
+
+    //public int MapSize
+    //{
+    //    get
+    //    {
+    //        return mapSize;
+    //    }
+    //}
 
     //   public void MoveCurrentPlayer(Tile destinationTile) {
     //       activeUnit.MoveToTile(destinationTile);
