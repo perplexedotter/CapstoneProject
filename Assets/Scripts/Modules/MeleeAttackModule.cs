@@ -11,12 +11,12 @@ public class MeleeAttackModule : Module {
         ModuleName = ModuleName.shortRange;
         HitPoints = 25;
         Mass = 100;
-        action = new Action(ActionType.ShortAttack, 25, 1);
+        Action = new Action(ActionType.ShortAttack, 25, 1);
     }
 
     public override Action GetAction()
     {
-        return action;
+        return Action;
     }
     // Use this for initialization
     void Start () {

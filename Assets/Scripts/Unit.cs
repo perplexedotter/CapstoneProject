@@ -37,6 +37,7 @@ public class Unit : MonoBehaviour {
     protected bool movementFinished = false;
     private List<Tile> path;
     private int pathIndex;
+    [SerializeField]private float threat;
 
     void Awake()
     {
@@ -69,7 +70,54 @@ public class Unit : MonoBehaviour {
             attack = 20;
             type = Type;
             shields = 0;
+            threat = 20;
         }
+
+        if (UnitType.frigate == Type)
+        {
+            hitPoints = 200;
+            mass = 600;
+            hardPoints = 3;
+            speed = 50;
+            damageTaken = 0;
+            attack = 20;
+            type = Type;
+            shields = 0;
+            threat = 10;
+        }
+    }
+
+    //calculate threat
+    public float GetThreat()
+    {
+        for (int i = 0; i < modules.Count; i++)
+        {
+            if (modules[i].ModuleName == ModuleName.heal)
+            {
+                threat += 30;
+            }
+            else if (modules[i].ModuleName == ModuleName.longRange)
+            {
+                threat += 25;
+            }
+            else if (modules[i].ModuleName == ModuleName.shortRange)
+            {
+                threat += 20;
+            }
+            else if (modules[i].ModuleName == ModuleName.slow)
+            {
+                threat += 15;
+            }
+            else if (modules[i].ModuleName == ModuleName.engine)
+            {
+                threat += 10;
+            }
+            else if (modules[i].ModuleName == ModuleName.shields)
+            {
+                threat += 5;
+            }
+        }
+        return threat;
     }
 
     //Unit will take damage
@@ -78,16 +126,17 @@ public class Unit : MonoBehaviour {
         damageTaken += dmg;
         return(GetHP() - damageTaken);
     }
+
     //returns list of actions
     //will combine actions into more powerful one
-    public List<Action> getActions()
+    public List<Action> GetActions()
     {
         List<Action> actions = new List<Action>();
         List<Action> actionsSorted = new List<Action>();
 
         for (int i = 0; i < modules.Count; i++)
         {
-            actions.Add(modules[i].action);
+            actions.Add(modules[i].Action);
         }
 
         actionsSorted = actions.OrderBy(o => o.Type).ToList();
@@ -103,12 +152,12 @@ public class Unit : MonoBehaviour {
                 }
             }
         }
-        debugActions(actionsSorted);
+        DebugActions(actionsSorted);
         return actionsSorted;
     }
     
     //for testing getactions
-    public void debugActions(List<Action> debug)
+    public void DebugActions(List<Action> debug)
     {
         for (int i = 0; i < debug.Count; i++)
         {
@@ -128,7 +177,7 @@ public class Unit : MonoBehaviour {
         for (int i = 0; i < statuses.Count; i++)
         {
             statuses[i].DecrementDuration();
-            if (statuses[i].duration == 1)
+            if (statuses[i].Duration == 1)
             {
                 statuses.RemoveAt(i);
                 i -= 1;
@@ -141,7 +190,7 @@ public class Unit : MonoBehaviour {
     {
         for (int i = 0; i < statuses.Count; i++)
         {
-            Debug.Log(statuses[i].statusName + " " + statuses[i].duration);
+            Debug.Log(statuses[i].StatusName + " " + statuses[i].Duration);
         }
     }
     //Adds module to unit
@@ -190,9 +239,9 @@ public class Unit : MonoBehaviour {
 
         for (int i = 0; i < statuses.Count; i++)
         {
-            if (statuses[i].statusName == statusType.hitPoints)
+            if (statuses[i].StatusName == statusType.hitPoints)
             {
-                moddedStat += statuses[i].amount;
+                moddedStat += statuses[i].Amount;
             }
         }
         return moddedStat;
@@ -210,9 +259,9 @@ public class Unit : MonoBehaviour {
 
         for (int i = 0; i < statuses.Count; i++)
         {
-            if (statuses[i].statusName == statusType.mass)
+            if (statuses[i].StatusName == statusType.mass)
             {
-                moddedStat += statuses[i].amount;
+                moddedStat += statuses[i].Amount;
             }
         }
         return moddedStat;
@@ -392,4 +441,5 @@ public class Unit : MonoBehaviour {
 public enum UnitType
 {
     fighter,
+    frigate,
 }

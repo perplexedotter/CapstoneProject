@@ -11,12 +11,12 @@ public class SlowModule : Module {
         ModuleName = ModuleName.slow;
         HitPoints = 25;
         Mass = 100;
-        action = new Action(ActionType.Slow, 0, 1);
+        Action = new Action(ActionType.Slow, 0, 1);
     }
 
     public override Action GetAction()
     {
-        return action;
+        return Action;
     }
     // Use this for initialization
     void Start () {

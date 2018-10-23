@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour {
 
@@ -154,7 +155,7 @@ public class BattleManager : MonoBehaviour {
     }
 
     //add short range module to active unit
-    public void addShortRangeModule()
+    public void AddShortRangeModule()
     {
         activeUnit.AddModule(new MeleeAttackModule());
         Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
@@ -163,8 +164,36 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+    //add long range module to active unit
+    public void AddLongRangeModule()
+    {
+        activeUnit.AddModule(new RangeAttackModule());
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+    //add Healing module to active unit
+    public void AddHealModule()
+    {
+        activeUnit.AddModule(new HealModule());
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //add Slowing module to active unit
+    public void AddSlowModule()
+    {
+        activeUnit.AddModule(new SlowModule());
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
     //remove short ranged module from active unit
-    public void removeShortRangeModule()
+    public void RemoveShortRangeModule()
     {
         activeUnit.RemoveModule(ModuleName.shortRange);
         map.ResetTileColors();
@@ -172,8 +201,32 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+    //remove short ranged module from active unit
+    public void RemoveLongRangeModule()
+    {
+        activeUnit.RemoveModule(ModuleName.longRange);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+    //remove short ranged module from active unit
+    public void RemoveHealModule()
+    {
+        activeUnit.RemoveModule(ModuleName.heal);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+    //remove short ranged module from active unit
+    public void RemoveSlowModule()
+    {
+        activeUnit.RemoveModule(ModuleName.slow);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
     //remove all modules from active unit
-    public void removeAllModules()
+    public void RemoveAllModules()
     {
         activeUnit.RemoveAllModules();
         map.ResetTileColors();
@@ -181,8 +234,14 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+    //Get threat from unit
+    public void getThreat()
+    {
+        Debug.Log(activeUnit.GetThreat());
+    }
+
     //Example of how to add status effect 
-    public void addStatusEffect()
+    public void AddStatusEffect()
     {
         //for testing
         activeUnit.AddStatus(new StatusEffects(5, 100, statusType.mass));
@@ -191,14 +250,17 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+
     //for testing getAction of activeUnit
-    public void getActions()
+    public void GetActions()
     {
-        List<Action> action = activeUnit.getActions();
+        List<Action> action = activeUnit.GetActions();
+        ActionListControl makeAction = new ActionListControl();
+        makeAction.MakeActionList(action);
     }
 
     //for testing taking damage
-    public void takeDamage()
+    public void TakeDamage()
     {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
         activeUnit.TakeDamage(50);

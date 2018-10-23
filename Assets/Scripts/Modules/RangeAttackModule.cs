@@ -11,12 +11,12 @@ public class RangeAttackModule : Module {
         ModuleName = ModuleName.longRange;
         HitPoints = 0;
         Mass = 200;
-        action = new Action(ActionType.LongAttack, 25, 2);
+        Action = new Action(ActionType.LongAttack, 25, 2);
     }
 
     public override Action GetAction()
     {
-        return action;
+        return Action;
     }
     // Use this for initialization
     void Start () {
