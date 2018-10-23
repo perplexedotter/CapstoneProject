@@ -26,6 +26,11 @@ public class BattleManager : MonoBehaviour {
     Unit activeUnit;
 	int unitIndex = 0;
 
+    List<Command> commands;
+    int commandIndex = 0;
+
+    bool unitMoved;
+    int actionsTaken;
 
     public int MapSize
     {
@@ -42,8 +47,8 @@ public class BattleManager : MonoBehaviour {
 	void Start () {
         //GenerateUnits();
         AddUnitsFromMap();
-        NextTurn();
         activeUnit = units[unitIndex];
+        ProcessTurn();
 	}
 
     private void AddUnitsFromMap()
@@ -54,22 +59,20 @@ public class BattleManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    //TODO move this out of update
     void Update () {
-		//units[unitIndex].TurnUpdate();
+
 	}
-	public void NextTurn()
+
+    public void NextTurn()
     {
-        map.ResetTileColors();
-        UpdateActiveUnit();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-        if (activeUnit.AIUnit)
-        {
-            ai.GetAIActions(activeUnit);
-        }
-        //decrements that status of active unit
-        activeUnit.DecrementStatuses();
+        commands = null;
+        commandIndex = 0;
+        unitMoved = false;
+        actionsTaken = 0;
+        map.ResetTileColors(); //Reset Map color for next turn
+        activeUnit.DecrementStatuses(); //Decrement current units statues
+        UpdateActiveUnit(); //Update the current unit
+        ProcessTurn(); //Begin processing the next turn
     }
 
     private void UpdateActiveUnit()
@@ -81,51 +84,67 @@ public class BattleManager : MonoBehaviour {
         activeUnit = units[unitIndex];
     }
 
-
-
-	//this will create the units on the map for this level
-	void GenerateUnits(){
-		Unit unit;
-        //Unit 0
-        GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
-        obj.transform.parent = transform;
-        unit = obj.GetComponent<Unit>();
-        unit.PlayerNumber = 0;
-
-
-        //makes the unit a fighter
-        unit.DefineUnit(UnitType.fighter);
-
-        unit.PlaceOnTile(map.GetTileByCoord(5, 1));
-        units.Add(unit);
-
-        //Unit 1
-        obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
-        obj.transform.parent = transform;
-        unit = obj.GetComponent<Unit>();
-        unit.PlayerNumber = 0;
-
-        //makes the unit a fighter
-        unit.DefineUnit(UnitType.fighter);
-
-        unit.PlaceOnTile(map.GetTileByCoord(2, 2));
-        units.Add(unit);
-
-        //Unit 2
-        obj = Instantiate(Player2UnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
-        obj.transform.parent = transform;
-        unit = obj.GetComponent<Unit>();
-
-        //makes the unit a fighter
-        unit.DefineUnit(UnitType.fighter);
-        unit.PlayerNumber = 1;
-
-        unit.PlaceOnTile(map.GetTileByCoord(1, 1));
-        units.Add(unit);
-        NextTurn();
+    //TODO possibly move to NextTurn
+    public void ProcessTurn()
+    {
+        if (activeUnit.AIUnit)
+        {
+            ProcessAITurn();
+        }
+        else
+        {
+            ProcessPlayerTurn();
+        }
     }
 
-    
+    private void ProcessPlayerTurn()
+    {
+        //TODO Fillout this function to actually process a players turn
+        if (unitMoved)
+        {
+            NextTurn();
+        }
+        else
+        {
+            UpdateCurrentPossibleMoves();
+            ShowCurrentPossibleMoves();
+        }
+    }
+
+    private void ProcessAITurn()
+    {
+        if(commands == null)
+            commands = ai.GetAICommands(activeUnit);
+        if (commandIndex == commands.Count)
+            NextTurn();
+        else
+        {
+            ProcessCommand(commands[commandIndex++]);
+        }
+    }
+
+    private void ProcessCommand(Command command)
+    {
+        switch (command.commandType)
+        {
+            //TODO add checking to make sure AI is making valid moves
+            case Command.CommandType.Move:
+                UpdateCurrentPossibleMoves();
+                ShowCurrentPossibleMoves();
+                MoveActiveUnitToTile(command.target);
+                break;
+
+            //TODO add processing for other actions
+            case Command.CommandType.Action:
+                ProcessAITurn();
+                break;
+        }
+    }
+
+    private void MoveActiveUnitToTile(Tile tile)
+    {
+        activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
+    }
 
     //Update the active Units possible moves
     public void UpdateCurrentPossibleMoves()
@@ -133,6 +152,19 @@ public class BattleManager : MonoBehaviour {
         //activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
         activeUnitPosMoves = map.GetMovementRange(activeUnit);
     }
+
+    //Called by a unit when it has finished moving so that BattleManager can resume control
+    public void FinishedMovement()
+    {
+        unitMoved = true;
+        if (activeUnit.AIUnit)
+            ProcessAITurn();
+        else
+            ProcessPlayerTurn();
+    }
+
+
+    //DISPLAY FUNCTIONS
 
     //Display the active Units possible moves
     public void ShowCurrentPossibleMoves()
@@ -142,26 +174,48 @@ public class BattleManager : MonoBehaviour {
             tile.SetTileColor(Tile.TileColor.move);
     }
 
+    public void ColorTiles(List<Tile> tiles, Tile.TileColor color)
+    {
+        foreach (var t in tiles)
+        {
+            t.SetTileColor(color);
+        }
+    }
+
+    public void DisplayMovementRange()
+    {
+        ShowCurrentPossibleMoves();
+    }
+
+    public void DisplayMeleeRange()
+    {
+        map.ResetTileColors();
+        List<Tile> meleeRange = map.GetMeleeRange(activeUnit);
+        ColorTiles(meleeRange, Tile.TileColor.attack);
+        //ShowCurrentPossibleMoves();
+
+        List<Unit> allysInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
+        List<Unit> enemiesInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
+        foreach (var u in allysInRange)
+        {
+            u.CurrentTile.SetTileColor(Tile.TileColor.ally);
+        }
+
+    }
+
+    //CLICK FUNCTIONS
+
     //Respond to use clicking on a tile
     public void TileClicked(Tile tile)
     {
         //TODO Add logic for attacking and abilities
-        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile) 
+        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile)
             && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
             && tile.UnitOnTile == null && !activeUnit.AIUnit)
         {
             //TODO Move this logic elsewhere
-            activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
+            MoveActiveUnitToTile(tile);
         }
-    }
-
-    //TODO Have Battle Manager record this and then determine what to do
-    public void FinishedMovement()
-    {
-        //TODO AI won't move unit directly this is just a test
-        //if (activeUnit.AIUnit)
-        //    ai.FinishedMovement();
-        NextTurn();
     }
 
     //TODO add context dependent actions for unit clicks
@@ -169,6 +223,9 @@ public class BattleManager : MonoBehaviour {
     {
 
     }
+
+    //TEST FUNCTIONS
+
 
     //add short range module to active unit
     public void addShortRangeModule()
@@ -220,37 +277,6 @@ public class BattleManager : MonoBehaviour {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
-    }
-
-
-    //TEST FUNCTIONS
-
-    public void DisplayMeleeRange()
-    {
-        map.ResetTileColors();
-        List<Tile> meleeRange = map.GetMeleeRange(activeUnit);
-        ColorTiles(meleeRange, Tile.TileColor.attack);
-        //ShowCurrentPossibleMoves();
-
-        List<Unit> allysInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
-        List<Unit> enemiesInRange = map.GetAllyUnitsInMeleeRange(activeUnit);
-        foreach(var u in allysInRange)
-        {
-            u.CurrentTile.SetTileColor(Tile.TileColor.ally);
-        }
-    }
-
-    public void ColorTiles(List<Tile> tiles, Tile.TileColor color)
-    {
-        foreach(var t in tiles)
-        {
-            t.SetTileColor(color);
-        }
-    }
-
-    public void DisplayMovementRange()
-    {
-        ShowCurrentPossibleMoves();
     }
 
     //   public void MoveCurrentPlayer(Tile destinationTile) {
@@ -308,4 +334,47 @@ public class BattleManager : MonoBehaviour {
     //    else
     //        tile.ResetTileMaterial();
     //}
+
+    ////this will create the units on the map for this level
+    //void GenerateUnits(){
+    //	Unit unit;
+    //       //Unit 0
+    //       GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+    //       obj.transform.parent = transform;
+    //       unit = obj.GetComponent<Unit>();
+    //       unit.PlayerNumber = 0;
+
+
+    //       //makes the unit a fighter
+    //       unit.DefineUnit(UnitType.fighter);
+
+    //       unit.PlaceOnTile(map.GetTileByCoord(5, 1));
+    //       units.Add(unit);
+
+    //       //Unit 1
+    //       obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+    //       obj.transform.parent = transform;
+    //       unit = obj.GetComponent<Unit>();
+    //       unit.PlayerNumber = 0;
+
+    //       //makes the unit a fighter
+    //       unit.DefineUnit(UnitType.fighter);
+
+    //       unit.PlaceOnTile(map.GetTileByCoord(2, 2));
+    //       units.Add(unit);
+
+    //       //Unit 2
+    //       obj = Instantiate(Player2UnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
+    //       obj.transform.parent = transform;
+    //       unit = obj.GetComponent<Unit>();
+
+    //       //makes the unit a fighter
+    //       unit.DefineUnit(UnitType.fighter);
+    //       unit.PlayerNumber = 1;
+
+    //       unit.PlaceOnTile(map.GetTileByCoord(1, 1));
+    //       units.Add(unit);
+    //       NextTurn();
+    //   }
+
 }

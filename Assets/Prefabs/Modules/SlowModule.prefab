@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4199306032436432}
   m_Layer: 0
-  m_Name: EngineModule
+  m_Name: SlowModule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

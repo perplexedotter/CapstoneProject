@@ -307,6 +307,25 @@ public class Map : MonoBehaviour {
         return units;
     }
 
+    public List<Unit> GetAllEnemies(Unit unit)
+    {
+        List<Unit> units = GetAllUnits();
+        List<Unit> enemies = new List<Unit>();
+        foreach(var u in units)
+            if (unit.PlayerNumber != u.PlayerNumber)
+                enemies.Add(u);
+        return enemies;
+    }
+    public List<Unit> GetAllAllies(Unit unit)
+    {
+        List<Unit> units = GetAllUnits();
+        List<Unit> allies = new List<Unit>();
+        foreach (var u in units)
+            if (unit.PlayerNumber == u.PlayerNumber)
+                allies.Add(u);
+        return allies;
+    }
+
     public Tile GetTileByCoord(int x, int y)
     {
         return GetTileByVector(new Vector2Int(x, y));
