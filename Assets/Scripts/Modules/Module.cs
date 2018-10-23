@@ -6,11 +6,7 @@ public class Module : MonoBehaviour {
     public int HitPoints { get; protected set; }
     public int Mass { get; protected set; }
     public Target ModuleTarget { get; protected set; }
-<<<<<<< HEAD
-    public ModuleName ModuleName { get; protected set; }
-=======
     public ModuleType ModuleType { get; protected set; }
->>>>>>> upstream/master
     public Action Action { get; protected set; }
 
     //virtual GetAction

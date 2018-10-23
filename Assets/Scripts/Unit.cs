@@ -95,27 +95,27 @@ public class Unit : MonoBehaviour {
     {
         for (int i = 0; i < modules.Count; i++)
         {
-            if (modules[i].ModuleName == ModuleName.heal)
+            if (modules[i].ModuleType == ModuleType.heal)
             {
                 threat += 30;
             }
-            else if (modules[i].ModuleName == ModuleName.longRange)
+            else if (modules[i].ModuleType == ModuleType.longRange)
             {
                 threat += 25;
             }
-            else if (modules[i].ModuleName == ModuleName.shortRange)
+            else if (modules[i].ModuleType == ModuleType.shortRange)
             {
                 threat += 20;
             }
-            else if (modules[i].ModuleName == ModuleName.slow)
+            else if (modules[i].ModuleType == ModuleType.slow)
             {
                 threat += 15;
             }
-            else if (modules[i].ModuleName == ModuleName.engine)
+            else if (modules[i].ModuleType == ModuleType.engine)
             {
                 threat += 10;
             }
-            else if (modules[i].ModuleName == ModuleName.shields)
+            else if (modules[i].ModuleType == ModuleType.shields)
             {
                 threat += 5;
             }
@@ -130,8 +130,7 @@ public class Unit : MonoBehaviour {
         return(GetHP() - damageTaken);
     }
 
-<<<<<<< HEAD
-=======
+
     public List<ModuleType> GetModuleTypes()
     {
         HashSet<ModuleType> moduleTypes = new HashSet<ModuleType>();
@@ -142,7 +141,6 @@ public class Unit : MonoBehaviour {
         return new List<ModuleType>(moduleTypes);
     }
 
->>>>>>> upstream/master
     //returns list of actions
     //will combine actions into more powerful one
     public List<Action> GetActions()
@@ -168,7 +166,7 @@ public class Unit : MonoBehaviour {
                 }
             }
         }
-        DebugActions(actionsSorted);
+        //DebugActions(actionsSorted);
         return actionsSorted;
     }
     

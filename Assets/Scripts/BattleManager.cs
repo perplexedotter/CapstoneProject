@@ -292,7 +292,7 @@ public class BattleManager : MonoBehaviour {
     //remove short ranged module from active unit
     public void RemoveLongRangeModule()
     {
-        activeUnit.RemoveModule(ModuleName.longRange);
+        activeUnit.RemoveModule(ModuleType.longRange);
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -300,7 +300,7 @@ public class BattleManager : MonoBehaviour {
     //remove short ranged module from active unit
     public void RemoveHealModule()
     {
-        activeUnit.RemoveModule(ModuleName.heal);
+        activeUnit.RemoveModule(ModuleType.heal);
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -308,7 +308,7 @@ public class BattleManager : MonoBehaviour {
     //remove short ranged module from active unit
     public void RemoveSlowModule()
     {
-        activeUnit.RemoveModule(ModuleName.slow);
+        activeUnit.RemoveModule(ModuleType.slow);
         map.ResetTileColors();
         UpdateCurrentPossibleMoves();
         ShowCurrentPossibleMoves();
@@ -343,11 +343,8 @@ public class BattleManager : MonoBehaviour {
     public void GetActions()
     {
         List<Action> action = activeUnit.GetActions();
-<<<<<<< HEAD
         ActionListControl makeAction = new ActionListControl();
         makeAction.MakeActionList(action);
-=======
->>>>>>> upstream/master
     }
 
     //for testing taking damage
