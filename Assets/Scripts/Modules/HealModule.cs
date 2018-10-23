@@ -8,7 +8,7 @@ public class HealModule : Module {
     //We can change stats as necessary for balance
     public HealModule()
     {
-        ModuleName = ModuleName.heal;
+        ModuleType = ModuleType.heal;
         HitPoints = 50;
         Mass = 100;
         Action = new Action(ActionType.Heal, 20, 1);

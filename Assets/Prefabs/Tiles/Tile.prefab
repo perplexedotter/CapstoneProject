@@ -95,8 +95,8 @@ GameObject:
   - component: {fileID: 65693544023135266}
   - component: {fileID: 114334998026443132}
   m_Layer: 0
-  m_Name: DebrisTile
-  m_TagString: Debris
+  m_Name: Tile
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -693,14 +693,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitOnTile: {fileID: 0}
+  type: 0
+  collider: {fileID: 0}
   baseColor: {r: 1, g: 1, b: 1, a: 0.18039216}
-  moveRangeColor: {r: 0.56001276, g: 0.98039216, b: 0, a: 0.5647059}
+  moveRangeColor: {r: 0, g: 0.9811321, b: 0.108579166, a: 0.5647059}
   attackRangeColor: {r: 1, g: 0, b: 0, a: 0.5803922}
   enemyColor: {r: 0.5188679, g: 0.25698647, b: 0.25698647, a: 0.5176471}
   allyColor: {r: 0, g: 0.5986471, b: 1, a: 0.5803922}
-  normalTilePrefab: {fileID: 0}
-  asteroidTilePrefab: {fileID: 0}
-  debrisTilePrefab: {fileID: 0}
 --- !u!114 &114334998026443132
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -5,7 +5,7 @@ using UnityEngine;
 //This Class is a glorifed struct and may be changed to such later.
 //Also it may not need to be a MonoBehaviour but I don't think leaving it as
 //such hurts anything.
-public class Action : MonoBehaviour {
+public class Action {
 
     //TODO possibly expand. This should cover the actions we have decided to include so far
     private ActionType type; //What the action does

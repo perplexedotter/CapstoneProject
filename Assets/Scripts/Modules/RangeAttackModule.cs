@@ -8,7 +8,7 @@ public class RangeAttackModule : Module {
     //We can change stats as necessary for balance
     public RangeAttackModule()
     {
-        ModuleName = ModuleName.longRange;
+        ModuleType = ModuleType.longRange;
         HitPoints = 0;
         Mass = 200;
         Action = new Action(ActionType.LongAttack, 25, 2);

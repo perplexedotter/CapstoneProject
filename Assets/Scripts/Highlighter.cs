@@ -21,12 +21,13 @@ public class Highlighter : MonoBehaviour {
     private void OnMouseEnter()
     {
         Highlight();
-        //print("Highlight");
+        UnitTileHighlight();
     }
 
     private void OnMouseExit()
     {
         RemoveHighlight();
+        RemoveUnitTileHighlight();
     }
 
     public void Highlight()
@@ -56,7 +57,38 @@ public class Highlighter : MonoBehaviour {
         SendMessage("StopHighlightAnimation");
     }
 
-    //Allows other scripts to send a message indicating the base colors of the children has changed
+    //Links the highlighting of the unit and tile together
+    private void UnitTileHighlight()
+    {
+        Unit unit = GetComponent<Unit>();
+        Tile tile = GetComponent<Tile>();
+        if (unit != null && unit.CurrentTile != null)
+        {
+            GameObject unitTile = unit.CurrentTile.gameObject;
+            unitTile.GetComponent<Highlighter>().Highlight();
+        }
+        else if (tile != null && tile.UnitOnTile != null)
+        {
+            GameObject tileUnit = tile.UnitOnTile.gameObject;
+            tileUnit.GetComponent<Highlighter>().Highlight();
+        }
+    }
+
+    private void RemoveUnitTileHighlight()
+    {
+        Unit unit = GetComponent<Unit>();
+        Tile tile = GetComponent<Tile>();
+        if (unit != null && unit.CurrentTile != null)
+        {
+            GameObject unitTile = unit.CurrentTile.gameObject;
+            unitTile.GetComponent<Highlighter>().RemoveHighlight();
+        }
+        else if (tile != null && tile.UnitOnTile != null)
+        {
+            GameObject tileUnit = tile.UnitOnTile.gameObject;
+            tileUnit.GetComponent<Highlighter>().RemoveHighlight();
+        }
+    }    //Allows other scripts to send a message indicating the base colors of the children has changed
     private void UpdateBaseColorQueue(Queue<Color> colors)
     {
         //print("Colors Updated");

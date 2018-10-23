@@ -8,7 +8,7 @@ public class SlowModule : Module {
     //We can change stats as necessary for balance
     public SlowModule()
     {
-        ModuleName = ModuleName.slow;
+        ModuleType = ModuleType.slow;
         HitPoints = 25;
         Mass = 100;
         Action = new Action(ActionType.Slow, 0, 1);

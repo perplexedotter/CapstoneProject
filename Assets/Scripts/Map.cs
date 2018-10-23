@@ -150,7 +150,6 @@ public class Map : MonoBehaviour {
         return tilesInRange;
     }
 
-    //TODO possibly make this a call to GetPath and possibly take a unit instead of playerNumber
     public List<Tile> GetMovementPath(Unit unit, Tile end)
     {
         return GetMovementPath(unit.CurrentTile, end, unit.PlayerNumber);
@@ -296,6 +295,36 @@ public class Map : MonoBehaviour {
 
 
     //UTILITY FUNCTIONS
+
+    //Returns a list of all units that are on the map
+    public List<Unit> GetAllUnits()
+    {
+        List<Unit> units = new List<Unit>();
+        foreach (var t in mapDict.Values)
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        return units;
+    }
+
+    public List<Unit> GetAllEnemies(Unit unit)
+    {
+        List<Unit> units = GetAllUnits();
+        List<Unit> enemies = new List<Unit>();
+        foreach(var u in units)
+            if (unit.PlayerNumber != u.PlayerNumber)
+                enemies.Add(u);
+        return enemies;
+    }
+    public List<Unit> GetAllAllies(Unit unit)
+    {
+        List<Unit> units = GetAllUnits();
+        List<Unit> allies = new List<Unit>();
+        foreach (var u in units)
+            if (unit.PlayerNumber == u.PlayerNumber)
+                allies.Add(u);
+        return allies;
+    }
+
     public Tile GetTileByCoord(int x, int y)
     {
         return GetTileByVector(new Vector2Int(x, y));
@@ -330,6 +359,38 @@ public class Map : MonoBehaviour {
             tiles.Add(adjacentTile);
 
         return tiles;
+    }
+
+    //Checks if units are adjacent to each other
+    public bool UnitsAreAdjacent(Unit u1, Unit u2)
+    {
+        if (u1 == null || u2 == null || u1.CurrentTile == null || u2.CurrentTile == null)
+            return false;
+        bool adjacent = false;
+        List<Tile> tilesAroundU1 = GetSurroundingTiles(u1.CurrentTile);
+        foreach (var t in tilesAroundU1)
+        {
+            if (u2.CurrentTile == t)
+                adjacent = true;
+        }
+        return adjacent;
+    }
+
+    public List<Unit> GetAdjacentUnits(Unit unit)
+    {
+        return GetAdjacentUnits(unit.CurrentTile);
+    }
+
+    public List<Unit> GetAdjacentUnits(Tile tile)
+    {
+        List<Tile> tilesAroundUnit = GetSurroundingTiles(tile);
+        List<Unit> units = new List<Unit>();
+        foreach (var t in tilesAroundUnit)
+        {
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        }
+        return units;
     }
 
     //Resets all tiles in map to base color

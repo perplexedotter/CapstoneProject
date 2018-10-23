@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour {
 
     [SerializeField] Unit unitOnTile;
     [SerializeField] TileType type;
+    [SerializeField] Collider collider;
 
 
     [Header("Material Colors")]
@@ -32,22 +33,6 @@ public class Tile : MonoBehaviour {
 
     Renderer[] childrenRenderers;
 
-    //MOVED TO MAP
-    ////TODO Move this to the search itself
-    //bool visted = false;
-
-    //public bool Visted
-    //{
-    //    get
-    //    {
-    //        return visted;
-    //    }
-
-    //    set
-    //    {
-    //        visted = value;
-    //    }
-    //}
 
     public static int GridSize
     {
@@ -83,16 +68,15 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    //TODO Clean up coordianate systems
     private void Awake()
     {
-        UnitOnTile = null;
         gridPos = GetGridPos();
+        childrenRenderers = GetComponentsInChildren<Renderer>();
     }
 
     // Use this for initialization
     void Start () {
-        childrenRenderers = GetComponentsInChildren<Renderer>();
+
 	}
 	
 	// Update is called once per frame
@@ -179,6 +163,24 @@ public class Tile : MonoBehaviour {
     {
 
     }
+
+
+    //MOVED TO MAP
+    ////TODO Move this to the search itself
+    //bool visted = false;
+
+    //public bool Visted
+    //{
+    //    get
+    //    {
+    //        return visted;
+    //    }
+
+    //    set
+    //    {
+    //        visted = value;
+    //    }
+    //}
 
     //DEPRECIATED
     //public void ResetTileSearchFields()
