@@ -9,11 +9,15 @@ public class ActionListButton : MonoBehaviour
 {
     [SerializeField] private Text ActionText;
     [SerializeField] public BattleManager BM;
+    [SerializeField] public int Damage;
+    [SerializeField] public int Range;
 
-    public void SetText(string ActionText)
+    public void SetText(string ActionText, int Damage, int Range)
     {
         this.gameObject.GetComponent<Button>().onClick.AddListener(OnClick);
         this.ActionText.text = ActionText;
+        this.Damage = Damage;
+        this.Range = Range;
     }
     public void OnClick()
     {
@@ -21,22 +25,22 @@ public class ActionListButton : MonoBehaviour
         if (this.ActionText.text == "Close Attack")
         {
             //BM.AddShortRangeModule();
-            Debug.Log("Attack Close");
+            Debug.Log("Attack Close" + " -- Power:" + Damage + "  Range:" + Range );
         }
         else if(this.ActionText.text == "Range Attack")
         {
             //BM.AddLongRangeModule();
-            Debug.Log("Attack at Range");
+            Debug.Log("Attack at Range" + " -- Power:" + Damage + "  Range:" + Range);
         }
         else if (this.ActionText.text == "Heal")
         {
             //BM.AddHealModule();
-            Debug.Log("Heal Target");
+            Debug.Log("Heal Target" + " -- Power:" + Damage + "  Range:" + Range);
         }
         else if (this.ActionText.text == "Slow")
         {
             //BM.AddSlowModule();
-            Debug.Log("Slow Target");
+            Debug.Log("Slow Target" + " -- Power:" + Damage + "  Range:" + Range);
         }
     }
 }

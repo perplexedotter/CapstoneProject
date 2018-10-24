@@ -34,7 +34,7 @@ public class ActionListControl : MonoBehaviour
     //Generates a list of clickable actions in Scroll Panel
     public void MakeActionList(List<Action> action)
     {
-        GameObject.Find("ActionScrollList").transform.position = new Vector3(590f, 66f, 0.0f);
+        GameObject.Find("ActionScrollList").transform.position = new Vector3(500f, 66f, 0.0f);
         buttonTemplate = GameObject.Find("ActionButton");
         clearActionList();
 
@@ -63,14 +63,14 @@ public class ActionListControl : MonoBehaviour
             }
             if(i == 0)
             {
-                GameObject.Find("ActionButton").GetComponent<ActionListButton>().SetText(actionType);
+                GameObject.Find("ActionButton").GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range);
             }
             else
             {
                 //Debug.Log(buttons.Count);
                 Debug.Log(button);
 
-                button.GetComponent<ActionListButton>().SetText(actionType);
+                button.GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range);
                 button.transform.SetParent(GameObject.Find("ActionButton").transform.parent, false);
                 buttons.Add(button.gameObject);
                 Destroy(GameObject.Find("ActionButton(Clone)"));
