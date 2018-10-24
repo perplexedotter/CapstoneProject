@@ -34,7 +34,7 @@ public class ActionListControl : MonoBehaviour
     //Generates a list of clickable actions in Scroll Panel
     public void MakeActionList(List<Action> action)
     {
-        GameObject.Find("ActionScrollList").transform.position = new Vector3(620f, 66f, 0.0f);
+        GameObject.Find("ActionScrollList").transform.position = new Vector3(590f, 66f, 0.0f);
         buttonTemplate = GameObject.Find("ActionButton");
         clearActionList();
 

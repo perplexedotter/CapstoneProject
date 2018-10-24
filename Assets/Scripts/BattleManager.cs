@@ -346,7 +346,6 @@ public class BattleManager : MonoBehaviour {
     //for testing getAction of activeUnit
     public void GetActions()
     {
-        Debug.Log("BM -- Get Action");
         List<Action> action = activeUnit.GetActions();
         ActionListControl makeAction = new ActionListControl();
         makeAction.MakeActionList(action);

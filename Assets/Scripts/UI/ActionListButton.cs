@@ -17,22 +17,26 @@ public class ActionListButton : MonoBehaviour
     }
     public void OnClick()
     {
-
+        GameObject.Find("ActionScrollList").transform.position = new Vector3(-1000f, 1000f, 0.0f);
         if (this.ActionText.text == "Close Attack")
         {
-            BM.AddShortRangeModule();
+            //BM.AddShortRangeModule();
+            Debug.Log("Attack Close");
         }
         else if(this.ActionText.text == "Range Attack")
         {
-            BM.AddLongRangeModule();
+            //BM.AddLongRangeModule();
+            Debug.Log("Attack at Range");
         }
         else if (this.ActionText.text == "Heal")
         {
-            BM.AddHealModule();
+            //BM.AddHealModule();
+            Debug.Log("Heal Target");
         }
         else if (this.ActionText.text == "Slow")
         {
-            BM.AddSlowModule();
+            //BM.AddSlowModule();
+            Debug.Log("Slow Target");
         }
     }
 }
