@@ -152,6 +152,12 @@ public class Tile : MonoBehaviour {
         SendMessage("UpdateBaseColorQueue", colors);
     }
 
+    public void RemoveHighlight()
+    {
+        Highlighter highlighter = GetComponent<Highlighter>();
+        if (highlighter != null)
+            highlighter.RemoveHighlight();
+    }
 
     //HIGHLIGHT FUNCTIONS
     private void StartHighlightAnimation()
