@@ -16,9 +16,9 @@ public class BattleManager : MonoBehaviour {
     private List<Tile> activeUnitPosMoves;
 
     //Units in battle
-	List<Unit> units = new List<Unit>();
+    List<Unit> units = new List<Unit>();
     Unit activeUnit;
-	int unitIndex = 0;
+    int unitIndex = 0;
 
     //AI Commands
     List<Command> commands;
@@ -46,15 +46,15 @@ public class BattleManager : MonoBehaviour {
     //public GameObject NonPlayerUnitPreFab;
 
     // Use this for initialization
-    void Awake(){
-		instance = this;		
-	}
-	void Start () {
+    void Awake() {
+        instance = this;
+    }
+    void Start() {
         //GenerateUnits();
         AddUnitsFromMap();
         activeUnit = units[unitIndex];
         ProcessTurn();
-	}
+    }
 
     private void AddUnitsFromMap()
     {
@@ -64,9 +64,9 @@ public class BattleManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update() {
 
-	}
+    }
 
     public void NextTurn()
     {
@@ -132,7 +132,7 @@ public class BattleManager : MonoBehaviour {
 
     private void ProcessAITurn()
     {
-        if(commands == null)
+        if (commands == null)
             commands = ai.GetAICommands(activeUnit);
         if (commandIndex == commands.Count)
             NextTurn();
@@ -241,7 +241,11 @@ public class BattleManager : MonoBehaviour {
 
     //TEST FUNCTIONS
 
-
+    // make active unit a fighter
+    public void DefineFighter()
+    {
+        activeUnit.DefineUnit(UnitType.fighter);
+    }
     //add short range module to active unit
     public void AddShortRangeModule()
     {
@@ -342,6 +346,7 @@ public class BattleManager : MonoBehaviour {
     //for testing getAction of activeUnit
     public void GetActions()
     {
+        Debug.Log("BM -- Get Action");
         List<Action> action = activeUnit.GetActions();
         ActionListControl makeAction = new ActionListControl();
         makeAction.MakeActionList(action);
