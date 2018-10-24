@@ -35,7 +35,7 @@ public class Module : MonoBehaviour {
 //used to name module
 public enum ModuleType
 {
-    shortRange, longRange, heal, slow,
+    shortRange, longRange, heal, slow, engine, shields
 }
 
 //used for choosing target
