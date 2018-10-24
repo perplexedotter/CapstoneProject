@@ -160,15 +160,16 @@ MonoBehaviour:
   playerNumber: 0
   aIUnit: 0
   type: 0
-  hitPoints: 0
+  hitPoints: 100
   damageTaken: 0
   attack: 0
-  speed: 0
-  mass: 0
+  speed: 100
+  mass: 400
   shields: 0
-  hardPoints: 0
+  hardPoints: 2
   movementRange: 0
   modules: []
+  threat: 0
 --- !u!136 &136690161165329542
 CapsuleCollider:
   m_ObjectHideFlags: 1

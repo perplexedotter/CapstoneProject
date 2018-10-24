@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class StatusEffects{
-    public float duration { get; protected set; }
-    public float amount { get; protected set; }
-    public statusType statusName{ get; protected set; }
+    public float Duration { get; protected set; }
+    public float Amount { get; protected set; }
+    public statusType StatusName{ get; protected set; }
 
     // constructor
     public StatusEffects(float duration, float amount, statusType statusName) 
     {
-        this.duration = duration;
-        this.amount = amount;
-        this.statusName = statusName;
+        this.Duration = duration;
+        this.Amount = amount;
+        this.StatusName = statusName;
 	}
 
     //used for decreasing by 1 each turn
     public void DecrementDuration()
     {
-        this.duration -= 1;
+        this.Duration -= 1;
     }
 
 	// Update is called once per frame

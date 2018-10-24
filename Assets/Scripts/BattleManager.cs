@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour {
 
@@ -15,9 +16,9 @@ public class BattleManager : MonoBehaviour {
     private List<Tile> activeUnitPosMoves;
 
     //Units in battle
-	List<Unit> units = new List<Unit>();
+    List<Unit> units = new List<Unit>();
     Unit activeUnit;
-	int unitIndex = 0;
+    int unitIndex = 0;
 
     //Turn Order
     [SerializeField] List<Unit> roundTurnOrder;
@@ -40,6 +41,13 @@ public class BattleManager : MonoBehaviour {
     bool attackMenuOpen;
     bool specialMenuOpen;
     bool specialSelected;
+    
+    //for Action Panel
+    [SerializeField] GameObject actButton1;
+    [SerializeField] GameObject actButton2;
+    [SerializeField] GameObject actButton3;
+    [SerializeField] GameObject actButton4;
+    [SerializeField] ActionListControl makeAction;
 
     //[SerializeField] int mapSize = 11;
     //[SerializeField] float unitHeightOffset = 1.5f;
@@ -51,21 +59,15 @@ public class BattleManager : MonoBehaviour {
     //public GameObject NonPlayerUnitPreFab;
 
     // Use this for initialization
-    void Awake(){
-		instance = this;		
-	}
-	void Start () {
+    void Awake() {
+        instance = this;
+    }
+    void Start() {
         //GenerateUnits();
         AddUnitsFromMap();
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
         ProcessTurn();
-	}
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     private void AddUnitsFromMap()
@@ -74,6 +76,7 @@ public class BattleManager : MonoBehaviour {
         foreach (var u in unitsFromMap)
             units.Add(u);
     }
+
 
     private void NextRound()
     {
@@ -87,6 +90,10 @@ public class BattleManager : MonoBehaviour {
     }
 
 
+    // Update is called once per frame
+    void Update() {
+
+    }
 
     public void NextTurn()
     {
@@ -178,7 +185,7 @@ public class BattleManager : MonoBehaviour {
 
     private void ProcessAITurn()
     {
-        if(commands == null)
+        if (commands == null)
             commands = ai.GetAICommands(activeUnit);
         if (commandIndex == commands.Count)
             NextTurn();
@@ -293,9 +300,24 @@ public class BattleManager : MonoBehaviour {
 
     //TEST FUNCTIONS
 
+    //adds damage dealt to active unit's running total
+    public void AddDamage(float damage)
+    {
+        activeUnit.AddDamage(damage);
+    }
 
+    //returns damage of active unit
+    public float GetDamageDealt()
+    {
+        return activeUnit.GetDamage();
+    }
+    // make active unit a fighter
+    public void DefineFighter()
+    {
+        activeUnit.DefineUnit(UnitType.fighter);
+    }
     //add short range module to active unit
-    public void addShortRangeModule()
+    public void AddShortRangeModule()
     {
         activeUnit.AddModule(new MeleeAttackModule());
         Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
@@ -304,8 +326,36 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+    //add long range module to active unit
+    public void AddLongRangeModule()
+    {
+        activeUnit.AddModule(new RangeAttackModule());
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+    //add Healing module to active unit
+    public void AddHealModule()
+    {
+        activeUnit.AddModule(new HealModule());
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+
+    //add Slowing module to active unit
+    public void AddSlowModule()
+    {
+        activeUnit.AddModule(new SlowModule());
+        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
     //remove short ranged module from active unit
-    public void removeShortRangeModule()
+    public void RemoveShortRangeModule()
     {
         activeUnit.RemoveModule(ModuleType.shortRange);
         map.ResetTileColors();
@@ -313,8 +363,32 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+    //remove short ranged module from active unit
+    public void RemoveLongRangeModule()
+    {
+        activeUnit.RemoveModule(ModuleType.longRange);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+    //remove short ranged module from active unit
+    public void RemoveHealModule()
+    {
+        activeUnit.RemoveModule(ModuleType.heal);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
+    //remove short ranged module from active unit
+    public void RemoveSlowModule()
+    {
+        activeUnit.RemoveModule(ModuleType.slow);
+        map.ResetTileColors();
+        UpdateCurrentPossibleMoves();
+        ShowCurrentPossibleMoves();
+    }
     //remove all modules from active unit
-    public void removeAllModules()
+    public void RemoveAllModules()
     {
         activeUnit.RemoveAllModules();
         map.ResetTileColors();
@@ -322,8 +396,14 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
+    //Get threat from unit
+    public void getThreat()
+    {
+        Debug.Log(activeUnit.GetThreat());
+    }
+
     //Example of how to add status effect 
-    public void addStatusEffect()
+    public void AddStatusEffect()
     {
         //for testing
         activeUnit.AddStatus(new StatusEffects(5, 100, statusType.mass));
@@ -333,17 +413,45 @@ public class BattleManager : MonoBehaviour {
     }
 
     //for testing getAction of activeUnit
-    public void getActions()
+    public void GetActions()
     {
+        actButton1.SetActive(false);
+        actButton2.SetActive(false);
+        actButton3.SetActive(false);
+        actButton4.SetActive(false);
         List<Action> action = activeUnit.GetActions();
+        makeAction.MakeActionList(action);
     }
 
     //for testing taking damage
-    public void takeDamage()
+    public void TakeDamage()
     {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
+    }
+
+    
+
+    public void ActivateAction(int i)
+    {
+        if (i == 1)
+        {
+            actButton1.SetActive(true);
+        }
+        if (i == 2)
+        {
+            actButton2.SetActive(true);
+        }
+        if (i == 3)
+        {
+            actButton3.SetActive(true);
+        }
+        if (i == 4)
+        {
+            actButton4.SetActive(true);
+        }
+
     }
 
     //public int MapSize
