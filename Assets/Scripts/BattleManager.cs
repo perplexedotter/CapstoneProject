@@ -35,6 +35,13 @@ public class BattleManager : MonoBehaviour {
     bool attackMenuOpen;
     bool specialMenuOpen;
     bool specialSelected;
+    
+    //for Action Panel
+    [SerializeField] GameObject actButton1;
+    [SerializeField] GameObject actButton2;
+    [SerializeField] GameObject actButton3;
+    [SerializeField] GameObject actButton4;
+    [SerializeField] ActionListControl makeAction;
 
     //[SerializeField] int mapSize = 11;
     //[SerializeField] float unitHeightOffset = 1.5f;
@@ -241,6 +248,17 @@ public class BattleManager : MonoBehaviour {
 
     //TEST FUNCTIONS
 
+    //adds damage dealt to active unit's running total
+    public void AddDamage(float damage)
+    {
+        activeUnit.AddDamage(damage);
+    }
+
+    //returns damage of active unit
+    public float GetDamageDealt()
+    {
+        return activeUnit.GetDamage();
+    }
     // make active unit a fighter
     public void DefineFighter()
     {
@@ -342,12 +360,14 @@ public class BattleManager : MonoBehaviour {
         ShowCurrentPossibleMoves();
     }
 
-
     //for testing getAction of activeUnit
     public void GetActions()
     {
+        actButton1.SetActive(false);
+        actButton2.SetActive(false);
+        actButton3.SetActive(false);
+        actButton4.SetActive(false);
         List<Action> action = activeUnit.GetActions();
-        ActionListControl makeAction = new ActionListControl();
         makeAction.MakeActionList(action);
     }
 
@@ -357,6 +377,29 @@ public class BattleManager : MonoBehaviour {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
         activeUnit.TakeDamage(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
+    }
+
+    
+
+    public void ActivateAction(int i)
+    {
+        if (i == 1)
+        {
+            actButton1.SetActive(true);
+        }
+        if (i == 2)
+        {
+            actButton2.SetActive(true);
+        }
+        if (i == 3)
+        {
+            actButton3.SetActive(true);
+        }
+        if (i == 4)
+        {
+            actButton4.SetActive(true);
+        }
+
     }
 
     //public int MapSize

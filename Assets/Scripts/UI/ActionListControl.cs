@@ -35,6 +35,7 @@ public class ActionListControl : MonoBehaviour
     public void MakeActionList(List<Action> action)
     {
         GameObject.Find("ActionScrollList").transform.position = new Vector3(500f, 66f, 0.0f);
+        BM.ActivateAction(1);
         buttonTemplate = GameObject.Find("ActionButton");
         clearActionList();
 
@@ -45,7 +46,7 @@ public class ActionListControl : MonoBehaviour
 
             string actionType = "";
 
-            if(action[i].Type == ActionType.ShortAttack)
+            if (action[i].Type == ActionType.ShortAttack)
             {
                 actionType = "Close Attack";
             }
@@ -61,26 +62,32 @@ public class ActionListControl : MonoBehaviour
             {
                 actionType = "Slow";
             }
-            if(i == 0)
+            if (i == 0)
             {
-                GameObject.Find("ActionButton").GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range);
+                GameObject.Find("ActionButton").GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range, i);
             }
-            else
+            if (i == 1)
             {
-                //Debug.Log(buttons.Count);
-                Debug.Log(button);
-
-                button.GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range);
-                button.transform.SetParent(GameObject.Find("ActionButton").transform.parent, false);
-                buttons.Add(button.gameObject);
-                Destroy(GameObject.Find("ActionButton(Clone)"));
+                BM.ActivateAction(2);
+                GameObject.Find("ActionButton2").GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range, i);
+            }
+            if (i == 2)
+            {
+                BM.ActivateAction(3);
+                GameObject.Find("ActionButton3").GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range, i);
+            }
+            if (i ==3)
+            {
+                BM.ActivateAction(4);
+                GameObject.Find("ActionButton4").GetComponent<ActionListButton>().SetText(actionType, action[i].Power, action[i].Range, i);
             }
         }
     }
-    
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 }

@@ -24,6 +24,7 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected UnitType type;
     [SerializeField] protected float hitPoints = 100;
     [SerializeField] protected float damageTaken = 0;
+    [SerializeField] protected float damageDealt = 0;
     [SerializeField] protected float attack = 0;
     [SerializeField] protected float speed = 100;
     [SerializeField] protected float mass = 400;
@@ -74,6 +75,7 @@ public class Unit : MonoBehaviour {
             type = Type;
             shields = 0;
             threat = 20;
+            damageDealt = 0;
         }
 
         if (UnitType.frigate == Type)
@@ -87,40 +89,44 @@ public class Unit : MonoBehaviour {
             type = Type;
             shields = 0;
             threat = 10;
+            damageDealt = 0;
         }
     }
+
 
     //calculate threat
     public float GetThreat()
     {
+        float tempThreat = threat;
+
         for (int i = 0; i < modules.Count; i++)
         {
             if (modules[i].ModuleType == ModuleType.heal)
             {
-                threat += 30;
+                tempThreat += 30;
             }
             else if (modules[i].ModuleType == ModuleType.longRange)
             {
-                threat += 25;
+                tempThreat += 25;
             }
             else if (modules[i].ModuleType == ModuleType.shortRange)
             {
-                threat += 20;
+                tempThreat += 20;
             }
             else if (modules[i].ModuleType == ModuleType.slow)
             {
-                threat += 15;
+                tempThreat += 15;
             }
             else if (modules[i].ModuleType == ModuleType.engine)
             {
-                threat += 10;
+                tempThreat += 10;
             }
             else if (modules[i].ModuleType == ModuleType.shields)
             {
-                threat += 5;
+                tempThreat += 5;
             }
         }
-        return threat;
+        return tempThreat;
     }
 
     //Unit will take damage
@@ -241,6 +247,17 @@ public class Unit : MonoBehaviour {
         return damageTaken;
     }
 
+    //returns total damage Dealt
+    public float GetDamageDealt()
+    {
+        return damageDealt;
+    }
+
+    //add to damage dealt
+    public void AddDamage(float damage)
+    {
+        damageDealt += damage;
+    }
     //returns base hp + bonus from modules
     public float GetHP()
     {
