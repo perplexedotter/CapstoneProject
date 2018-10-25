@@ -14,6 +14,11 @@ public class BattleManager : MonoBehaviour {
     public static BattleManager instance;
 
     private List<Tile> activeUnitPosMoves;
+    private List<Tile> activeUnitPosMelee;
+
+    //To show tiles for player during attack
+    private List<Tile> activeUnitPosShort;
+    private List<Tile> activeUnitPosLong;
 
     //Units in battle
     List<Unit> units = new List<Unit>();
@@ -56,7 +61,8 @@ public class BattleManager : MonoBehaviour {
     private bool menuState = false;
     private bool actionState = false;
     private bool movingState = false;
-
+    enum ActionChosen { longRange, shortRange, heal, slow};
+    ActionChosen actionChosen;
 
     //for Action Panel
     [SerializeField] GameObject actButton1;
@@ -77,6 +83,8 @@ public class BattleManager : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         instance = this;
+        ActionMenu.SetActive(false);
+
     }
     void Start() {
         //GenerateUnits();
@@ -122,6 +130,13 @@ public class BattleManager : MonoBehaviour {
         ResetForNextTurn();
         activeUnit.DecrementStatuses(); //Decrement current units statues
         UpdateActiveUnit(); //Update the current unit
+        if (!activeUnit.AIUnit) {
+            BattleMenu.SetActive(true);
+            ActionMenu.SetActive(false);
+        } else {
+            BattleMenu.SetActive(false);
+            ActionMenu.SetActive(false);
+        }
         ProcessTurn(); //Begin processing the next turn
     }
 
@@ -193,14 +208,18 @@ public class BattleManager : MonoBehaviour {
 
     private void ProcessPlayerTurn()
     {
-        //TODO Fillout this function to actually process a players turn
+        
         if (unitMoved && actionsTaken > 0)
         {
             NextTurn();
         }
         else
         {
+            //handles movement tile colorings and clicks
             if (movingState) {
+                BattleMenu.SetActive(false);
+                ActionMenu.SetActive(false);
+                //safety sanity check to catch fast-click bugs
                 if(unitMoved)
                 {
                     ResetToBattleMenu();
@@ -208,6 +227,7 @@ public class BattleManager : MonoBehaviour {
                 UpdateCurrentPossibleMoves();
                 ShowCurrentPossibleMoves();
             }
+            //sets menu for use during turn
             if (menuState) {
                 
                 if (unitMoved)
@@ -219,7 +239,38 @@ public class BattleManager : MonoBehaviour {
                 map.ResetTileColors();
             }
             if (actionState) {
-                
+                if(actionsTaken > 0)
+                {
+                    ResetToBattleMenu();
+                }
+                BattleMenu.SetActive(false);
+                ActionMenu.SetActive(false);
+                //do actions based on selection
+                switch (actionChosen)
+                {
+                    case ActionChosen.longRange:
+                        UpdateCurrentPossibleLongAttack();
+                        ShowCurrentPossibleLongRange();
+                        break;
+                    case ActionChosen.shortRange:
+                        UpdateCurrentPossibleShortAttack();
+                        ShowCurrentPossibleShortRange();
+                        break;
+                    case ActionChosen.heal:
+                        UpdateCurrentPossibleShortAttack();
+                        ShowCurrentPossibleHealRange();
+                        break;
+                    case ActionChosen.slow:
+                        UpdateCurrentPossibleLongAttack();
+                        ShowCurrentPossibleSlowRange();
+                        break;
+                    default:
+                        Debug.Log("Entered action state with no action chosen");
+                        ResetToBattleMenu();
+                        break;
+
+                }
+                //do action stuff
             }
 
         }
@@ -253,25 +304,38 @@ public class BattleManager : MonoBehaviour {
     }
     public void EndButtonClicked()
     {
+        BattleMenu.SetActive(false);
         unitMoved = true;
         actionsTaken = 5;
         ProcessTurn();
     }
     public void LongButtonClicked()
     {
-        
+        menuState = false;
+        actionChosen = (ActionChosen)0;
+        actionState = true;
+        ProcessTurn();
     }
     public void ShortButtonClicked()
     {
-        
+        menuState = false;
+        actionChosen = (ActionChosen)1;
+        actionState = true;
+        ProcessTurn();
     }
     public void HealButtonClicked()
     {
-        
+        menuState = false;
+        actionChosen = (ActionChosen)2;
+        actionState = true;
+        ProcessTurn();
     }
     public void SlowButtonClicked()
     {
-        
+        menuState = false;
+        actionChosen = (ActionChosen)3;
+        actionState = true;
+        ProcessTurn();
     }
     private void ProcessAITurn()
     {
@@ -314,6 +378,18 @@ public class BattleManager : MonoBehaviour {
         //activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
         activeUnitPosMoves = map.GetMovementRange(activeUnit);
     }
+    public void UpdateCurrentPossibleMelee()
+    {
+        activeUnitPosMelee = map.GetMeleeRange(activeUnit);
+    }
+    public void UpdateCurrentPossibleShortAttack()
+    {
+        activeUnitPosShort = map.GetShortAttackRange(activeUnit);
+    }
+    public void UpdateCurrentPossibleLongAttack()
+    {
+        activeUnitPosLong = map.GetLongAttackRange(activeUnit);
+    }
 
     //Called by a unit when it has finished moving so that BattleManager can resume control
     public void FinishedMovement()
@@ -336,6 +412,30 @@ public class BattleManager : MonoBehaviour {
         //map.ResetTileColors();
         foreach (Tile tile in activeUnitPosMoves)
             tile.SetTileColor(Tile.TileColor.move);
+    }
+    public void ShowCurrentPossibleLongRange()
+    {
+        //map.ResetTileColors();
+        foreach (Tile tile in activeUnitPosLong)
+            tile.SetTileColor(Tile.TileColor.attack);
+    }
+    public void ShowCurrentPossibleShortRange()
+    {
+        //map.ResetTileColors();
+        foreach (Tile tile in activeUnitPosShort)
+            tile.SetTileColor(Tile.TileColor.attack);
+    }
+    public void ShowCurrentPossibleHealRange()
+    {
+        //map.ResetTileColors();
+        foreach (Tile tile in activeUnitPosShort)
+            tile.SetTileColor(Tile.TileColor.ally);
+    }
+    public void ShowCurrentPossibleSlowRange()
+    {
+        //map.ResetTileColors();
+        foreach (Tile tile in activeUnitPosLong)
+            tile.SetTileColor(Tile.TileColor.attack);
     }
 
     public void ColorTiles(List<Tile> tiles, Tile.TileColor color)
@@ -381,9 +481,49 @@ public class BattleManager : MonoBehaviour {
         //TODO Add logic for attacking and abilities
         if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile)
             && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
-            && tile.UnitOnTile == null && !activeUnit.AIUnit && !menuState)
+            && tile.UnitOnTile == null && !activeUnit.AIUnit && movingState)
         {
             MoveActiveUnitToTile(tile);
+        }
+        //logic for actions taken
+        if (actionState && !activeUnit.AIUnit)
+        {
+                switch (actionChosen)
+                {
+                    case ActionChosen.longRange:
+                        if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
+                        {
+                            Debug.Log("Long Attack Hits" + tile.UnitOnTile.name);
+                            
+                        }
+                        break;
+                    case ActionChosen.shortRange:
+                        if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
+                        {
+                            Debug.Log("Short Attack Hits" + tile.UnitOnTile.name);
+
+                        }
+                        break;
+                    case ActionChosen.heal:
+                        if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && !tile.UnitOnTile.AIUnit)
+                        {
+                            Debug.Log("Heal Attack Hits" + tile.UnitOnTile.name);
+
+                        }
+                        break;
+                    case ActionChosen.slow:
+                        if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
+                        {
+                            Debug.Log("Slow Attack Hits" + tile.UnitOnTile.name);
+
+                        }
+                        break;
+                    default:
+                        Debug.Log("Entered action state with no action chosen");
+                        ResetToBattleMenu();
+                        break;
+
+                }
         }
     }
 
