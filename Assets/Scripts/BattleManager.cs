@@ -20,9 +20,15 @@ public class BattleManager : MonoBehaviour {
     Unit activeUnit;
     int unitIndex = 0;
 
+    //Turn Order
+    [SerializeField] List<Unit> roundTurnOrder;
+    [SerializeField] int turnIndex;
+    [SerializeField] int roundNumber = 0;
+
     //AI Commands
     List<Command> commands;
     int commandIndex = 0;
+    bool unitSlowed;
 
     //Events this turn
     bool unitMoved;
@@ -74,7 +80,8 @@ public class BattleManager : MonoBehaviour {
     void Start() {
         //GenerateUnits();
         AddUnitsFromMap();
-        activeUnit = units[unitIndex];
+        NextRound();
+        activeUnit = roundTurnOrder[turnIndex];
         ProcessTurn();
     }
 
@@ -84,6 +91,19 @@ public class BattleManager : MonoBehaviour {
         foreach (var u in unitsFromMap)
             units.Add(u);
     }
+
+
+    private void NextRound()
+    {
+        //TODO add other things assiciated with ending a round
+        turnIndex = 0;
+        roundNumber++;
+        unitSlowed = false;
+        roundTurnOrder = new List<Unit>(units); //TODO Maybe make this the previous turnOrder as seed
+        UpdateTurnOrder(turnIndex); //Update the turn order for all units
+        DisplayTurnOrder();
+    }
+
 
     // Update is called once per frame
     void Update() {
@@ -117,8 +137,29 @@ public class BattleManager : MonoBehaviour {
         map.ResetTileColors();
     }
 
+    //Updates the turn order for all units starting at the index given
+    //This allows for this function be used after a unt is slowed to imediatily 
+    //Update and display the turn order and for the turn order to be updated each round
+    private void UpdateTurnOrder(int index)
+    {
+        //Get units to update
+        List<Unit> turnsToUpdate = new List<Unit>();
+        for(int i = index; i < roundTurnOrder.Count; i++)
+        {
+            turnsToUpdate.Add(roundTurnOrder[i]);
+        }
+        //TODO Convert this to a GetSpeed and Reverse the sort
+        turnsToUpdate.Sort((a, b) => a.GetMass().CompareTo(b.GetMass()));
+        //Replace updated units
+        for(int i = index; i < roundTurnOrder.Count; i++)
+        {
+            roundTurnOrder[i] = turnsToUpdate[i - index];
+        }
+    }
+
     private void UpdateActiveUnit()
     {
+<<<<<<< HEAD
         if (activeUnit.Destroyed())
         {
             units.Remove(units[unitIndex]);
@@ -131,6 +172,18 @@ public class BattleManager : MonoBehaviour {
             unitIndex = 0;
        
         activeUnit = units[unitIndex];
+=======
+        //if (unitIndex + 1 < units.Count)
+        //    unitIndex++;
+        //else
+        //    unitIndex = 0;
+        //activeUnit = units[unitIndex];
+        if (turnIndex + 1 < roundTurnOrder.Count)
+            turnIndex++;
+        else
+            NextRound();
+        activeUnit = roundTurnOrder[turnIndex];
+>>>>>>> upstream/master
 
     }
 
@@ -246,6 +299,12 @@ public class BattleManager : MonoBehaviour {
         {
             u.CurrentTile.SetTileColor(Tile.TileColor.ally);
         }
+
+    }
+
+    //TODO Implement this
+    private void DisplayTurnOrder()
+    {
 
     }
 
