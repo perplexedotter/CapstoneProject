@@ -258,6 +258,11 @@ Prefab:
       propertyPath: m_Name
       value: Tile 0,0
       objectReference: {fileID: 0}
+    - target: {fileID: 114193524029788770, guid: a016727452de7bf49aeb5694f0b9145b,
+        type: 2}
+      propertyPath: unitOnTile
+      value: 
+      objectReference: {fileID: 1444963038}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a016727452de7bf49aeb5694f0b9145b, type: 2}
   m_IsPrefabAsset: 0
@@ -1589,6 +1594,12 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a016727452de7bf49aeb5694f0b9145b, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &274100672 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114193524029788770, guid: a016727452de7bf49aeb5694f0b9145b,
+    type: 2}
+  m_PrefabInternal: {fileID: 64014171}
+  m_Script: {fileID: 11500000, guid: 08408fb76814f1d4eb58f406db9c807a, type: 3}
 --- !u!1001 &277926838
 Prefab:
   m_ObjectHideFlags: 0
@@ -1948,7 +1959,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 40.8
+      value: 11.9
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalPosition.y
@@ -1956,7 +1967,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 49.1
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2002,7 +2013,7 @@ Prefab:
         type: 2}
       propertyPath: currentTile
       value: 
-      objectReference: {fileID: 915707583}
+      objectReference: {fileID: 786361905}
     - target: {fileID: 114721051503195952, guid: f2e9cf4ae9d8c0d409c97766e62772a6,
         type: 2}
       propertyPath: modules.Array.data[0]
@@ -4801,6 +4812,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4429949836186490, guid: a016727452de7bf49aeb5694f0b9145b,
     type: 2}
   m_PrefabInternal: {fileID: 1032794186}
+--- !u!114 &786361905 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114193524029788770, guid: a016727452de7bf49aeb5694f0b9145b,
+    type: 2}
+  m_PrefabInternal: {fileID: 716577776}
+  m_Script: {fileID: 11500000, guid: 08408fb76814f1d4eb58f406db9c807a, type: 3}
 --- !u!1001 &786622584
 Prefab:
   m_ObjectHideFlags: 0
@@ -5769,6 +5786,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   map: {fileID: 1645087134}
   ai: {fileID: 610783505}
+  roundTurnOrder: []
+  turnIndex: 0
+  roundNumber: 0
   actButton1: {fileID: 1288588565}
   actButton2: {fileID: 911190044}
   actButton3: {fileID: 67510855}
@@ -8683,6 +8703,11 @@ Prefab:
       propertyPath: m_Name
       value: Tile 1,0
       objectReference: {fileID: 0}
+    - target: {fileID: 114193524029788770, guid: a016727452de7bf49aeb5694f0b9145b,
+        type: 2}
+      propertyPath: unitOnTile
+      value: 
+      objectReference: {fileID: 1797286027}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a016727452de7bf49aeb5694f0b9145b, type: 2}
   m_IsPrefabAsset: 0
@@ -8804,6 +8829,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496b4063bd6bfe54788042daa5805d3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1444963038 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114721051503195952, guid: f2e9cf4ae9d8c0d409c97766e62772a6,
+    type: 2}
+  m_PrefabInternal: {fileID: 1767070096}
+  m_Script: {fileID: 11500000, guid: 34b1a0b2dacdb3045a0fb90ae0a63f7e, type: 3}
 --- !u!1001 &1470218021
 Prefab:
   m_ObjectHideFlags: 0
@@ -10274,7 +10305,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 50
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalPosition.y
@@ -10282,7 +10313,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 80
+      value: -1.1
       objectReference: {fileID: 0}
     - target: {fileID: 4932673188701830, guid: f2e9cf4ae9d8c0d409c97766e62772a6, type: 2}
       propertyPath: m_LocalRotation.x
@@ -10328,7 +10359,7 @@ Prefab:
         type: 2}
       propertyPath: currentTile
       value: 
-      objectReference: {fileID: 915707583}
+      objectReference: {fileID: 274100672}
     - target: {fileID: 114721051503195952, guid: f2e9cf4ae9d8c0d409c97766e62772a6,
         type: 2}
       propertyPath: modules.Array.data[0]
@@ -10560,6 +10591,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496b4063bd6bfe54788042daa5805d3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1797286027 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114721051503195952, guid: f2e9cf4ae9d8c0d409c97766e62772a6,
+    type: 2}
+  m_PrefabInternal: {fileID: 312182574}
+  m_Script: {fileID: 11500000, guid: 34b1a0b2dacdb3045a0fb90ae0a63f7e, type: 3}
 --- !u!1 &1829825416
 GameObject:
   m_ObjectHideFlags: 0

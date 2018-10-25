@@ -159,20 +159,16 @@ public class BattleManager : MonoBehaviour {
 
     private void UpdateActiveUnit()
     {
-<<<<<<< HEAD
+        //destroys active unit if destoyed bool = true 
         if (activeUnit.Destroyed())
         {
-            units.Remove(units[unitIndex]);
+            roundTurnOrder.RemoveAt(turnIndex);
+            units.Remove(activeUnit);
+            Explode(activeUnit.transform.position);
             Destroy(activeUnit.gameObject);
-            unitIndex -= 1;
+            turnIndex -= 1;
         }
-        if (unitIndex + 1 < units.Count)
-            unitIndex++;
-        else
-            unitIndex = 0;
-       
-        activeUnit = units[unitIndex];
-=======
+
         //if (unitIndex + 1 < units.Count)
         //    unitIndex++;
         //else
@@ -183,7 +179,6 @@ public class BattleManager : MonoBehaviour {
         else
             NextRound();
         activeUnit = roundTurnOrder[turnIndex];
->>>>>>> upstream/master
 
     }
 
@@ -329,6 +324,14 @@ public class BattleManager : MonoBehaviour {
     }
 
     //TEST FUNCTIONS
+
+    
+    //make explosion at location passed to function
+    public void Explode(Vector3 Pos)
+    {
+        Destroy(GameObject.Instantiate(Resources.Load("Prefabs/Explode"), Pos, Quaternion.identity) as GameObject, 5);
+
+    }
 
     //adds damage dealt to active unit's running total
     public void AddDamage(float damage)
