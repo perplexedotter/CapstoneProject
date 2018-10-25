@@ -42,6 +42,22 @@ public class BattleManager : MonoBehaviour {
     bool specialMenuOpen;
     bool specialSelected;
     
+    //for handling battle menu
+    [SerializeField] Button LongRangeButton;
+    [SerializeField] Button ShortTangeButton;
+    [SerializeField] Button HealButton;
+    [SerializeField] Button SlowButton;
+    [SerializeField] Button ActionButton;
+    [SerializeField] Button MoveButton;
+    [SerializeField] Button EndButton;
+    [SerializeField] GameObject BattleMenu;
+    [SerializeField] GameObject ActionMenu;
+
+    private bool menuState = false;
+    private bool actionState = false;
+    private bool movingState = false;
+
+
     //for Action Panel
     [SerializeField] GameObject actButton1;
     [SerializeField] GameObject actButton2;
@@ -80,6 +96,7 @@ public class BattleManager : MonoBehaviour {
 
     private void NextRound()
     {
+        Debug.Log("Next round!");
         //TODO add other things assiciated with ending a round
         turnIndex = 0;
         roundNumber++;
@@ -92,7 +109,12 @@ public class BattleManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            print("escape key was Clicked");
+            if(!activeUnit.AIUnit){
+                ResetToBattleMenu();
+}        }    
     }
 
     public void NextTurn()
@@ -172,17 +194,85 @@ public class BattleManager : MonoBehaviour {
     private void ProcessPlayerTurn()
     {
         //TODO Fillout this function to actually process a players turn
-        if (unitMoved)
+        if (unitMoved && actionsTaken > 0)
         {
             NextTurn();
         }
         else
         {
-            UpdateCurrentPossibleMoves();
-            ShowCurrentPossibleMoves();
+            if (movingState) {
+                if(unitMoved)
+                {
+                    ResetToBattleMenu();
+                }
+                UpdateCurrentPossibleMoves();
+                ShowCurrentPossibleMoves();
+            }
+            if (menuState) {
+                
+                if (unitMoved)
+                {
+                    MoveButton.interactable = false;
+                } else {
+                    MoveButton.interactable = true;
+                }
+                map.ResetTileColors();
+            }
+            if (actionState) {
+                
+            }
+
         }
     }
+    private void ResetToBattleMenu()
+    {
+        BattleMenu.SetActive(true);
+        ActionMenu.SetActive(false);
+        
+        movingState = false;
+        actionState = false;
+        menuState = true;
+        ProcessTurn();
+    }
 
+    public void ActionButtonClicked()
+    {   
+        BattleMenu.SetActive(false);
+        ActionMenu.SetActive(true);
+        ProcessTurn();
+        
+    }
+    public void MoveButtonClicked()
+    {
+        menuState = false;
+        BattleMenu.SetActive(false);
+        ActionMenu.SetActive(false);
+        movingState = true;
+        ProcessTurn();
+       
+    }
+    public void EndButtonClicked()
+    {
+        unitMoved = true;
+        actionsTaken = 5;
+        ProcessTurn();
+    }
+    public void LongButtonClicked()
+    {
+        
+    }
+    public void ShortButtonClicked()
+    {
+        
+    }
+    public void HealButtonClicked()
+    {
+        
+    }
+    public void SlowButtonClicked()
+    {
+        
+    }
     private void ProcessAITurn()
     {
         if (commands == null)
@@ -229,7 +319,12 @@ public class BattleManager : MonoBehaviour {
     public void FinishedMovement()
     {
         unitMoved = true;
-        ProcessTurn();
+        if (!activeUnit.AIUnit) 
+        {
+            movingState = false;
+            menuState = true;
+        }
+        ResetToBattleMenu();
     }
 
 
@@ -286,7 +381,7 @@ public class BattleManager : MonoBehaviour {
         //TODO Add logic for attacking and abilities
         if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile)
             && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
-            && tile.UnitOnTile == null && !activeUnit.AIUnit)
+            && tile.UnitOnTile == null && !activeUnit.AIUnit && !menuState)
         {
             MoveActiveUnitToTile(tile);
         }
