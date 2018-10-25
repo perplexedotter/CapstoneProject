@@ -54,7 +54,22 @@ public class BattleManager : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
+
         instance = this;
+
+
+        //this is how to add modules to units via children
+        //just know that the units use void awake for building module list -- which means these will get added after they have called awake
+        //the units have a small wait time to call functions in awake, which provides enough time to add components
+        /*
+        GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/MeleeModule"), GameObject.Find("Unit").transform) as GameObject;
+        GameObject mod2 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/RangeAttackModule"), GameObject.Find("Unit").transform) as GameObject;
+        GameObject mod3 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/HealModule"), GameObject.Find("Unit").transform) as GameObject;
+        GameObject mod4 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/SlowModule"), GameObject.Find("Unit").transform) as GameObject;
+        */
+
+
+
     }
     void Start() {
         //GenerateUnits();
@@ -104,11 +119,19 @@ public class BattleManager : MonoBehaviour {
 
     private void UpdateActiveUnit()
     {
+        if (activeUnit.Destroyed())
+        {
+            units.Remove(units[unitIndex]);
+            Destroy(activeUnit.gameObject);
+            unitIndex -= 1;
+        }
         if (unitIndex + 1 < units.Count)
             unitIndex++;
         else
             unitIndex = 0;
+       
         activeUnit = units[unitIndex];
+
     }
 
     public void ProcessTurn()

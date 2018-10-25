@@ -7,6 +7,11 @@ TagManager:
   - Debris
   - Tile
   - Asteroid
+  - Module
+  - Melee
+  - Range
+  - Heal
+  - Slow
   layers:
   - Default
   - TransparentFX
