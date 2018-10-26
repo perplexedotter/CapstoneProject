@@ -31,6 +31,7 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected float shields = 0;
     [SerializeField] protected float hardPoints = 0;
     [SerializeField] protected int movementRange;
+    [SerializeField] protected bool destroy = false;
 
     [Header("Modules and Statuses")]
     [SerializeField] protected List<Module> modules = new List<Module>();
@@ -46,6 +47,21 @@ public class Unit : MonoBehaviour {
     void Awake()
     {
 
+        //This code can get components instead of children
+        /*
+        foreach (MeleeAttackModule m in this.GetComponents<MeleeAttackModule>()){
+            Debug.Log(m);
+            modules.Add(m);
+        }*/
+
+
+        //gets children
+        //Needs own function for supplying a small wait time
+        //wait allows for components to be added before they are added to module list
+        StartCoroutine (GetChildren());
+
+
+
     }
     // Use this for initialization
     void Start()
@@ -58,6 +74,38 @@ public class Unit : MonoBehaviour {
     {
         ProcessMovement();
     }
+
+    IEnumerator GetChildren()
+    {
+        yield return new WaitForSeconds(.5f);
+        Transform[] childModules = GetComponentsInChildren<Transform>();
+        foreach (Transform child in childModules)
+        {
+            if (child.tag == "Melee")
+            {
+                MeleeAttackModule melee = child.GetComponent<MeleeAttackModule>();
+                modules.Add(melee);
+            }
+            else if (child.tag == "Range")
+            {
+                RangeAttackModule range = child.GetComponent<RangeAttackModule>();
+                modules.Add(range);
+            }
+            else if (child.tag == "Heal")
+            {
+                Debug.Log("k");
+                HealModule heal = child.GetComponent<HealModule>();
+                modules.Add(heal);
+            }
+            else if (child.tag == "Slow")
+            {
+                SlowModule slow = child.GetComponent<SlowModule>();
+                modules.Add(slow);
+            }
+        }
+    }
+
+
 
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
@@ -133,9 +181,19 @@ public class Unit : MonoBehaviour {
     public float TakeDamage(float dmg)
     {
         damageTaken += dmg;
-        return(GetHP() - damageTaken);
+        float currentHP = GetHP() - damageTaken;
+        if(currentHP <= 0)
+        {
+            destroy = true;
+        }
+        return currentHP;
     }
 
+    //returns if unit should be destroyed or not
+    public bool Destroyed()
+    {
+        return destroy;
+    }
 
     public List<ModuleType> GetModuleTypes()
     {
