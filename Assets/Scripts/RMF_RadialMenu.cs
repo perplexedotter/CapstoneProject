@@ -22,7 +22,7 @@ public class RMF_RadialMenu : MonoBehaviour {
 
 
     [Tooltip("If set to true, a pointer with a graphic of your choosing will aim in the direction of your mouse. You will need to specify the container for the selection follower.")]
-    public bool useSelectionFollower = true;
+    public bool useSelectionFollower = false;
 
     [Tooltip("If using the selection follower, this must point to the rect transform of the selection follower's container.")]
     public RectTransform selectionFollowerContainer;
