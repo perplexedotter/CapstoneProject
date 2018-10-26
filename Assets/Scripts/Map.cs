@@ -194,6 +194,16 @@ public class Map : MonoBehaviour {
         Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange() + 1, true, false, unit.PlayerNumber);
         return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
     }
+    public List<Tile> GetShortAttackRange(Unit unit)
+    {
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, 1, true, false, unit.PlayerNumber);
+        return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
+    }
+    public List<Tile> GetLongAttackRange(Unit unit)
+    {
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, 4, true, false, unit.PlayerNumber);
+        return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
+    }
 
     public List<Unit> GetUnitsInMeleeRange(Unit unit)
     {
