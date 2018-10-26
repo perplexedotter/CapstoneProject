@@ -84,8 +84,22 @@ public class BattleManager : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
+
         instance = this;
         ToggleActionMenu(false);
+
+
+        //this is how to add modules to units via children
+        //just know that the units use void awake for building module list -- which means these will get added after they have called awake
+        //the units have a small wait time to call functions in awake, which provides enough time to add components
+        /*
+        GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/MeleeModule"), GameObject.Find("Unit").transform) as GameObject;
+        GameObject mod2 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/RangeAttackModule"), GameObject.Find("Unit").transform) as GameObject;
+        GameObject mod3 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/HealModule"), GameObject.Find("Unit").transform) as GameObject;
+        GameObject mod4 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/SlowModule"), GameObject.Find("Unit").transform) as GameObject;
+        */
+
+
 
     }
     void Start() {
@@ -186,6 +200,16 @@ public class BattleManager : MonoBehaviour {
 
     private void UpdateActiveUnit()
     {
+        //destroys active unit if destoyed bool = true 
+        if (activeUnit.Destroyed())
+        {
+            roundTurnOrder.RemoveAt(turnIndex);
+            units.Remove(activeUnit);
+            Explode(activeUnit.transform.position);
+            Destroy(activeUnit.gameObject);
+            turnIndex -= 1;
+        }
+
         //if (unitIndex + 1 < units.Count)
         //    unitIndex++;
         //else
@@ -586,6 +610,14 @@ public class BattleManager : MonoBehaviour {
     }
 
     //TEST FUNCTIONS
+
+    
+    //make explosion at location passed to function
+    public void Explode(Vector3 Pos)
+    {
+        Destroy(GameObject.Instantiate(Resources.Load("Prefabs/Explode"), Pos, Quaternion.identity) as GameObject, 5);
+
+    }
 
     //adds damage dealt to active unit's running total
     public void AddDamage(float damage)

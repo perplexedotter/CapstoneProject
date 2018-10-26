@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class RangeAttackModule : Module {
 
+    private void Awake()
+    {
+        ModuleType = ModuleType.longRange;
+        HitPoints = 0;
+        Mass = 200;
+        Action = new Action(ActionType.LongAttack, 25, 2);
+    }
     //basic constructor (give name)
     //We can change stats as necessary for balance
     public RangeAttackModule()
