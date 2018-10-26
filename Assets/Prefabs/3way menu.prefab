@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 11486208}
   - component: {fileID: 22568804}
   m_Layer: 5
-  m_Name: Radial Menu Example 3
+  m_Name: 3way menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
