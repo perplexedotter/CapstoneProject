@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 114030712242428756}
   - component: {fileID: 225954239236969858}
   m_Layer: 5
-  m_Name: BattleMenu
+  m_Name: 4way menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
