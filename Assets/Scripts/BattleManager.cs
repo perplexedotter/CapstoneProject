@@ -62,6 +62,7 @@ public class BattleManager : MonoBehaviour {
     private bool menuState = false;
     private bool actionState = false;
     private bool movingState = false;
+    private bool inputPaused = false;
     enum ActionChosen { longRange, shortRange, heal, slow};
     ActionChosen actionChosen;
 
@@ -306,9 +307,17 @@ public class BattleManager : MonoBehaviour {
  
     private void ResetToBattleMenu()
     {
+        StartCoroutine(_ResetToBattleMenu());
+    }
+
+    private IEnumerator _ResetToBattleMenu()
+    {
+        inputPaused = true;
+        yield return new WaitForSeconds(.1f);
+        inputPaused = false;
         ToggleBattleMenu(true);
         ToggleActionMenu(false);
-        
+
         movingState = false;
         actionState = false;
         menuState = true;
@@ -548,28 +557,32 @@ public class BattleManager : MonoBehaviour {
     //Respond to use clicking on a tile
     public void TileClicked(Tile tile)
     {
-        //TODO Add logic for attacking and abilities
-        if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile)
-            && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
-            && tile.UnitOnTile == null && !activeUnit.AIUnit && movingState)
+        if (!inputPaused)
         {
-            MoveActiveUnitToTile(tile);
+            //TODO Add logic for attacking and abilities
+            if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile)
+                && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
+                && tile.UnitOnTile == null && !activeUnit.AIUnit && movingState)
+            {
+                MoveActiveUnitToTile(tile);
+            }
+            //logic for actions taken
+            if (actionState && !activeUnit.AIUnit && tile.UnitOnTile)
+            {
+                ResolveAction(tile);
+                actionsTaken++;
+                Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
+                ResetToBattleMenu();
+
+            }
         }
-        //logic for actions taken
-        if (actionState && !activeUnit.AIUnit && tile.UnitOnTile)
-        {
-            ResolveAction(tile);
-            actionsTaken++;
-            Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
-            ResetToBattleMenu();
-            
-        }
+
     }
 
     //TODO posible link unit and tile clicks together
     public void UnitClicked(Unit unit)
     {
-
+        TileClicked(unit.CurrentTile);
     }
 
     //TEST FUNCTIONS
