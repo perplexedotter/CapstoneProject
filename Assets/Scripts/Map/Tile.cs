@@ -17,19 +17,12 @@ public class Tile : MonoBehaviour {
     [SerializeField] TileType type;
     [SerializeField] Collider collider;
 
-
     [Header("Material Colors")]
     [SerializeField] Color baseColor;
     [SerializeField] Color moveRangeColor;
     [SerializeField] Color attackRangeColor;
     [SerializeField] Color enemyColor;
     [SerializeField] Color allyColor;
-
-    //[Header("Tile Type Prefabs")]
-    //[SerializeField] GameObject normalTilePrefab;
-    //[SerializeField] GameObject asteroidTilePrefab;
-    //[SerializeField] GameObject debrisTilePrefab;
-
 
     Renderer[] childrenRenderers;
 
@@ -169,39 +162,4 @@ public class Tile : MonoBehaviour {
     {
 
     }
-
-
-    //MOVED TO MAP
-    ////TODO Move this to the search itself
-    //bool visted = false;
-
-    //public bool Visted
-    //{
-    //    get
-    //    {
-    //        return visted;
-    //    }
-
-    //    set
-    //    {
-    //        visted = value;
-    //    }
-    //}
-
-    //DEPRECIATED
-    //public void ResetTileSearchFields()
-    //{
-    //    visted = false;
-    //    exploredFrom = null;
-    //}
-
-    //DEPRECIATED Use SetTileColor instead
-    //Update all faces material
-    //public void UpdateMaterial(Material material)
-    //{
-    //    foreach (Renderer renderer in childrenRenderers)
-    //    {
-    //        renderer.material = material;
-    //    }
-    //}
 }

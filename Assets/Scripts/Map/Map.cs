@@ -44,13 +44,7 @@ public class Map : MonoBehaviour {
         }
 	}
 	
-    //SEARCH FUNCTIONS
-
-    //Specialized BFS for unit movement
-    //private Dictionary<Tile, TileSearchField> MovementBFS(Unit unit)
-    //{
-
-    //}
+    /********************************************* SEARCH FUNCTIONS ***************************************/
 
     private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range)
     {
@@ -134,7 +128,7 @@ public class Map : MonoBehaviour {
     }
 
 
-    //RANGE FUNCTIONS (MOVEMENT BASED)
+    /******************************************** RANGE FUNCTIONS (MOVEMENT BASED) ***********************************/
 
     public List<Tile> GetMovementRange(Unit unit)
     {
@@ -187,7 +181,7 @@ public class Map : MonoBehaviour {
     }
 
     
-    //MELEE RANGE FUNCTIONS (MOVEMENT BASED)
+    /************************************ MELEE RANGE FUNCTIONS (MOVEMENT BASED) ************************************/
 
     public List<Tile> GetMeleeRange(Unit unit)
     {
@@ -245,7 +239,7 @@ public class Map : MonoBehaviour {
     }
 
     
-    //RANGE FUNCTIONS (NOT MOVEMENT BASED)
+    /************************************ RANGE FUNCTIONS (NOT MOVEMENT BASED) ********************************/
 
 
     //Returns a list of all units in range passed including on the start tile
@@ -304,7 +298,7 @@ public class Map : MonoBehaviour {
     }
 
 
-    //UTILITY FUNCTIONS
+    /********************************* UTILITY FUNCTIONS **************************************/
 
     //Returns a list of all units that are on the map
     public List<Unit> GetAllUnits()
@@ -410,18 +404,4 @@ public class Map : MonoBehaviour {
             tile.ResetTileColor();
     }
 
-    //DEPRECIATED
-    ////Resets all tiles visited status for BFS algo
-    //public void ResetVisited()
-    //{
-    //    foreach (var tile in mapDict.Values)
-    //        tile.Visted = false;
-    //}
-
-    //DEPRECIATED Use ResetTileColors Instead
-    //public void ResetTileMaterials()
-    //{
-    //    foreach (Tile tile in mapTiles)
-    //        tile.ResetTileMaterial();
-    //}
 }
