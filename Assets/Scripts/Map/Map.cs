@@ -74,7 +74,7 @@ public class Map : MonoBehaviour {
         {
             //Create a list of tiles to be added at this range increment
             List<TileSearchField> currentTiles = new List<TileSearchField>();
-            while (tileQueue.Count > 0)
+            while (tileQueue.Count > 0 && !endFound)
             {
                 TileSearchField tileToExamine = tileQueue.Dequeue();
                 tileToExamine.visited = true;
@@ -96,7 +96,7 @@ public class Map : MonoBehaviour {
                             tsf.exploredFrom = tileToExamine.Tile;
                             tilesInRange.Add(tsf);
                             currentTiles.Add(tsf);
-                            if (startTile == endTile)
+                            if (tsf.Tile == endTile)
                                 endFound = true;   
                         }
 
