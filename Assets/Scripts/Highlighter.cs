@@ -96,9 +96,4 @@ public class Highlighter : MonoBehaviour {
         childColors = colors;
     }
 
-    //DEPRECIATED Allows other scripts to send a message indicating the base color has changed
-    //private void UpdateBaseColor(Color color)
-    //{
-    //    baseColor = color;
-    //}
 }

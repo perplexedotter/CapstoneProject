@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour {
 
-    //[Header("Map Properties")]
     [SerializeField] Map map;
     [SerializeField] AIController ai;
 
@@ -46,8 +45,15 @@ public class BattleManager : MonoBehaviour {
     bool attackMenuOpen;
     bool specialMenuOpen;
     bool specialSelected;
-    
+
+    //Game State Flags
+    private bool menuState = false;
+    private bool actionState = false;
+    private bool movingState = false;
+    private bool inputPaused = false;
+
     //for handling battle menu
+    [Header("Battle Menu Components")]
     [SerializeField] Button LongRangeButton;
     [SerializeField] Button ShortTangeButton;
     [SerializeField] Button HealButton;
@@ -59,10 +65,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] CanvasGroup ActionMenuCanvas;
     [SerializeField] GameObject BattleMenu;
     [SerializeField] GameObject ActionMenu;
-    private bool menuState = false;
-    private bool actionState = false;
-    private bool movingState = false;
-    private bool inputPaused = false;
+
     enum ActionChosen { longRange, shortRange, heal, slow};
     ActionChosen actionChosen;
 
@@ -73,14 +76,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] GameObject actButton4;
     [SerializeField] ActionListControl makeAction;
 
-    //[SerializeField] int mapSize = 11;
-    //[SerializeField] float unitHeightOffset = 1.5f;
-
-    //[SerializeField] GameObject PlayerUnitPreFab;
-    //[SerializeField] GameObject Player2UnitPreFab;
-
-    //public GameObject TilePreFab;
-    //public GameObject NonPlayerUnitPreFab;
+    //UNITY FUNCTIONS
 
     // Use this for initialization
     void Awake() {
@@ -99,8 +95,6 @@ public class BattleManager : MonoBehaviour {
         GameObject mod4 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/SlowModule"), GameObject.Find("Unit").transform) as GameObject;
         */
 
-
-
     }
     void Start() {
         //GenerateUnits();
@@ -110,6 +104,21 @@ public class BattleManager : MonoBehaviour {
         ProcessTurn();
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+
+        //TODO Add logic to escape the battle menu to let player examine map/units
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            print("escape key was Clicked");
+            if (!activeUnit.AIUnit)
+            {
+                ResetToBattleMenu();
+            }
+        }
+    }
+
     private void AddUnitsFromMap()
     {
         List<Unit> unitsFromMap = map.GetAllUnits();
@@ -117,6 +126,8 @@ public class BattleManager : MonoBehaviour {
             units.Add(u);
     }
 
+
+    //TURN / ROUND FUNCTIONS
 
     private void NextRound()
     {
@@ -131,16 +142,7 @@ public class BattleManager : MonoBehaviour {
     }
 
 
-    // Update is called once per frame
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            print("escape key was Clicked");
-            if(!activeUnit.AIUnit){
-                ResetToBattleMenu();
-            }   
-        }
-    }
+
 
     public void NextTurn()
     {
@@ -189,7 +191,7 @@ public class BattleManager : MonoBehaviour {
         {
             turnsToUpdate.Add(roundTurnOrder[i]);
         }
-        //TODO Convert this to a GetSpeed and Reverse the sort
+        //TODO Convert this to a GetSpeed and Reverse the sort (Might keep mass)
         turnsToUpdate.Sort((a, b) => a.GetMass().CompareTo(b.GetMass()));
         //Replace updated units
         for(int i = index; i < roundTurnOrder.Count; i++)
@@ -200,8 +202,9 @@ public class BattleManager : MonoBehaviour {
 
     private void UpdateActiveUnit()
     {
+        //TODO Move this elsewhere so units are imediatly destroyed when its their turn
         //destroys active unit if destoyed bool = true 
-        if (activeUnit.Destroyed())
+        if (activeUnit.Destroyed)
         {
             roundTurnOrder.RemoveAt(turnIndex);
             units.Remove(activeUnit);
@@ -210,11 +213,6 @@ public class BattleManager : MonoBehaviour {
             turnIndex -= 1;
         }
 
-        //if (unitIndex + 1 < units.Count)
-        //    unitIndex++;
-        //else
-        //    unitIndex = 0;
-        //activeUnit = units[unitIndex];
         if (turnIndex + 1 < roundTurnOrder.Count)
             turnIndex++;
         else
@@ -311,6 +309,40 @@ public class BattleManager : MonoBehaviour {
 
         }
     }
+
+    private void ProcessAITurn()
+    {
+        if (commands == null)
+            commands = ai.GetAICommands(activeUnit);
+        if (commandIndex == commands.Count)
+            NextTurn();
+        else
+        {
+            ProcessCommand(commands[commandIndex++]);
+        }
+    }
+
+    private void ProcessCommand(Command command)
+    {
+        switch (command.commandType)
+        {
+            //TODO add checking to make sure AI is making valid moves
+            case Command.CommandType.Move:
+                UpdateCurrentPossibleMoves();
+                ShowCurrentPossibleMoves();
+                MoveActiveUnitToTile(command.target);
+                break;
+
+            //TODO add processing for other actions
+            case Command.CommandType.Action:
+                ProcessAITurn();
+                break;
+        }
+    }
+
+
+    /****************************************** UTILITY FUNCTIONS ******************************/
+
     //enables or disables the clickability and the physical button object
     private void ToggleBattleMenu(bool on)
     {
@@ -348,94 +380,8 @@ public class BattleManager : MonoBehaviour {
         ProcessTurn();
     }
 
-    public void ActionButtonClicked()
-    {   
-        ToggleBattleMenu(false);
-        ToggleActionMenu(true);
-        
-    }
-    public void MoveButtonClicked()
-    {
-        if (!actionState && !movingState)
-        {
-            menuState = false;
-            ToggleBattleMenu(false);
-            ToggleActionMenu(false);
-            movingState = true;
-            ProcessTurn();
-        }
-    }
-    public void EndButtonClicked()
-    {
-        //makes sure end isnt clicked in error during other work states
-        if (!actionState && !movingState)
-        {
-            NextTurn();
-        }   
-        
-    }
-    public void LongButtonClicked()
-    {
-        menuState = false;
-        actionChosen = (ActionChosen)0;
-        actionState = true;
-        ProcessTurn();
-    }
-    public void ShortButtonClicked()
-    {
-        menuState = false;
-        actionChosen = (ActionChosen)1;
-        actionState = true;
-        ProcessTurn();
-    }
-    public void HealButtonClicked()
-    {
-        menuState = false;
-        actionChosen = (ActionChosen)2;
-        actionState = true;
-        ProcessTurn();
-    }
-    public void SlowButtonClicked()
-    {
-        menuState = false;
-        actionChosen = (ActionChosen)3;
-        actionState = true;
-        ProcessTurn();
-    }
-    private void ProcessAITurn()
-    {
-        if (commands == null)
-            commands = ai.GetAICommands(activeUnit);
-        if (commandIndex == commands.Count)
-            NextTurn();
-        else
-        {
-            ProcessCommand(commands[commandIndex++]);
-        }
-    }
 
-    private void ProcessCommand(Command command)
-    {
-        switch (command.commandType)
-        {
-            //TODO add checking to make sure AI is making valid moves
-            case Command.CommandType.Move:
-                UpdateCurrentPossibleMoves();
-                ShowCurrentPossibleMoves();
-                MoveActiveUnitToTile(command.target);
-                break;
-
-            //TODO add processing for other actions
-            case Command.CommandType.Action:
-                ProcessAITurn();
-                break;
-        }
-    }
-
-    private void MoveActiveUnitToTile(Tile tile)
-    {
-        activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
-    }
+    //TODO update this function take an Action object and process it possibly generalize it to allow it to be used with AI
     //takes the current tile clicked after action and resolves sadi action on unit on tile
     private bool ResolveAction(Tile tile) 
     {
@@ -480,20 +426,29 @@ public class BattleManager : MonoBehaviour {
         }
         return false;
     }
+
+    private void MoveActiveUnitToTile(Tile tile)
+    {
+        activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
+    }
+
     //Update the active Units possible moves
     public void UpdateCurrentPossibleMoves()
     {
         //activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
         activeUnitPosMoves = map.GetMovementRange(activeUnit);
     }
+
     public void UpdateCurrentPossibleMelee()
     {
         activeUnitPosMelee = map.GetMeleeRange(activeUnit);
     }
+
     public void UpdateCurrentPossibleShortAttack()
     {
         activeUnitPosShort = map.GetShortAttackRange(activeUnit);
     }
+
     public void UpdateCurrentPossibleLongAttack()
     {
         activeUnitPosLong = map.GetLongAttackRange(activeUnit);
@@ -507,7 +462,7 @@ public class BattleManager : MonoBehaviour {
     }
 
 
-    //DISPLAY FUNCTIONS
+    /************************************ DISPLAY FUNCTIONS ****************************/
 
     //Display the active Units possible moves
     public void ShowCurrentPossibleMoves()
@@ -576,7 +531,64 @@ public class BattleManager : MonoBehaviour {
 
     }
 
-    //CLICK FUNCTIONS
+    /*************************************** MENU CLICK FUNCTIONS *********************************/
+
+    public void ActionButtonClicked()
+    {
+        ToggleBattleMenu(false);
+        ToggleActionMenu(true);
+
+    }
+    public void MoveButtonClicked()
+    {
+        if (!actionState && !movingState)
+        {
+            menuState = false;
+            ToggleBattleMenu(false);
+            ToggleActionMenu(false);
+            movingState = true;
+            ProcessTurn();
+        }
+    }
+    public void EndButtonClicked()
+    {
+        //makes sure end isnt clicked in error during other work states
+        if (!actionState && !movingState)
+        {
+            NextTurn();
+        }
+
+    }
+    public void LongButtonClicked()
+    {
+        menuState = false;
+        actionChosen = (ActionChosen)0;
+        actionState = true;
+        ProcessTurn();
+    }
+    public void ShortButtonClicked()
+    {
+        menuState = false;
+        actionChosen = (ActionChosen)1;
+        actionState = true;
+        ProcessTurn();
+    }
+    public void HealButtonClicked()
+    {
+        menuState = false;
+        actionChosen = (ActionChosen)2;
+        actionState = true;
+        ProcessTurn();
+    }
+    public void SlowButtonClicked()
+    {
+        menuState = false;
+        actionChosen = (ActionChosen)3;
+        actionState = true;
+        ProcessTurn();
+    }
+
+    /********************************** MAP CLICK FUNCTIONS *********************************/
 
     //Respond to use clicking on a tile
     public void TileClicked(Tile tile)
@@ -603,15 +615,14 @@ public class BattleManager : MonoBehaviour {
 
     }
 
-    //TODO posible link unit and tile clicks together
+    //TODO Make this actually work (Add OnMouseOver to Unit that sends this message)
     public void UnitClicked(Unit unit)
     {
         TileClicked(unit.CurrentTile);
     }
 
-    //TEST FUNCTIONS
+/**************************************** TEST FUNCTIONS *********************************/
 
-    
     //make explosion at location passed to function
     public void Explode(Vector3 Pos)
     {
@@ -750,8 +761,6 @@ public class BattleManager : MonoBehaviour {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
     }
 
-    
-
     public void ActivateAction(int i)
     {
         if (i == 1)
@@ -771,70 +780,6 @@ public class BattleManager : MonoBehaviour {
         }
 
     }
-
-    //public int MapSize
-    //{
-    //    get
-    //    {
-    //        return mapSize;
-    //    }
-    //}
-
-    //   public void MoveCurrentPlayer(Tile destinationTile) {
-    //       activeUnit.MoveToTile(destinationTile);
-    //}
-
-    //DEPRICATED use Map.GetTilesInRange instead
-    ////Takes a unit and finds all tiles they could possibly move to
-    //public List<Tile> GetPossibleMoves(Unit unit)
-    //{
-    //    HashSet<Tile> possibleMoves = new HashSet<Tile>();
-    //    Queue<Tile> tileQueue = new Queue<Tile>();
-    //    int movementRange = unit.GetMovementRange();
-
-    //    //Add starting tile and reset tiles to unvisited
-    //    tileQueue.Enqueue(unit.CurrentTile);
-    //    map.ResetVisited();
-
-    //    //Loop while there are tiles to examine within range
-    //    while (movementRange > 0 && tileQueue.Count > 0)
-    //    {
-    //        List<Tile> currentTiles = new List<Tile>();
-    //        while (tileQueue.Count > 0)
-    //        {
-    //            Tile tileToExamine = tileQueue.Dequeue();
-    //            tileToExamine.Visted = true;
-    //            List<Tile> surroundTiles = map.GetSurroundingTiles(tileToExamine);
-    //            foreach (Tile tile in surroundTiles)
-    //            {
-    //                //TODO adjust to account for terrain and for other units in path
-    //                if (!possibleMoves.Contains(tile))
-    //                {
-    //                    possibleMoves.Add(tile);
-    //                    if (!tile.Visted)
-    //                        currentTiles.Add(tile);
-    //                }
-    //            }
-    //        }
-    //        //Add next set of tiles to queue and decrement range
-    //        foreach (Tile tile in currentTiles)
-    //            tileQueue.Enqueue(tile);
-    //        movementRange--;
-    //    }
-
-    //    //Return tiles if there are any
-    //    List<Tile> posMoves = new List<Tile>(possibleMoves);
-    //    return posMoves.Count > 0 ? posMoves : null;
-    //}
-
-    //DEPRECIATED refactered mouse enters and exits to a seperate highlighter script
-    //public void TileMouseExit(Tile tile)
-    //{
-    //    if (possibleMoves != null && possibleMoves.Contains(tile))
-    //        tile.UpdateMaterial(tileMoveRangeMaterial);
-    //    else
-    //        tile.ResetTileMaterial();
-    //}
 
     ////this will create the units on the map for this level
     //void GenerateUnits(){
