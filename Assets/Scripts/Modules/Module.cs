@@ -9,8 +9,15 @@ public class Module : MonoBehaviour {
     public ModuleType ModuleType { get; set; }
     public Action Action { get; protected set; }
 
+    [SerializeField] int Power;
+
     //virtual GetAction
     public virtual Action GetAction()
+    {
+        return null;
+    }
+
+    public virtual Buff GetBuff()
     {
         return null;
     }

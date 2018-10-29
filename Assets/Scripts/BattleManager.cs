@@ -14,6 +14,7 @@ public class BattleManager : MonoBehaviour {
 
     private List<Tile> activeUnitPosMoves;
     private List<Tile> activeUnitPosMelee;
+    private List<Action> activeUnitPosActions;
 
     //To show tiles for player during attack
     private List<Tile> activeUnitPosShort;
@@ -55,7 +56,7 @@ public class BattleManager : MonoBehaviour {
     //for handling battle menu
     [Header("Battle Menu Components")]
     [SerializeField] Button LongRangeButton;
-    [SerializeField] Button ShortTangeButton;
+    [SerializeField] Button ShortRangeButton;
     [SerializeField] Button HealButton;
     [SerializeField] Button SlowButton;
     [SerializeField] Button ActionButton;
@@ -218,6 +219,7 @@ public class BattleManager : MonoBehaviour {
         else
             NextRound();
         activeUnit = roundTurnOrder[turnIndex];
+        activeUnitPosActions = activeUnit.GetActions();
 
     }
 
@@ -235,7 +237,6 @@ public class BattleManager : MonoBehaviour {
 
     private void ProcessPlayerTurn()
     {
-        
         if (unitMoved && actionsTaken > 0)
         {   
             Debug.Log("next bc of processplayerturn and unitmoved is" + unitMoved);
@@ -310,6 +311,8 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
+
+
     private void ProcessAITurn()
     {
         if (commands == null)
@@ -358,9 +361,9 @@ public class BattleManager : MonoBehaviour {
         ActionMenuCanvas.interactable = on;
         ActionMenu.SetActive(on);
         if(on) {EndButton.interactable = !on;}
-        
+        SetInteractableActions(on);
     }
- 
+
     private void ResetToBattleMenu()
     {
         StartCoroutine(_ResetToBattleMenu());
@@ -380,6 +383,36 @@ public class BattleManager : MonoBehaviour {
         ProcessTurn();
     }
 
+
+    private void SetInteractableActions(bool on)
+    {
+
+        if (on)
+        {
+            HealButton.interactable = false;
+            LongRangeButton.interactable = false;
+            ShortRangeButton.interactable = false;
+            SlowButton.interactable = false;
+            foreach (var a in activeUnitPosActions)
+            {
+                switch (a.Type)
+                {
+                    case ActionType.Heal:
+                        HealButton.interactable = true;
+                        break;
+                    case ActionType.LongAttack:
+                        LongRangeButton.interactable = true;
+                        break;
+                    case ActionType.ShortAttack:
+                        ShortRangeButton.interactable = true;
+                        break;
+                    case ActionType.Slow:
+                        SlowButton.interactable = true;
+                        break;
+                }
+            }
+        }
+    }
 
     //TODO update this function take an Action object and process it possibly generalize it to allow it to be used with AI
     //takes the current tile clicked after action and resolves sadi action on unit on tile
