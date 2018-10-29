@@ -57,7 +57,8 @@ public class Unit : MonoBehaviour {
         //gets children
         //Needs own function for supplying a small wait time
         //wait allows for components to be added before they are added to module list
-        StartCoroutine (GetChildren());
+        //StartCoroutine (GetChildren());
+        modules = new List<Module>(GetComponentsInChildren<Module>());
 
 
 
@@ -441,6 +442,8 @@ public class Unit : MonoBehaviour {
             {
                 Vector3 destination = path[pathIndex].transform.position;
                 float step = moveSpeed * Time.deltaTime;
+                //Vector3.RotateTowards(transform.position, destination);
+                transform.LookAt(destination);
                 transform.position = Vector3.MoveTowards(transform.position, destination, step);
                 if (Vector3.Distance(destination, transform.position) <= 0)
                 {
@@ -481,6 +484,14 @@ public class Unit : MonoBehaviour {
             transform.position = tile.transform.position;
             UpdateTile(tile);
         }
+    }
+
+    public Vector2Int GetCoords()
+    {
+        return new Vector2Int(
+            (int)Mathf.Floor(transform.position.x / Tile.GridSize) * Tile.GridSize,
+            (int)Mathf.Floor(transform.position.z / Tile.GridSize) * Tile.GridSize
+        );
     }
 
     /********************************************* ANIMATION FUNCTIONS *****************************************/
