@@ -48,14 +48,14 @@ public class Map : MonoBehaviour {
 
     private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range)
     {
-        return RangeLimitedSearch(startTile, range, false, true, -1);
+        return RangeLimitedSearch(startTile, null, range, false, true, -1);
     }
 
     //TODO Possibly Change to dijkstra
-    private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, int range, bool movement, bool traverseAsteroid, int playerNumber){
+    private Dictionary<Tile, TileSearchField> RangeLimitedSearch(Tile startTile, Tile endTile, int range, bool movement, bool traverseAsteroid, int playerNumber){
         if (range <= 0 || startTile == null)
             return null;
-
+        bool endFound = false;
         //Create a dictionary contian the TileSearchFields to be used in the search
         Dictionary<Vector2Int, TileSearchField> toSearch = new Dictionary<Vector2Int, TileSearchField>();
         foreach(var t in mapDict.Values)
@@ -70,11 +70,11 @@ public class Map : MonoBehaviour {
         tilesInRange.Add(toSearch[startTile.GetGridPos()]);
 
         //While there are tiles to search and range hasn't been exceed loop
-        while (range > 0 && tileQueue.Count > 0)
+        while (range > 0 && tileQueue.Count > 0 && !endFound)
         {
             //Create a list of tiles to be added at this range increment
             List<TileSearchField> currentTiles = new List<TileSearchField>();
-            while (tileQueue.Count > 0)
+            while (tileQueue.Count > 0 && !endFound)
             {
                 TileSearchField tileToExamine = tileQueue.Dequeue();
                 tileToExamine.visited = true;
@@ -96,6 +96,8 @@ public class Map : MonoBehaviour {
                             tsf.exploredFrom = tileToExamine.Tile;
                             tilesInRange.Add(tsf);
                             currentTiles.Add(tsf);
+                            if (tsf.Tile == endTile)
+                                endFound = true;   
                         }
 
                     }
@@ -132,7 +134,7 @@ public class Map : MonoBehaviour {
 
     public List<Tile> GetMovementRange(Unit unit)
     {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange(), true, false, unit.PlayerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, null, unit.GetMovementRange(), true, false, unit.PlayerNumber);
         if (tileDict == null)
             return null;
         List<Tile> tilesInRange = new List<Tile>();
@@ -154,7 +156,7 @@ public class Map : MonoBehaviour {
         if (start == end)//Can't get a path from a tile to itself
             return null;
         //Use the size to ensure that range is unlimited regardless of the size of the map
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, mapDict.Count, true, false, playerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, end, mapDict.Count, true, false, playerNumber);
         if (tileDict == null)
             return null;
 
@@ -185,17 +187,17 @@ public class Map : MonoBehaviour {
 
     public List<Tile> GetMeleeRange(Unit unit)
     {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, unit.GetMovementRange() + 1, true, false, unit.PlayerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, null, unit.GetMovementRange() + 1, true, false, unit.PlayerNumber);
         return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
     }
     public List<Tile> GetShortAttackRange(Unit unit)
     {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, 1, true, false, unit.PlayerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, null, 1, true, false, unit.PlayerNumber);
         return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
     }
     public List<Tile> GetLongAttackRange(Unit unit)
     {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, 4, true, false, unit.PlayerNumber);
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, null, 4, true, false, unit.PlayerNumber);
         return tileDict != null ? new List<Tile>(tileDict.Keys) : new List<Tile>();
     }
 
