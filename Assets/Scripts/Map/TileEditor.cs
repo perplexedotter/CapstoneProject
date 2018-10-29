@@ -6,7 +6,7 @@ using UnityEngine;
 [SelectionBase]
 [RequireComponent(typeof(Tile))]
 public class TileEditor : MonoBehaviour {
-
+#if UNITY_EDITOR
     Tile tile;
 
     private void Awake()
@@ -19,4 +19,5 @@ public class TileEditor : MonoBehaviour {
         gameObject.name = "Tile " + tile.GetGridPos().x + "," + tile.GetGridPos().y;
         transform.position = new Vector3(tile.GetCoords().x, 0, tile.GetCoords().y);
 	}
+#endif
 }

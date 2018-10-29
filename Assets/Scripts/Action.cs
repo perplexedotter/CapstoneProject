@@ -11,6 +11,7 @@ public class Action {
     private ActionType type; //What the action does
     private int power; //How much it does (damage, healing, etc)
     private int range; //How far it reaches
+    private Target target;
 
     public ActionType Type
     {
@@ -36,9 +37,23 @@ public class Action {
         }
     }
 
-    public Action(ActionType type, int power, int range)
+    public Target Target
+    {
+        get
+        {
+            return target;
+        }
+
+        set
+        {
+            target = value;
+        }
+    }
+
+    public Action(ActionType type, Target target, int power, int range)
     {
         this.type = type;
+        this.target = target;
         this.power = power;
         this.range = range;
     }
@@ -46,14 +61,22 @@ public class Action {
     //Used to combine two like type actions into a single more powerful action
     public Action Combine(Action action)
     {
-        if (action.type != this.type) //For not unlike actions can't be combined
+        if (action.type != this.type || action.target != this.target) //For not unlike actions can't be combined
             return null;
         //These calculations can be changed to account for synergies
         int power = this.power + action.power;
         //Ranges should match but if not should default to the the shorter range;
         int range = Mathf.Min(this.range, action.range);
 
-        return new Action(type, power, range);
+        return new Action(type, target, power, range);
     }
 }
 public enum ActionType { ShortAttack, LongAttack, Heal, Slow };
+
+public enum Target
+{
+    Ally,
+    Enemy,
+    Self,
+    Everyone,
+}

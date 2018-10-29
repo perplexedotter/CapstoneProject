@@ -9,7 +9,7 @@ public class MeleeAttackModule : Module {
         ModuleType = ModuleType.shortRange;
         HitPoints = 25;
         Mass = 100;
-        Action = new Action(ActionType.ShortAttack, 25, 1);
+        Action = new Action(ActionType.ShortAttack, Target.Enemy, 25, 1);
     }
     //basic constructor (give name)
     //We can change stats as necessary for balance
@@ -18,7 +18,7 @@ public class MeleeAttackModule : Module {
         ModuleType = ModuleType.shortRange;
         HitPoints = 25;
         Mass = 100;
-        Action = new Action(ActionType.ShortAttack, 25, 1);
+        Action = new Action(ActionType.ShortAttack, Target.Enemy, 25, 1);
     }
 
     public override Action GetAction()

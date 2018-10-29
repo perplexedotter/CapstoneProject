@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +7,7 @@ public class BattleManager : MonoBehaviour {
 
     [SerializeField] Map map;
     [SerializeField] AIController ai;
+    [SerializeField] float aiDelay = 1f;
 
     public static BattleManager instance;
 
@@ -18,6 +17,8 @@ public class BattleManager : MonoBehaviour {
     //To show tiles for player during attack
     private List<Tile> activeUnitPosShort;
     private List<Tile> activeUnitPosLong;
+
+    private List<Action> activeUnitPosActions;
 
     //Units in battle
     List<Unit> units = new List<Unit>();
@@ -55,7 +56,7 @@ public class BattleManager : MonoBehaviour {
     //for handling battle menu
     [Header("Battle Menu Components")]
     [SerializeField] Button LongRangeButton;
-    [SerializeField] Button ShortTangeButton;
+    [SerializeField] Button ShortRangeButton;
     [SerializeField] Button HealButton;
     [SerializeField] Button SlowButton;
     [SerializeField] Button ActionButton;
@@ -68,6 +69,7 @@ public class BattleManager : MonoBehaviour {
 
     enum ActionChosen { longRange, shortRange, heal, slow};
     ActionChosen actionChosen;
+    Action unitAction;
 
     //for Action Panel
     [SerializeField] GameObject actButton1;
@@ -82,7 +84,7 @@ public class BattleManager : MonoBehaviour {
     void Awake() {
 
         instance = this;
-        ToggleActionMenu(false);
+
 
 
         //this is how to add modules to units via children
@@ -101,6 +103,8 @@ public class BattleManager : MonoBehaviour {
         AddUnitsFromMap();
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
+        activeUnitPosActions = activeUnit.GetActions();
+        ToggleActionMenu(false);
         ProcessTurn();
     }
 
@@ -218,6 +222,7 @@ public class BattleManager : MonoBehaviour {
         else
             NextRound();
         activeUnit = roundTurnOrder[turnIndex];
+        activeUnitPosActions = activeUnit.GetActions();
 
     }
 
@@ -235,7 +240,6 @@ public class BattleManager : MonoBehaviour {
 
     private void ProcessPlayerTurn()
     {
-        
         if (unitMoved && actionsTaken > 0)
         {   
             Debug.Log("next bc of processplayerturn and unitmoved is" + unitMoved);
@@ -280,35 +284,38 @@ public class BattleManager : MonoBehaviour {
                 ToggleBattleMenu(false);
                 ToggleActionMenu(false);
                 //do actions based on selection
-                switch (actionChosen)
-                {
-                    case ActionChosen.longRange:
-                        UpdateCurrentPossibleLongAttack();
-                        ShowCurrentPossibleLongRange();
-                        break;
-                    case ActionChosen.shortRange:
-                        UpdateCurrentPossibleShortAttack();
-                        ShowCurrentPossibleShortRange();
-                        break;
-                    case ActionChosen.heal:
-                        UpdateCurrentPossibleShortAttack();
-                        ShowCurrentPossibleHealRange();
-                        break;
-                    case ActionChosen.slow:
-                        UpdateCurrentPossibleLongAttack();
-                        ShowCurrentPossibleSlowRange();
-                        break;
-                    default:
-                        Debug.Log("Entered action state with no action chosen");
-                        ResetToBattleMenu();
-                        break;
+                //switch (actionChosen)
+                //{
+                //    case ActionChosen.longRange:
+                //        UpdateCurrentPossibleLongAttack();
+                //        ShowCurrentPossibleLongRange();
+                //        break;
+                //    case ActionChosen.shortRange:
+                //        UpdateCurrentPossibleShortAttack();
+                //        ShowCurrentPossibleShortRange();
+                //        break;
+                //    case ActionChosen.heal:
+                //        UpdateCurrentPossibleShortAttack();
+                //        ShowCurrentPossibleHealRange();
+                //        break;
+                //    case ActionChosen.slow:
+                //        UpdateCurrentPossibleLongAttack();
+                //        ShowCurrentPossibleSlowRange();
+                //        break;
+                //    default:
+                //        Debug.Log("Entered action state with no action chosen");
+                //        ResetToBattleMenu();
+                //        break;
 
-                }
+                //}
+                ShowActionRange(unitAction);
                 //do action stuff
             }
 
         }
     }
+
+
 
     private void ProcessAITurn()
     {
@@ -335,11 +342,18 @@ public class BattleManager : MonoBehaviour {
 
             //TODO add processing for other actions
             case Command.CommandType.Action:
-                ProcessAITurn();
+                ShowActionRange(command.action);
+                StartCoroutine(DelayActionCommand(command));
                 break;
         }
     }
 
+    IEnumerator DelayActionCommand(Command command)
+    {
+        yield return new WaitForSeconds(aiDelay);
+        ResolveAction(command.action, command.target);
+        ProcessAITurn();
+    }
 
     /****************************************** UTILITY FUNCTIONS ******************************/
 
@@ -358,9 +372,9 @@ public class BattleManager : MonoBehaviour {
         ActionMenuCanvas.interactable = on;
         ActionMenu.SetActive(on);
         if(on) {EndButton.interactable = !on;}
-        
+        SetInteractableActions(on);
     }
- 
+
     private void ResetToBattleMenu()
     {
         StartCoroutine(_ResetToBattleMenu());
@@ -380,8 +394,35 @@ public class BattleManager : MonoBehaviour {
         ProcessTurn();
     }
 
+    private void SetInteractableActions(bool on)
+    {
+        if (on)
+        {
+            HealButton.interactable = false;
+            LongRangeButton.interactable = false;
+            ShortRangeButton.interactable = false;
+            SlowButton.interactable = false;
+            foreach (var a in activeUnitPosActions)
+            {
+                switch (a.Type)
+                {
+                    case ActionType.Heal:
+                        HealButton.interactable = true;
+                        break;
+                    case ActionType.LongAttack:
+                        LongRangeButton.interactable = true;
+                        break;
+                    case ActionType.ShortAttack:
+                        ShortRangeButton.interactable = true;
+                        break;
+                    case ActionType.Slow:
+                        SlowButton.interactable = true;
+                        break;
+                }
+            }
+        }
+    }
 
-    //TODO update this function take an Action object and process it possibly generalize it to allow it to be used with AI
     //takes the current tile clicked after action and resolves sadi action on unit on tile
     private bool ResolveAction(Tile tile) 
     {
@@ -391,7 +432,7 @@ public class BattleManager : MonoBehaviour {
                 if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
                 {
                     Debug.Log("Long Attack Hits" + tile.UnitOnTile.name);
-                    tile.UnitOnTile.TakeDamage(50);
+                    tile.UnitOnTile.DamageUnit(50);
                     return true;
                 }
                 break;
@@ -399,7 +440,7 @@ public class BattleManager : MonoBehaviour {
                 if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
                 {
                     Debug.Log("Short Attack Hits" + tile.UnitOnTile.name);
-                    tile.UnitOnTile.TakeDamage(100);
+                    tile.UnitOnTile.DamageUnit(100);
                     return true;
                 }
                 break;
@@ -407,7 +448,7 @@ public class BattleManager : MonoBehaviour {
                 if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && !tile.UnitOnTile.AIUnit)
                 {
                     Debug.Log("Heal Attack Hits" + tile.UnitOnTile.name);
-                    tile.UnitOnTile.TakeDamage(-100);
+                    tile.UnitOnTile.DamageUnit(-100);
                     return true;
                 }
                 break;
@@ -427,6 +468,50 @@ public class BattleManager : MonoBehaviour {
         return false;
     }
 
+
+    //TODO Complete this
+    private bool ResolveAction(Action action, Tile tile)
+    {
+        int playerNumber = activeUnit.PlayerNumber;
+        Unit targetedUnit = tile.UnitOnTile;
+        List<Tile> range = GetActionRange(action);
+        bool resolved = false;
+        if(range.Contains(tile) && targetedUnit != null)
+        {
+            //TODO update the ifs to follow the actions actual Target value
+            switch (action.Type)
+            {
+                case ActionType.ShortAttack:
+                case ActionType.LongAttack:
+                    if (targetedUnit.PlayerNumber != playerNumber)
+                    {
+                        activeUnit.FaceTile(tile);
+                        resolved = true;
+                        targetedUnit.DamageUnit(action.Power);
+                    }
+                    break;
+                case ActionType.Slow:
+                    if (targetedUnit.PlayerNumber != playerNumber)
+                    {
+                        activeUnit.FaceTile(tile);
+                        targetedUnit.AddStatus(new StatusEffects(1, action.Power, statusType.mass));
+                        UpdateTurnOrder(turnIndex + 1); //Update turn index for remaining units
+                        resolved = true;
+                    }
+                    break;
+                case ActionType.Heal:
+                    if (targetedUnit.PlayerNumber == playerNumber)
+                    {
+                        activeUnit.FaceTile(tile);
+                        targetedUnit.HealUnit(action.Power);
+                        resolved = true;
+                    }
+                    break;
+            }
+        }
+        return resolved;
+    }
+
     private void MoveActiveUnitToTile(Tile tile)
     {
         activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
@@ -435,7 +520,6 @@ public class BattleManager : MonoBehaviour {
     //Update the active Units possible moves
     public void UpdateCurrentPossibleMoves()
     {
-        //activeUnitPosMoves = map.GetTilesInRange(activeUnit.CurrentTile, activeUnit.GetMovementRange());
         activeUnitPosMoves = map.GetMovementRange(activeUnit);
     }
 
@@ -459,6 +543,46 @@ public class BattleManager : MonoBehaviour {
     {
         unitMoved = true;
         ResetToBattleMenu();
+    }
+
+
+    public List<Tile> GetActionRange(Action action)
+    {
+        List<Tile> totalRange = map.GetTilesInRange(activeUnit.CurrentTile, action.Range);
+        List<Tile> adjustedRange = new List<Tile>();
+        Tile.TileColor color = action.Target == Target.Self || action.Target == Target.Ally ? Tile.TileColor.ally : Tile.TileColor.attack;
+        foreach (var t in totalRange)
+        {
+            if (t.UnitOnTile == null)
+                adjustedRange.Add(t);
+            else if (t.UnitOnTile == activeUnit && (action.Target == Target.Self || action.Target == Target.Ally))
+                adjustedRange.Add(t);
+            else if (t.UnitOnTile.PlayerNumber == activeUnit.PlayerNumber && action.Target == Target.Ally)
+                adjustedRange.Add(t);
+            else if (t.UnitOnTile.PlayerNumber != activeUnit.PlayerNumber && action.Target == Target.Enemy)
+                adjustedRange.Add(t);
+            else if (action.Target == Target.Everyone)
+                adjustedRange.Add(t);
+        }
+        return adjustedRange;
+    }
+
+    private Action GetActionOfType(ActionType type)
+    {
+        foreach(var a in activeUnitPosActions)
+        {
+            if (a.Type == type)
+                return a;
+        }
+        return null;
+    }
+
+    public void ColorTiles(List<Tile> tiles, Tile.TileColor color)
+    {
+        foreach (var t in tiles)
+        {
+            t.SetTileColor(color);
+        }
     }
 
 
@@ -496,13 +620,16 @@ public class BattleManager : MonoBehaviour {
             tile.SetTileColor(Tile.TileColor.attack);
     }
 
-    public void ColorTiles(List<Tile> tiles, Tile.TileColor color)
+    public void ShowActionRange(Action action)
     {
-        foreach (var t in tiles)
+        List<Tile> inRange = GetActionRange(action);
+        Tile.TileColor color = (action.Target == Target.Self || action.Target == Target.Ally) ? Tile.TileColor.ally : Tile.TileColor.attack;
+        foreach(var t in inRange)
         {
             t.SetTileColor(color);
         }
     }
+
 
     public void DisplayMovementRange()
     {
@@ -564,6 +691,8 @@ public class BattleManager : MonoBehaviour {
         menuState = false;
         actionChosen = (ActionChosen)0;
         actionState = true;
+        //Should only be possible if action is avaliable
+        unitAction = GetActionOfType(ActionType.LongAttack);
         ProcessTurn();
     }
     public void ShortButtonClicked()
@@ -571,6 +700,8 @@ public class BattleManager : MonoBehaviour {
         menuState = false;
         actionChosen = (ActionChosen)1;
         actionState = true;
+        //Should only be possible if action is avaliable
+        unitAction = GetActionOfType(ActionType.ShortAttack);
         ProcessTurn();
     }
     public void HealButtonClicked()
@@ -578,6 +709,8 @@ public class BattleManager : MonoBehaviour {
         menuState = false;
         actionChosen = (ActionChosen)2;
         actionState = true;
+        //Should only be possible if action is avaliable
+        unitAction = GetActionOfType(ActionType.Heal);
         ProcessTurn();
     }
     public void SlowButtonClicked()
@@ -585,6 +718,8 @@ public class BattleManager : MonoBehaviour {
         menuState = false;
         actionChosen = (ActionChosen)3;
         actionState = true;
+        //Should only be possible if action is avaliable
+        unitAction = GetActionOfType(ActionType.Slow);
         ProcessTurn();
     }
 
@@ -605,7 +740,8 @@ public class BattleManager : MonoBehaviour {
             //logic for actions taken
             if (actionState && !activeUnit.AIUnit && tile.UnitOnTile)
             {
-                ResolveAction(tile);
+                //ResolveAction(tile);
+                ResolveAction(unitAction, tile);
                 actionsTaken++;
                 Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
                 ResetToBattleMenu();
@@ -757,7 +893,7 @@ public class BattleManager : MonoBehaviour {
     public void TakeDamage()
     {
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
-        activeUnit.TakeDamage(50);
+        activeUnit.DamageUnit(50);
         Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
     }
 

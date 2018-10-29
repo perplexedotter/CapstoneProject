@@ -9,17 +9,17 @@ public class RangeAttackModule : Module {
         ModuleType = ModuleType.longRange;
         HitPoints = 0;
         Mass = 200;
-        Action = new Action(ActionType.LongAttack, 25, 2);
+        Action = new Action(ActionType.LongAttack, Target.Enemy, 25, 2);
     }
     //basic constructor (give name)
-    //We can change stats as necessary for balance
-    public RangeAttackModule()
-    {
-        ModuleType = ModuleType.longRange;
-        HitPoints = 0;
-        Mass = 200;
-        Action = new Action(ActionType.LongAttack, 25, 2);
-    }
+    ////We can change stats as necessary for balance
+    //public RangeAttackModule()
+    //{
+    //    ModuleType = ModuleType.longRange;
+    //    HitPoints = 0;
+    //    Mass = 200;
+    //    Action = new Action(ActionType.LongAttack, 25, 2);
+    //}
 
     public override Action GetAction()
     {

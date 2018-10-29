@@ -57,7 +57,8 @@ public class Unit : MonoBehaviour {
         //gets children
         //Needs own function for supplying a small wait time
         //wait allows for components to be added before they are added to module list
-        StartCoroutine (GetChildren());
+        //StartCoroutine (GetChildren());
+        modules = new List<Module>(GetComponentsInChildren<Module>());
 
 
 
@@ -248,31 +249,51 @@ public class Unit : MonoBehaviour {
 
     //returns list of actions
     //will combine actions into more powerful one
+    //public List<Action> GetActions()
+    //{
+    //    List<Action> actions = new List<Action>();
+    //    List<Action> actionsSorted = new List<Action>();
+
+    //    for (int i = 0; i < modules.Count; i++)
+    //    {
+    //        actions.Add(modules[i].Action);
+    //    }
+
+    //    actionsSorted = actions.OrderBy(o => o.Type).ToList();
+    //    for (int i = 0; i < actionsSorted.Count; i++)
+    //    {
+    //        if (i != actionsSorted.Count - 1)
+    //        {
+    //            if (actionsSorted[i].Type == actionsSorted[i + 1].Type)
+    //            {
+    //                actionsSorted[i + 1] = actionsSorted[i].Combine(actionsSorted[i + 1]);
+    //                actionsSorted.RemoveAt(i);
+    //                i -= 1;
+    //            }
+    //        }
+    //    }
+    //    //DebugActions(actionsSorted);
+    //    return actionsSorted;
+    //}
+
     public List<Action> GetActions()
     {
-        List<Action> actions = new List<Action>();
-        List<Action> actionsSorted = new List<Action>();
-
-        for (int i = 0; i < modules.Count; i++)
+        Dictionary<ActionType, Action> actions = new Dictionary<ActionType, Action>();
+        foreach(var m in modules)
         {
-            actions.Add(modules[i].Action);
-        }
-
-        actionsSorted = actions.OrderBy(o => o.Type).ToList();
-        for (int i = 0; i < actionsSorted.Count; i++)
-        {
-            if (i != actionsSorted.Count - 1)
-            {
-                if (actionsSorted[i].Type == actionsSorted[i + 1].Type)
+            Action a;
+            Action action = m.GetAction();
+            if (action != null){
+                if(actions.TryGetValue(action.Type, out a)){
+                    actions[action.Type] = action.Combine(a);
+                }
+                else
                 {
-                    actionsSorted[i + 1] = actionsSorted[i].Combine(actionsSorted[i + 1]);
-                    actionsSorted.RemoveAt(i);
-                    i -= 1;
+                    actions.Add(action.Type, action);
                 }
             }
         }
-        //DebugActions(actionsSorted);
-        return actionsSorted;
+        return new List<Action>(actions.Values);
     }
 
     public List<ModuleType> GetModuleTypes()
@@ -328,7 +349,7 @@ public class Unit : MonoBehaviour {
     /*********************************************** UNIT VALUE EFFECTING FUNCTIONS ***************************/
 
     //Unit will take damage
-    public float TakeDamage(float dmg)
+    public float DamageUnit(float dmg)
     {
         damageTaken += dmg;
         float currentHP = GetHP() - damageTaken;
@@ -337,6 +358,15 @@ public class Unit : MonoBehaviour {
             destroy = true;
         }
         return currentHP;
+    }
+
+    public float HealUnit(float healing)
+    {
+        float healedAmount = damageTaken;
+        damageTaken -= healing;
+        damageTaken = damageTaken < 0 ? 0 : damageTaken; //Don't let damageTaken go negative
+        healedAmount = Mathf.Min(healedAmount, healing); //Determine the actual amount healed
+        return healedAmount;
     }
 
     //Adds status to list
@@ -441,6 +471,8 @@ public class Unit : MonoBehaviour {
             {
                 Vector3 destination = path[pathIndex].transform.position;
                 float step = moveSpeed * Time.deltaTime;
+                //Vector3.RotateTowards(transform.position, destination);
+                transform.LookAt(destination);
                 transform.position = Vector3.MoveTowards(transform.position, destination, step);
                 if (Vector3.Distance(destination, transform.position) <= 0)
                 {
@@ -481,6 +513,22 @@ public class Unit : MonoBehaviour {
             transform.position = tile.transform.position;
             UpdateTile(tile);
         }
+    }
+
+    public void FaceTile(Tile tile)
+    {
+        if(tile != null)
+        {
+            transform.LookAt(tile.transform);
+        }
+    }
+
+    public Vector2Int GetCoords()
+    {
+        return new Vector2Int(
+            (int)Mathf.Floor(transform.position.x / Tile.GridSize) * Tile.GridSize,
+            (int)Mathf.Floor(transform.position.z / Tile.GridSize) * Tile.GridSize
+        );
     }
 
     /********************************************* ANIMATION FUNCTIONS *****************************************/
