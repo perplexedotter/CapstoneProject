@@ -9,17 +9,17 @@ public class HealModule : Module {
         ModuleType = ModuleType.heal;
         HitPoints = 50;
         Mass = 100;
-        Action = new Action(ActionType.Heal, 20, 1);
+        Action = new Action(ActionType.Heal, Target.Ally, 20, 1);
     }
     //basic constructor (give name)
     //We can change stats as necessary for balance
-    public HealModule()
-    {
-        ModuleType = ModuleType.heal;
-        HitPoints = 50;
-        Mass = 100;
-        Action = new Action(ActionType.Heal, 20, 1);
-    }
+    //public HealModule()
+    //{
+    //    ModuleType = ModuleType.heal;
+    //    HitPoints = 50;
+    //    Mass = 100;
+    //    Action = new Action(ActionType.Heal, 20, 1);
+    //}
 
     public override Action GetAction()
     {

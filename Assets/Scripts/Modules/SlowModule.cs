@@ -9,17 +9,17 @@ public class SlowModule : Module {
         ModuleType = ModuleType.slow;
         HitPoints = 25;
         Mass = 100;
-        Action = new Action(ActionType.Slow, 0, 1);
+        Action = new Action(ActionType.Slow, Target.Enemy, 0, 1);
     }
     //basic constructor (give name)
     //We can change stats as necessary for balance
-    public SlowModule()
-    {
-        ModuleType = ModuleType.slow;
-        HitPoints = 25;
-        Mass = 100;
-        Action = new Action(ActionType.Slow, 0, 1);
-    }
+    //public SlowModule()
+    //{
+    //    ModuleType = ModuleType.slow;
+    //    HitPoints = 25;
+    //    Mass = 100;
+    //    Action = new Action(ActionType.Slow, 0, 1);
+    //}
 
     public override Action GetAction()
     {
