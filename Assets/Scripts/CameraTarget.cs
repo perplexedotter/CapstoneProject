@@ -5,9 +5,11 @@ using UnityEngine;
 public class CameraTarget : MonoBehaviour {
 	[SerializeField] public Vector3 cameraTarget;
 	[SerializeField] public float zoomSpeed;
-	[SerializeField] public float panSpeed;
+	[SerializeField] public float xPanSpeed;
+	[SerializeField] public float yPanSpeed;
 	[SerializeField] public float minZoom;
 	[SerializeField] public float maxZoom;
+
 
 	private Plane _Plane;
 	// Use this for initialization
@@ -30,16 +32,16 @@ public class CameraTarget : MonoBehaviour {
 		Vector3 dUp = transform.up.XZ();
 		//Debug.Log(mousePos);
 		if (Input.GetKey(KeyCode.A)) {
-			transform.position -= dRight * Time.deltaTime *  panSpeed;
+			transform.position -= dRight * Time.deltaTime *  xPanSpeed;
 		}
 		if (Input.GetKey(KeyCode.D)) {
-			transform.position += dRight * Time.deltaTime *  panSpeed;
+			transform.position += dRight * Time.deltaTime *  xPanSpeed;
 		}
 		if (Input.GetKey(KeyCode.W)) {
-			transform.position += dUp * Time.deltaTime *  panSpeed;
+			transform.position += dUp * Time.deltaTime *  yPanSpeed;
 		}
 		if (Input.GetKey(KeyCode.S)) {
-			transform.position -= dUp * Time.deltaTime *  panSpeed;
+			transform.position -= dUp * Time.deltaTime *  yPanSpeed;
 		}
 	}
 
