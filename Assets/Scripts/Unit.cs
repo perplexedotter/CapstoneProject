@@ -249,31 +249,51 @@ public class Unit : MonoBehaviour {
 
     //returns list of actions
     //will combine actions into more powerful one
+    //public List<Action> GetActions()
+    //{
+    //    List<Action> actions = new List<Action>();
+    //    List<Action> actionsSorted = new List<Action>();
+
+    //    for (int i = 0; i < modules.Count; i++)
+    //    {
+    //        actions.Add(modules[i].Action);
+    //    }
+
+    //    actionsSorted = actions.OrderBy(o => o.Type).ToList();
+    //    for (int i = 0; i < actionsSorted.Count; i++)
+    //    {
+    //        if (i != actionsSorted.Count - 1)
+    //        {
+    //            if (actionsSorted[i].Type == actionsSorted[i + 1].Type)
+    //            {
+    //                actionsSorted[i + 1] = actionsSorted[i].Combine(actionsSorted[i + 1]);
+    //                actionsSorted.RemoveAt(i);
+    //                i -= 1;
+    //            }
+    //        }
+    //    }
+    //    //DebugActions(actionsSorted);
+    //    return actionsSorted;
+    //}
+
     public List<Action> GetActions()
     {
-        List<Action> actions = new List<Action>();
-        List<Action> actionsSorted = new List<Action>();
-
-        for (int i = 0; i < modules.Count; i++)
+        Dictionary<ActionType, Action> actions = new Dictionary<ActionType, Action>();
+        foreach(var m in modules)
         {
-            actions.Add(modules[i].Action);
-        }
-
-        actionsSorted = actions.OrderBy(o => o.Type).ToList();
-        for (int i = 0; i < actionsSorted.Count; i++)
-        {
-            if (i != actionsSorted.Count - 1)
-            {
-                if (actionsSorted[i].Type == actionsSorted[i + 1].Type)
+            Action a;
+            Action action = m.GetAction();
+            if (action != null){
+                if(actions.TryGetValue(action.Type, out a)){
+                    actions[action.Type] = action.Combine(a);
+                }
+                else
                 {
-                    actionsSorted[i + 1] = actionsSorted[i].Combine(actionsSorted[i + 1]);
-                    actionsSorted.RemoveAt(i);
-                    i -= 1;
+                    actions.Add(action.Type, action);
                 }
             }
         }
-        //DebugActions(actionsSorted);
-        return actionsSorted;
+        return new List<Action>(actions.Values);
     }
 
     public List<ModuleType> GetModuleTypes()
@@ -329,7 +349,7 @@ public class Unit : MonoBehaviour {
     /*********************************************** UNIT VALUE EFFECTING FUNCTIONS ***************************/
 
     //Unit will take damage
-    public float TakeDamage(float dmg)
+    public float DamageUnit(float dmg)
     {
         damageTaken += dmg;
         float currentHP = GetHP() - damageTaken;
@@ -338,6 +358,15 @@ public class Unit : MonoBehaviour {
             destroy = true;
         }
         return currentHP;
+    }
+
+    public float HealUnit(float healing)
+    {
+        float healedAmount = damageTaken;
+        damageTaken -= healing;
+        damageTaken = damageTaken < 0 ? 0 : damageTaken; //Don't let damageTaken go negative
+        healedAmount = Mathf.Min(healedAmount, healing); //Determine the actual amount healed
+        return healedAmount;
     }
 
     //Adds status to list
@@ -483,6 +512,14 @@ public class Unit : MonoBehaviour {
         {
             transform.position = tile.transform.position;
             UpdateTile(tile);
+        }
+    }
+
+    public void FaceTile(Tile tile)
+    {
+        if(tile != null)
+        {
+            transform.LookAt(tile.transform);
         }
     }
 

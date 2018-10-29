@@ -7,12 +7,11 @@ using UnityEngine;
 public class UnitSnapEditor : MonoBehaviour {
 
     Unit unit;
-    Dictionary<Vector2Int, Tile> tileDict;
+    Dictionary<Vector2Int, Tile> tileDict = new Dictionary<Vector2Int, Tile>();
 
 	// Use this for initialization
 	void Start () {
         unit = GetComponent<Unit>();
-        tileDict = new Dictionary<Vector2Int, Tile>();
         Tile[] tiles = FindObjectsOfType<Tile>();
         foreach(var t in tiles)
         {

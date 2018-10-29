@@ -13,4 +13,9 @@ public class ActiveModule : Module {
 	void Update () {
 		
 	}
+
+    public override Action GetAction()
+    {
+        return new Action(ActionType, Target, Power, Range);
+    }
 }

@@ -53,6 +53,7 @@ public class Action {
     public Action(ActionType type, Target target, int power, int range)
     {
         this.type = type;
+        this.target = target;
         this.power = power;
         this.range = range;
     }
