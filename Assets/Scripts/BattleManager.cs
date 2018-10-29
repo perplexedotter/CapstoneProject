@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -383,10 +381,8 @@ public class BattleManager : MonoBehaviour {
         ProcessTurn();
     }
 
-
     private void SetInteractableActions(bool on)
     {
-
         if (on)
         {
             HealButton.interactable = false;
@@ -460,6 +456,25 @@ public class BattleManager : MonoBehaviour {
         return false;
     }
 
+
+    //TODO Complete this
+    private bool ResolveAction(Action action, Tile tile)
+    {
+        List<Tile> range = GetActionRange(action);
+        switch (action.Type)
+        {
+            case ActionType.LongAttack:
+                break;
+            case ActionType.ShortAttack:
+                break;
+            case ActionType.Slow:
+                break;
+            case ActionType.Heal:
+                break;
+        }
+        return false;
+    }
+
     private void MoveActiveUnitToTile(Tile tile)
     {
         activeUnit.TraversePath(map.GetMovementPath(activeUnit, tile));
@@ -527,6 +542,37 @@ public class BattleManager : MonoBehaviour {
         //map.ResetTileColors();
         foreach (Tile tile in activeUnitPosLong)
             tile.SetTileColor(Tile.TileColor.attack);
+    }
+
+    public List<Tile> GetActionRange(Action action)
+    {
+        List<Tile> totalRange = map.GetTilesInRange(activeUnit.CurrentTile, action.Range);
+        List<Tile> adjustedRange = new List<Tile>();
+        Tile.TileColor color = action.Target == Target.Self || action.Target == Target.Ally ? Tile.TileColor.ally : Tile.TileColor.attack;
+        foreach (var t in totalRange)
+        {
+            if (t.UnitOnTile == null)
+                adjustedRange.Add(t);
+            else if (t.UnitOnTile == activeUnit && (action.Target == Target.Self || action.Target == Target.Ally))
+                adjustedRange.Add(t);
+            else if (t.UnitOnTile.PlayerNumber == activeUnit.PlayerNumber && action.Target == Target.Ally)
+                adjustedRange.Add(t);
+            else if (t.UnitOnTile.PlayerNumber != activeUnit.PlayerNumber && action.Target == Target.Enemy)
+                adjustedRange.Add(t);
+            else if (action.Target == Target.Everyone)
+                adjustedRange.Add(t);
+        }
+        return adjustedRange;
+    }
+
+    public void ShowActionRange(Action action)
+    {
+        List<Tile> inRange = GetActionRange(action);
+        Tile.TileColor color = action.Target == Target.Self || action.Target == Target.Ally ? Tile.TileColor.ally : Tile.TileColor.attack;
+        foreach(var t in inRange)
+        {
+            t.SetTileColor(color);
+        }
     }
 
     public void ColorTiles(List<Tile> tiles, Tile.TileColor color)
