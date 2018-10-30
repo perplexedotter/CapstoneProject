@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 
 [SelectionBase]
@@ -36,6 +37,8 @@ public class Unit : MonoBehaviour {
     [Header("Modules and Statuses")]
     [SerializeField] protected List<Module> modules = new List<Module>();
     [SerializeField] protected List<StatusEffects> statuses = new List<StatusEffects>();
+
+
 
     //Movement fields
     private bool isMoving = false;
@@ -307,7 +310,10 @@ public class Unit : MonoBehaviour {
         }
         return new List<ModuleType>(moduleTypes);
     }
-
+    public UnitType GetShipType()
+    {
+        return type;
+    }
     //returns base hp + bonus from modules
     public float GetHP()
     {

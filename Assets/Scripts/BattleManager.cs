@@ -9,6 +9,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Map map;
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
+    [SerializeField] Text statusText;
 
     public static BattleManager instance;
 
@@ -24,6 +25,7 @@ public class BattleManager : MonoBehaviour {
     //Units in battle
     List<Unit> units = new List<Unit>();
     Unit activeUnit;
+    string statusBarMods = "";
     int unitIndex = 0;
 
     //Turn Order
@@ -103,10 +105,12 @@ public class BattleManager : MonoBehaviour {
     void Start() {
         //AddUnitsFromMap();
         units = new List<Unit>(FindObjectsOfType<Unit>());
+
         roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
         activeUnit.UnitOutline(true);
+        statusBarMods = StringifyModList(activeUnit);
         activeUnitPosActions = activeUnit.GetActions();
         ProcessTurn();
     }
@@ -114,7 +118,9 @@ public class BattleManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
+        statusText.transform.position = statusPos;
+        statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -156,6 +162,7 @@ public class BattleManager : MonoBehaviour {
         ResetForNextTurn();
         activeUnit.DecrementStatuses(); //Decrement current units statues
         UpdateActiveUnit(); //Update the current unit
+        statusBarMods = StringifyModList(activeUnit);
         Debug.Log("It is "+ activeUnit + "\'s turn!");
 
         if (!activeUnit.AIUnit) {
@@ -935,6 +942,17 @@ public class BattleManager : MonoBehaviour {
             actButton4.SetActive(true);
         }
 
+    }
+
+    private string StringifyModList(Unit unit) {
+        string modStr = "";
+        List<ModuleType> modList = unit.GetModuleTypes();
+        Debug.Log(unit.GetModuleTypes());
+        for(int i = 0; i < modList.Count; i++) {
+            modStr += modList[i].ToString();
+            modStr += "\n";
+        }
+        return modStr;
     }
 
     ////this will create the units on the map for this level
