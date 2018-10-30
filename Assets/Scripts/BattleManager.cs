@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -84,6 +85,7 @@ public class BattleManager : MonoBehaviour {
     void Awake() {
 
         instance = this;
+        ToggleActionMenu(false);
 
 
 
@@ -99,13 +101,12 @@ public class BattleManager : MonoBehaviour {
 
     }
     void Start() {
-        //GenerateUnits();
         AddUnitsFromMap();
+        roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
         activeUnit.UnitOutline(true);
         activeUnitPosActions = activeUnit.GetActions();
-        ToggleActionMenu(false);
         ProcessTurn();
     }
 
@@ -140,8 +141,8 @@ public class BattleManager : MonoBehaviour {
         //TODO add other things assiciated with ending a round
         turnIndex = 0;
         roundNumber++;
-        unitSlowed = false;
-        roundTurnOrder = new List<Unit>(units); //TODO Maybe make this the previous turnOrder as seed
+        //unitSlowed = false;
+        //roundTurnOrder = new List<Unit>(roundTurnOrder); //TODO Maybe make this the previous turnOrder as seed
         UpdateTurnOrder(turnIndex); //Update the turn order for all units
         DisplayTurnOrder();
     }
@@ -209,14 +210,14 @@ public class BattleManager : MonoBehaviour {
     {
         //TODO Move this elsewhere so units are imediatly destroyed when its their turn
         //destroys active unit if destoyed bool = true 
-        if (activeUnit.Destroyed)
-        {
-            roundTurnOrder.RemoveAt(turnIndex);
-            units.Remove(activeUnit);
-            Explode(activeUnit.transform.position);
-            Destroy(activeUnit.gameObject);
-            turnIndex -= 1;
-        }
+        //if (activeUnit.Destroyed)
+        //{
+        //    roundTurnOrder.RemoveAt(turnIndex);
+        //    units.Remove(activeUnit);
+        //    Explode(activeUnit.transform.position);
+        //    Destroy(activeUnit.gameObject);
+        //    turnIndex -= 1;
+        //}
 
         if (turnIndex + 1 < roundTurnOrder.Count)
             turnIndex++;
@@ -427,53 +428,51 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
-    //takes the current tile clicked after action and resolves sadi action on unit on tile
-    private bool ResolveAction(Tile tile) 
-    {
-        switch (actionChosen)
-        {
-            case ActionChosen.longRange:
-                if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
-                {
-                    Debug.Log("Long Attack Hits" + tile.UnitOnTile.name);
-                    tile.UnitOnTile.DamageUnit(50);
-                    return true;
-                }
-                break;
-            case ActionChosen.shortRange:
-                if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
-                {
-                    Debug.Log("Short Attack Hits" + tile.UnitOnTile.name);
-                    tile.UnitOnTile.DamageUnit(100);
-                    return true;
-                }
-                break;
-            case ActionChosen.heal:
-                if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && !tile.UnitOnTile.AIUnit)
-                {
-                    Debug.Log("Heal Attack Hits" + tile.UnitOnTile.name);
-                    tile.UnitOnTile.DamageUnit(-100);
-                    return true;
-                }
-                break;
-            case ActionChosen.slow:
-                if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
-                {
-                    Debug.Log("Slow Attack Hits" + tile.UnitOnTile.name);
-                    tile.UnitOnTile.AddStatus(new StatusEffects(5, 100, statusType.mass));
-                    return true;
-                }
-                break;
-            default:
-                Debug.Log("Entered action state with no action chosen");
-                ResetToBattleMenu();
-                break;
-        }
-        return false;
-    }
+    ////takes the current tile clicked after action and resolves sadi action on unit on tile
+    //private bool ResolveAction(Tile tile) 
+    //{
+    //    switch (actionChosen)
+    //    {
+    //        case ActionChosen.longRange:
+    //            if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
+    //            {
+    //                Debug.Log("Long Attack Hits" + tile.UnitOnTile.name);
+    //                tile.UnitOnTile.DamageUnit(50);
+    //                return true;
+    //            }
+    //            break;
+    //        case ActionChosen.shortRange:
+    //            if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
+    //            {
+    //                Debug.Log("Short Attack Hits" + tile.UnitOnTile.name);
+    //                tile.UnitOnTile.DamageUnit(100);
+    //                return true;
+    //            }
+    //            break;
+    //        case ActionChosen.heal:
+    //            if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && !tile.UnitOnTile.AIUnit)
+    //            {
+    //                Debug.Log("Heal Attack Hits" + tile.UnitOnTile.name);
+    //                tile.UnitOnTile.DamageUnit(-100);
+    //                return true;
+    //            }
+    //            break;
+    //        case ActionChosen.slow:
+    //            if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
+    //            {
+    //                Debug.Log("Slow Attack Hits" + tile.UnitOnTile.name);
+    //                tile.UnitOnTile.AddStatus(new StatusEffects(5, 100, statusType.mass));
+    //                return true;
+    //            }
+    //            break;
+    //        default:
+    //            Debug.Log("Entered action state with no action chosen");
+    //            ResetToBattleMenu();
+    //            break;
+    //    }
+    //    return false;
+    //}
 
-
-    //TODO Complete this
     private bool ResolveAction(Action action, Tile tile)
     {
         int playerNumber = activeUnit.PlayerNumber;
@@ -512,8 +511,24 @@ public class BattleManager : MonoBehaviour {
                     }
                     break;
             }
+            if (targetedUnit.Destroyed)
+            {
+                DestroyUnit(targetedUnit);
+            }
         }
         return resolved;
+    }
+
+    private void DestroyUnit(Unit unit)
+    {
+        int unitIndex = roundTurnOrder.IndexOf(unit);
+        if(unitIndex > -1 && unitIndex < turnIndex)
+        {
+            turnIndex--;
+        }
+        roundTurnOrder.Remove(unit);
+        Explode(unit.transform.position);
+        Destroy(unit.gameObject);
     }
 
     private void MoveActiveUnitToTile(Tile tile)
