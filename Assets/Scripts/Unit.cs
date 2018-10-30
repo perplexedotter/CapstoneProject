@@ -519,6 +519,7 @@ public class Unit : MonoBehaviour {
         if(tile != null)
         {
             transform.position = tile.transform.position;
+            Debug.Log("transforming unit on tile " + tile.ToString());
             UpdateTile(tile);
         }
     }

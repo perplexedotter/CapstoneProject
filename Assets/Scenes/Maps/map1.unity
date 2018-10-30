@@ -9492,7 +9492,7 @@ MonoBehaviour:
   map: {fileID: 1645087134}
   ai: {fileID: 610783505}
   aiDelay: 0.5
-  statusText: {fileID: 0}
+  statusText: {fileID: 1568376190}
   roundTurnOrder: []
   turnIndex: 0
   roundNumber: 0
