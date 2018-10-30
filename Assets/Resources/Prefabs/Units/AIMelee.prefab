@@ -11,22 +11,6 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1642466028196816}
   m_IsPrefabAsset: 1
---- !u!1 &1140379802961360
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4803113443555356}
-  - component: {fileID: 114327358684658498}
-  m_Layer: 0
-  m_Name: MeleeModule
-  m_TagString: Melee
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1642466028196816
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,6 +48,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1935064754659564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4406381227132290}
+  - component: {fileID: 114633147358765212}
+  m_Layer: 0
+  m_Name: ShortAttackModule
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4406381227132290
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1935064754659564}
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: 110, y: 0, z: 100}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4798577835953534}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4798577835953534
 Transform:
   m_ObjectHideFlags: 1
@@ -71,27 +84,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1642466028196816}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 20, y: 0, z: 110}
+  m_LocalPosition: {x: 70, y: 0, z: 110}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4803113443555356}
+  - {fileID: 4406381227132290}
   - {fileID: 4812195608315130}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!4 &4803113443555356
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1140379802961360}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4798577835953534}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4812195608315130
 Transform:
   m_ObjectHideFlags: 1
@@ -120,7 +120,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 221d266f70723b143af66ae681f9bb9f, type: 3}
+  - {fileID: 2100000, guid: 9ba096c81cb8cef46b7654afd7ee10d5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -176,17 +176,23 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 221d266f70723b143af66ae681f9bb9f, type: 3}
---- !u!114 &114327358684658498
+--- !u!114 &114633147358765212
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1140379802961360}
+  m_GameObject: {fileID: 1935064754659564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e09e57de80cb06a458735346779bc4f7, type: 3}
+  m_Script: {fileID: 11500000, guid: cf7ef4f6e6b749949a819e9c56ac0a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
+  Target: 1
+  ActionType: 0
+  Range: 1
+  Power: 20
+  mass: 12
 --- !u!114 &114635903130731672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -221,7 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b1a0b2dacdb3045a0fb90ae0a63f7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collider: {fileID: 0}
+  collider: {fileID: 64674710856418756}
   moveSpeed: 75
   currentTile: {fileID: 0}
   playerNumber: 1
@@ -232,7 +238,7 @@ MonoBehaviour:
   damageDealt: 0
   attack: 0
   speed: 100
-  mass: 400
+  mass: 422
   shields: 0
   hardPoints: 0
   threat: 0

@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4928125642245064}
   - component: {fileID: 114589738924556782}
   m_Layer: 0
-  m_Name: ShortAttackModule
+  m_Name: LongAttackModule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,9 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf7ef4f6e6b749949a819e9c56ac0a3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 1
   Target: 1
-  ActionType: 0
-  Range: 1
-  Power: 20
-  mass: 12
+  ActionType: 1
+  Range: 4
+  Power: 40
+  mass: 23
