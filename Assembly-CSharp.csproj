@@ -62,10 +62,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Action.cs" />
+    <Compile Include="Assets\Scripts\ActiveStateToggler.cs" />
     <Compile Include="Assets\Scripts\AI\AIController.cs" />
     <Compile Include="Assets\Scripts\AI\Command.cs" />
+    <Compile Include="Assets\Scripts\ApplicationManager.cs" />
     <Compile Include="Assets\Scripts\BattleManager.cs" />
     <Compile Include="Assets\Scripts\CameraTarget.cs" />
+    <Compile Include="Assets\Scripts\ChangeColor.cs" />
     <Compile Include="Assets\Scripts\Helpers.cs" />
     <Compile Include="Assets\Scripts\Highlighter.cs" />
     <Compile Include="Assets\Scripts\Map\BeltObject.cs" />
@@ -84,14 +87,28 @@
     <Compile Include="Assets\Scripts\Modules\PassiveModule.cs" />
     <Compile Include="Assets\Scripts\Modules\RangeAttackModule.cs" />
     <Compile Include="Assets\Scripts\Modules\SlowModule.cs" />
+    <Compile Include="Assets\Scripts\PanelManager.cs" />
+    <Compile Include="Assets\Scripts\ResizePanel.cs" />
+    <Compile Include="Assets\Scripts\ScrollDetailTexture.cs" />
     <Compile Include="Assets\Scripts\StatusEffects.cs" />
+    <Compile Include="Assets\Scripts\TiltWindow.cs" />
     <Compile Include="Assets\Scripts\UI\ActionListButton.cs" />
     <Compile Include="Assets\Scripts\UI\ActionListControl.cs" />
+    <Compile Include="Assets\Scripts\UI\DragMe.cs" />
+    <Compile Include="Assets\Scripts\UI\DragPanel.cs" />
+    <Compile Include="Assets\Scripts\UI\DropMe.cs" />
+    <Compile Include="Assets\Scripts\UI\LoadScreenOnClick.cs" />
     <Compile Include="Assets\Scripts\UI\rotateShip.cs" />
+    <Compile Include="Assets\Scripts\UI\SelectOnInput.cs" />
     <Compile Include="Assets\Scripts\UI\ShipDesigner.cs" />
     <Compile Include="Assets\Scripts\UI\shipModules.cs" />
+    <Compile Include="Assets\Scripts\UI\ShowSliderValue.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
     <Compile Include="Assets\Scripts\UnitSnapEditor.cs" />
+    <None Include="Assets\Fonts\Jupiter\LICENSE.txt" />
+    <None Include="Assets\Textures\SF UI\Background\LICENSE.txt" />
+    <None Include="Assets\Materials\UI-Default-No-Alpha.shader" />
+    <None Include="Assets\Shaders\Outline.shader" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/grimesp/Documents/GitHub/CapstoneProject/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

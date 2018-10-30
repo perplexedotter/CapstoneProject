@@ -12,768 +12,192 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cacheType: 5
-  lastUpdatedAtString: 2018-10-29T18:17:36.910-07:00
-  initializedAtString: 2018-10-29T18:16:46.065-07:00
+  lastUpdatedAtString: 2018-10-30T13:53:58.253-07:00
+  initializedAtString: 2018-10-30T13:51:26.949-07:00
   entries:
-  - path: Assets\Materials.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials.meta
-    projectPath: Assets\Materials.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Asteroid_01_S.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Asteroid_01_S.mat
-    projectPath: Assets\Materials\Asteroid_01_S.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Asteroid_01_S.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Asteroid_01_S.mat.meta
-    projectPath: Assets\Materials\Asteroid_01_S.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Background.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Background.mat
-    projectPath: Assets\Materials\Background.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Background.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Background.mat.meta
-    projectPath: Assets\Materials\Background.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Clear.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Clear.mat
-    projectPath: Assets\Materials\Clear.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Clear.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Clear.mat.meta
-    projectPath: Assets\Materials\Clear.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Fire.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Fire.meta
-    projectPath: Assets\Materials\Fire.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Fire\FlameParticle.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Fire\FlameParticle.mat
-    projectPath: Assets\Materials\Fire\FlameParticle.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Fire\FlameParticle.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Fire\FlameParticle.mat.meta
-    projectPath: Assets\Materials\Fire\FlameParticle.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Fire\FlameRoundYellowParticle.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Fire\FlameRoundYellowParticle.mat
-    projectPath: Assets\Materials\Fire\FlameRoundYellowParticle.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Fire\FlameRoundYellowParticle.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Fire\FlameRoundYellowParticle.mat.meta
-    projectPath: Assets\Materials\Fire\FlameRoundYellowParticle.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Fire\SmokeDarkParticle.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Fire\SmokeDarkParticle.mat
-    projectPath: Assets\Materials\Fire\SmokeDarkParticle.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Fire\SmokeDarkParticle.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Fire\SmokeDarkParticle.mat.meta
-    projectPath: Assets\Materials\Fire\SmokeDarkParticle.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Grid.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Grid.mat
-    projectPath: Assets\Materials\Grid.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Grid.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Grid.mat.meta
-    projectPath: Assets\Materials\Grid.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\highlight.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\highlight.mat
-    projectPath: Assets\Materials\highlight.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\highlight.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\highlight.mat.meta
-    projectPath: Assets\Materials\highlight.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Nebula Aqua-Pink.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Nebula
-      Aqua-Pink.mat
-    projectPath: Assets\Materials\Nebula Aqua-Pink.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Nebula Aqua-Pink.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Nebula
-      Aqua-Pink.mat.meta
-    projectPath: Assets\Materials\Nebula Aqua-Pink.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Red.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Red.mat
-    projectPath: Assets\Materials\Red.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Red.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Red.mat.meta
-    projectPath: Assets\Materials\Red.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\SmokeDarkParticle.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\SmokeDarkParticle.mat
-    projectPath: Assets\Materials\SmokeDarkParticle.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\SmokeDarkParticle.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\SmokeDarkParticle.mat.meta
-    projectPath: Assets\Materials\SmokeDarkParticle.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\solid.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\solid.mat
-    projectPath: Assets\Materials\solid.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\solid.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\solid.mat.meta
-    projectPath: Assets\Materials\solid.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Spray.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Spray.mat
-    projectPath: Assets\Materials\Spray.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Spray.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Spray.mat.meta
-    projectPath: Assets\Materials\Spray.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Spray2.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Spray2.mat
-    projectPath: Assets\Materials\Spray2.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Spray2.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Spray2.mat.meta
-    projectPath: Assets\Materials\Spray2.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Tile Material.mat
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Tile
-      Material.mat
-    projectPath: Assets\Materials\Tile Material.mat
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Materials\Tile Material.mat.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Materials\Tile
-      Material.mat.meta
-    projectPath: Assets\Materials\Tile Material.mat.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models.meta
-    projectPath: Assets\Models.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\AIFrigate.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\AIFrigate.meta
-    projectPath: Assets\Models\AIFrigate.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\AIFrigate\frigateIdea.mtl
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\AIFrigate\frigateIdea.mtl
-    projectPath: Assets\Models\AIFrigate\frigateIdea.mtl
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\AIFrigate\frigateIdea.mtl.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\AIFrigate\frigateIdea.mtl.meta
-    projectPath: Assets\Models\AIFrigate\frigateIdea.mtl.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\AIFrigate\frigateIdea.obj
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\AIFrigate\frigateIdea.obj
-    projectPath: Assets\Models\AIFrigate\frigateIdea.obj
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\AIFrigate\frigateIdea.obj.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\AIFrigate\frigateIdea.obj.meta
-    projectPath: Assets\Models\AIFrigate\frigateIdea.obj.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\AIFrigate\frigateIdea.png
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\AIFrigate\frigateIdea.png
-    projectPath: Assets\Models\AIFrigate\frigateIdea.png
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\AIFrigate\frigateIdea.png.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\AIFrigate\frigateIdea.png.meta
-    projectPath: Assets\Models\AIFrigate\frigateIdea.png.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Asteroid_01_S.fbx
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Asteroid_01_S.fbx
-    projectPath: Assets\Models\Asteroid_01_S.fbx
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Asteroid_01_S.fbx.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Asteroid_01_S.fbx.meta
-    projectPath: Assets\Models\Asteroid_01_S.fbx.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Fighter1.mtl
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Fighter1.mtl
-    projectPath: Assets\Models\Fighter1.mtl
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Fighter1.mtl.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Fighter1.mtl.meta
-    projectPath: Assets\Models\Fighter1.mtl.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Fighter1.obj
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Fighter1.obj
-    projectPath: Assets\Models\Fighter1.obj
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Fighter1.obj.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Fighter1.obj.meta
-    projectPath: Assets\Models\Fighter1.obj.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Fighter1.png
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Fighter1.png
-    projectPath: Assets\Models\Fighter1.png
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Models\Fighter1.png.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Models\Fighter1.png.meta
-    projectPath: Assets\Models\Fighter1.png.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Prefabs.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Prefabs.meta
-    projectPath: Assets\Prefabs.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Prefabs\2way menu.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Prefabs\2way
-      menu.prefab
-    projectPath: Assets\Prefabs\2way menu.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Prefabs\2way menu.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Prefabs\2way
-      menu.prefab.meta
-    projectPath: Assets\Prefabs\2way menu.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Prefabs\3way menu.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Prefabs\3way
-      menu.prefab
-    projectPath: Assets\Prefabs\3way menu.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Prefabs\3way menu.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Prefabs\3way
-      menu.prefab.meta
-    projectPath: Assets\Prefabs\3way menu.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Prefabs\4way menu.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Prefabs\4way
-      menu.prefab
-    projectPath: Assets\Prefabs\4way menu.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Prefabs\4way menu.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Prefabs\4way
-      menu.prefab.meta
-    projectPath: Assets\Prefabs\4way menu.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources.meta
-    projectPath: Assets\Resources.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs.meta
-    projectPath: Assets\Resources\Prefabs.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\AIController.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\AIController.prefab
-    projectPath: Assets\Resources\Prefabs\AIController.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\AIController.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\AIController.prefab.meta
-    projectPath: Assets\Resources\Prefabs\AIController.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\BattleMenu.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\BattleMenu.prefab
-    projectPath: Assets\Resources\Prefabs\BattleMenu.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\BattleMenu.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\BattleMenu.prefab.meta
-    projectPath: Assets\Resources\Prefabs\BattleMenu.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Directional Light.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Directional
-      Light.prefab
-    projectPath: Assets\Resources\Prefabs\Directional Light.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Directional Light.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Directional
-      Light.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Directional Light.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Explode.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Explode.prefab
-    projectPath: Assets\Resources\Prefabs\Explode.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Explode.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Explode.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Explode.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Main Camera.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Main
-      Camera.prefab
-    projectPath: Assets\Resources\Prefabs\Main Camera.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Main Camera.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Main
-      Camera.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Main Camera.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules.meta
-    projectPath: Assets\Resources\Prefabs\Modules.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\ActiveModules.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\ActiveModules.meta
-    projectPath: Assets\Resources\Prefabs\Modules\ActiveModules.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\ActiveModules\ShortAttackModule.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\ActiveModules\ShortAttackModule.prefab
-    projectPath: Assets\Resources\Prefabs\Modules\ActiveModules\ShortAttackModule.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\ActiveModules\ShortAttackModule.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\ActiveModules\ShortAttackModule.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Modules\ActiveModules\ShortAttackModule.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\HealModule.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\HealModule.prefab
-    projectPath: Assets\Resources\Prefabs\Modules\HealModule.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\HealModule.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\HealModule.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Modules\HealModule.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\MeleeModule.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\MeleeModule.prefab
-    projectPath: Assets\Resources\Prefabs\Modules\MeleeModule.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\MeleeModule.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\MeleeModule.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Modules\MeleeModule.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\RangeAttackModule.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\RangeAttackModule.prefab
-    projectPath: Assets\Resources\Prefabs\Modules\RangeAttackModule.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\RangeAttackModule.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\RangeAttackModule.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Modules\RangeAttackModule.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\SlowModule.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\SlowModule.prefab
-    projectPath: Assets\Resources\Prefabs\Modules\SlowModule.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Modules\SlowModule.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Modules\SlowModule.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Modules\SlowModule.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old.meta
-    projectPath: Assets\Resources\Prefabs\Old.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\AsteroidTile.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\AsteroidTile.prefab
-    projectPath: Assets\Resources\Prefabs\Old\AsteroidTile.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\AsteroidTile.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\AsteroidTile.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Old\AsteroidTile.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\NonPlayerCharacter.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\NonPlayerCharacter.prefab
-    projectPath: Assets\Resources\Prefabs\Old\NonPlayerCharacter.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\NonPlayerCharacter.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\NonPlayerCharacter.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Old\NonPlayerCharacter.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\PlayerCharacter.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\PlayerCharacter.prefab
-    projectPath: Assets\Resources\Prefabs\Old\PlayerCharacter.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\PlayerCharacter.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\PlayerCharacter.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Old\PlayerCharacter.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\Tile (old).prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\Tile
-      (old).prefab
-    projectPath: Assets\Resources\Prefabs\Old\Tile (old).prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\Tile (old).prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\Tile
-      (old).prefab.meta
-    projectPath: Assets\Resources\Prefabs\Old\Tile (old).prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\Tile Old.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\Tile
-      Old.prefab
-    projectPath: Assets\Resources\Prefabs\Old\Tile Old.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Old\Tile Old.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Old\Tile
-      Old.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Old\Tile Old.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles.meta
-    projectPath: Assets\Resources\Prefabs\Tiles.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\AsteroidTile.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\AsteroidTile.prefab
-    projectPath: Assets\Resources\Prefabs\Tiles\AsteroidTile.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\AsteroidTile.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\AsteroidTile.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Tiles\AsteroidTile.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\CentralAsteroid.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\CentralAsteroid.prefab
-    projectPath: Assets\Resources\Prefabs\Tiles\CentralAsteroid.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\CentralAsteroid.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\CentralAsteroid.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Tiles\CentralAsteroid.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\DebrisTile.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\DebrisTile.prefab
-    projectPath: Assets\Resources\Prefabs\Tiles\DebrisTile.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\DebrisTile.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\DebrisTile.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Tiles\DebrisTile.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\SmallAsteroid.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\SmallAsteroid.prefab
-    projectPath: Assets\Resources\Prefabs\Tiles\SmallAsteroid.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\SmallAsteroid.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\SmallAsteroid.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Tiles\SmallAsteroid.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\Tile.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\Tile.prefab
-    projectPath: Assets\Resources\Prefabs\Tiles\Tile.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Tiles\Tile.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Tiles\Tile.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Tiles\Tile.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units.meta
-    projectPath: Assets\Resources\Prefabs\Units.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\AIMelee.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\AIMelee.prefab
-    projectPath: Assets\Resources\Prefabs\Units\AIMelee.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\AIMelee.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\AIMelee.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Units\AIMelee.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\FighterBase.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\FighterBase.prefab
-    projectPath: Assets\Resources\Prefabs\Units\FighterBase.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\FighterBase.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\FighterBase.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Units\FighterBase.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\Unit(Player2).prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\Unit(Player2).prefab
-    projectPath: Assets\Resources\Prefabs\Units\Unit(Player2).prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\Unit(Player2).prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\Unit(Player2).prefab.meta
-    projectPath: Assets\Resources\Prefabs\Units\Unit(Player2).prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\Unit.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\Unit.prefab
-    projectPath: Assets\Resources\Prefabs\Units\Unit.prefab
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Resources\Prefabs\Units\Unit.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Resources\Prefabs\Units\Unit.prefab.meta
-    projectPath: Assets\Resources\Prefabs\Units\Unit.prefab.meta
-    originalPath: 
-    status: 5
-    staged: 0
-  - path: Assets\Scenes\Maps\map1.unity
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scenes\Maps\map1.unity
-    projectPath: Assets\Scenes\Maps\map1.unity
+  - path: .vs\CapstoneProject\v15\Server\sqlite3\storage.ide
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\.vs\CapstoneProject\v15\Server\sqlite3\storage.ide
+    projectPath: .vs\CapstoneProject\v15\Server\sqlite3\storage.ide
     originalPath: 
     status: 3
     staged: 0
-  - path: Assets\Scenes\ShipBuilder.unity
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scenes\ShipBuilder.unity
-    projectPath: Assets\Scenes\ShipBuilder.unity
-    originalPath: 
-    status: 1
-    staged: 0
-  - path: Assets\Scenes\ShipBuilder.unity.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scenes\ShipBuilder.unity.meta
-    projectPath: Assets\Scenes\ShipBuilder.unity.meta
-    originalPath: 
-    status: 1
-    staged: 0
-  - path: Assets\Scripts.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts.meta
-    projectPath: Assets\Scripts.meta
+  - path: .vs\CapstoneProject\v15\Server\sqlite3\storage.ide-shm
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\.vs\CapstoneProject\v15\Server\sqlite3\storage.ide-shm
+    projectPath: .vs\CapstoneProject\v15\Server\sqlite3\storage.ide-shm
     originalPath: 
     status: 3
     staged: 0
-  - path: Assets\Scripts\BattleManager.cs
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts\BattleManager.cs
-    projectPath: Assets\Scripts\BattleManager.cs
+  - path: .vs\CapstoneProject\v15\Server\sqlite3\storage.ide-wal
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\.vs\CapstoneProject\v15\Server\sqlite3\storage.ide-wal
+    projectPath: .vs\CapstoneProject\v15\Server\sqlite3\storage.ide-wal
     originalPath: 
     status: 3
     staged: 0
-  - path: Assets\Scripts\UI\rotateShip.cs
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts\UI\rotateShip.cs
-    projectPath: Assets\Scripts\UI\rotateShip.cs
+  - path: Assembly-CSharp.csproj
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assembly-CSharp.csproj
+    projectPath: Assembly-CSharp.csproj
     originalPath: 
-    status: 1
+    status: 3
     staged: 0
-  - path: Assets\Scripts\UI\rotateShip.cs.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts\UI\rotateShip.cs.meta
-    projectPath: Assets\Scripts\UI\rotateShip.cs.meta
+  - path: Library\assetDatabase3
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\assetDatabase3
+    projectPath: Library\assetDatabase3
     originalPath: 
-    status: 1
+    status: 3
     staged: 0
-  - path: Assets\Scripts\UI\ShipDesigner.cs
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts\UI\ShipDesigner.cs
-    projectPath: Assets\Scripts\UI\ShipDesigner.cs
+  - path: Library\gfu\cache\gitlocks.yaml
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\gfu\cache\gitlocks.yaml
+    projectPath: Library\gfu\cache\gitlocks.yaml
     originalPath: 
-    status: 1
+    status: 3
     staged: 0
-  - path: Assets\Scripts\UI\ShipDesigner.cs.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts\UI\ShipDesigner.cs.meta
-    projectPath: Assets\Scripts\UI\ShipDesigner.cs.meta
+  - path: Library\gfu\cache\gitstatusentries.yaml
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\gfu\cache\gitstatusentries.yaml
+    projectPath: Library\gfu\cache\gitstatusentries.yaml
     originalPath: 
-    status: 1
+    status: 3
     staged: 0
-  - path: Assets\Scripts\UI\shipModules.cs
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts\UI\shipModules.cs
-    projectPath: Assets\Scripts\UI\shipModules.cs
+  - path: Library\gfu\cache\gittrackingstatus.yaml
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\gfu\cache\gittrackingstatus.yaml
+    projectPath: Library\gfu\cache\gittrackingstatus.yaml
     originalPath: 
-    status: 1
+    status: 3
     staged: 0
-  - path: Assets\Scripts\UI\shipModules.cs.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Scripts\UI\shipModules.cs.meta
-    projectPath: Assets\Scripts\UI\shipModules.cs.meta
+  - path: Library\gfu\cache\repoinfo.yaml
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\gfu\cache\repoinfo.yaml
+    projectPath: Library\gfu\cache\repoinfo.yaml
     originalPath: 
-    status: 1
+    status: 3
     staged: 0
-  - path: Assets\Tile.prefab
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Tile.prefab
-    projectPath: Assets\Tile.prefab
+  - path: Library\metadata\00\00000000000000005000000000000000
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\00\00000000000000005000000000000000
+    projectPath: Library\metadata\00\00000000000000005000000000000000
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\00\0000000000000000b000000000000000
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\00\0000000000000000b000000000000000
+    projectPath: Library\metadata\00\0000000000000000b000000000000000
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\18\18b4dbf8a0b54ea4adf46fb7f4d71dd0
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\18\18b4dbf8a0b54ea4adf46fb7f4d71dd0
+    projectPath: Library\metadata\18\18b4dbf8a0b54ea4adf46fb7f4d71dd0
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\24\2403d1f95ea54028853403e595bc9274
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\24\2403d1f95ea54028853403e595bc9274
+    projectPath: Library\metadata\24\2403d1f95ea54028853403e595bc9274
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\34\34b1a0b2dacdb3045a0fb90ae0a63f7e
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\34\34b1a0b2dacdb3045a0fb90ae0a63f7e
+    projectPath: Library\metadata\34\34b1a0b2dacdb3045a0fb90ae0a63f7e
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\51\51288a4fc4384861a5b1f9dd49b3da26
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\51\51288a4fc4384861a5b1f9dd49b3da26
+    projectPath: Library\metadata\51\51288a4fc4384861a5b1f9dd49b3da26
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\54\548f7f09f0870744599c32d0c0b0c790.info
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\54\548f7f09f0870744599c32d0c0b0c790.info
+    projectPath: Library\metadata\54\548f7f09f0870744599c32d0c0b0c790.info
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\9e\9ed9f71895516cb44b2bc5368c548a36.info
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\9e\9ed9f71895516cb44b2bc5368c548a36.info
+    projectPath: Library\metadata\9e\9ed9f71895516cb44b2bc5368c548a36.info
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\a2\a2c5a1278d566ce419fe0bc036c47158
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\a2\a2c5a1278d566ce419fe0bc036c47158
+    projectPath: Library\metadata\a2\a2c5a1278d566ce419fe0bc036c47158
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\b1\b15808d886dfed24db50a0141617b310
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\b1\b15808d886dfed24db50a0141617b310
+    projectPath: Library\metadata\b1\b15808d886dfed24db50a0141617b310
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\bb\bb6b4101ad2c42ec99f064a70c354e3c
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\bb\bb6b4101ad2c42ec99f064a70c354e3c
+    projectPath: Library\metadata\bb\bb6b4101ad2c42ec99f064a70c354e3c
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\c8\c8e414730d26779449af1b104d462779
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\c8\c8e414730d26779449af1b104d462779
+    projectPath: Library\metadata\c8\c8e414730d26779449af1b104d462779
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\metadata\de\de8f3e8372b31c145b8a8da760c6ef97
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\metadata\de\de8f3e8372b31c145b8a8da760c6ef97
+    projectPath: Library\metadata\de\de8f3e8372b31c145b8a8da760c6ef97
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\ScriptAssemblies\Assembly-CSharp.dll
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\ScriptAssemblies\Assembly-CSharp.dll
+    projectPath: Library\ScriptAssemblies\Assembly-CSharp.dll
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\ScriptAssemblies\Assembly-CSharp.dll.mdb
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\ScriptAssemblies\Assembly-CSharp.dll.mdb
+    projectPath: Library\ScriptAssemblies\Assembly-CSharp.dll.mdb
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: Library\ScriptAssemblies\BuiltinAssemblies.stamp
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\ScriptAssemblies\BuiltinAssemblies.stamp
+    projectPath: Library\ScriptAssemblies\BuiltinAssemblies.stamp
     originalPath: 
     status: 5
     staged: 0
-  - path: Assets\Tile.prefab.meta
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Assets\Tile.prefab.meta
-    projectPath: Assets\Tile.prefab.meta
+  - path: Library\ScriptMapper
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\ScriptMapper
+    projectPath: Library\ScriptMapper
     originalPath: 
-    status: 5
+    status: 3
     staged: 0
-  - path: ProjectSettings\ProjectVersion.txt
-    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\ProjectSettings\ProjectVersion.txt
-    projectPath: ProjectSettings\ProjectVersion.txt
+  - path: Library\shadercompiler-UnityShaderCompiler.exe0.log
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\Library\shadercompiler-UnityShaderCompiler.exe0.log
+    projectPath: Library\shadercompiler-UnityShaderCompiler.exe0.log
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+    projectPath: obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+    projectPath: obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: obj\Debug\Assembly-CSharp-Editor.csprojAssemblyReference.cache
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\obj\Debug\Assembly-CSharp-Editor.csprojAssemblyReference.cache
+    projectPath: obj\Debug\Assembly-CSharp-Editor.csprojAssemblyReference.cache
+    originalPath: 
+    status: 3
+    staged: 0
+  - path: obj\Debug\Assembly-CSharp-Editor-firstpass.csprojAssemblyReference.cache
+    fullPath: C:\Users\grimesp\Documents\GitHub\CapstoneProject\obj\Debug\Assembly-CSharp-Editor-firstpass.csprojAssemblyReference.cache
+    projectPath: obj\Debug\Assembly-CSharp-Editor-firstpass.csprojAssemblyReference.cache
     originalPath: 
     status: 3
     staged: 0
