@@ -9,6 +9,8 @@ public class Unit : MonoBehaviour {
 
     //Needed to Detect Child Collision
     [SerializeField] Collider collider;
+    [SerializeField] Shader outlineShader;
+    [SerializeField] Shader standardShader;
 
     [Header("Transform Properties")]
     [SerializeField] protected float moveSpeed = 75.0f;
@@ -543,6 +545,21 @@ public class Unit : MonoBehaviour {
 
     }
 
+    public void UnitOutline(bool outlined)
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach(var r in renderers)
+        {
+            if (outlined)
+            {
+                r.material.shader = this.outlineShader;
+            }
+            else
+            {
+                r.material.shader = this.standardShader;
+            }
+        }
+    }
     /******************************************** TEST FUNCTIONS ********************************************/
 
     //for testing getactions
