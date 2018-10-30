@@ -103,6 +103,7 @@ public class BattleManager : MonoBehaviour {
         AddUnitsFromMap();
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
+        activeUnit.UnitOutline(true);
         activeUnitPosActions = activeUnit.GetActions();
         ToggleActionMenu(false);
         ProcessTurn();
@@ -221,7 +222,9 @@ public class BattleManager : MonoBehaviour {
             turnIndex++;
         else
             NextRound();
+        activeUnit.UnitOutline(false);
         activeUnit = roundTurnOrder[turnIndex];
+        activeUnit.UnitOutline(true);
         activeUnitPosActions = activeUnit.GetActions();
 
     }
@@ -342,6 +345,7 @@ public class BattleManager : MonoBehaviour {
 
             //TODO add processing for other actions
             case Command.CommandType.Action:
+                map.ResetTileColors();
                 ShowActionRange(command.action);
                 StartCoroutine(DelayActionCommand(command));
                 break;
