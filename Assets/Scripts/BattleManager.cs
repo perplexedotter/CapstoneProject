@@ -101,7 +101,8 @@ public class BattleManager : MonoBehaviour {
 
     }
     void Start() {
-        AddUnitsFromMap();
+        //AddUnitsFromMap();
+        units = new List<Unit>(FindObjectsOfType<Unit>());
         roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
