@@ -9,11 +9,14 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Map map;
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
+    [SerializeField] Text statusText;
 
     public static BattleManager instance;
 
     private List<Tile> activeUnitPosMoves;
     private List<Tile> activeUnitPosMelee;
+    private List<Tile> wormholeTileList;
+    
 
     //To show tiles for player during attack
     private List<Tile> activeUnitPosShort;
@@ -24,8 +27,9 @@ public class BattleManager : MonoBehaviour {
     //Units in battle
     List<Unit> units = new List<Unit>();
     Unit activeUnit;
+    string statusBarMods = "";
     int unitIndex = 0;
-
+    bool unitTeleported = false;
     //Turn Order
     [SerializeField] List<Unit> roundTurnOrder;
     [SerializeField] int turnIndex;
@@ -103,10 +107,13 @@ public class BattleManager : MonoBehaviour {
     void Start() {
         //AddUnitsFromMap();
         units = new List<Unit>(FindObjectsOfType<Unit>());
+
+        wormholeTileList = map.GetWormholeTiles();
         roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
         activeUnit.UnitOutline(true);
+        statusBarMods = StringifyModList(activeUnit);
         activeUnitPosActions = activeUnit.GetActions();
         ProcessTurn();
     }
@@ -114,7 +121,10 @@ public class BattleManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        //keep info by activeunit TODO: put in own function
+        Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
+        statusText.transform.position = statusPos;
+        statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -156,6 +166,7 @@ public class BattleManager : MonoBehaviour {
         ResetForNextTurn();
         activeUnit.DecrementStatuses(); //Decrement current units statues
         UpdateActiveUnit(); //Update the current unit
+        statusBarMods = StringifyModList(activeUnit);
         Debug.Log("It is "+ activeUnit + "\'s turn!");
 
         if (!activeUnit.AIUnit) {
@@ -175,7 +186,7 @@ public class BattleManager : MonoBehaviour {
         commandIndex = 0;
         unitMoved = false;
         actionsTaken = 0;
-
+        unitTeleported = false;
         //Reset Menus
         baseMenuOpen = false;
         moveMenuOpen = false;
@@ -562,6 +573,19 @@ public class BattleManager : MonoBehaviour {
     public void FinishedMovement()
     {
         unitMoved = true;
+        //if unit is on wormhole
+        Debug.Log("wormholeTileList list:" + wormholeTileList.ToString());
+        for (int i = 0; i < wormholeTileList.Count; i++)
+        {
+            if(wormholeTileList[i].UnitOnTile) {
+                Debug.Log("unit on wormhole: " + wormholeTileList[i].UnitOnTile);
+                if(!unitTeleported) {
+                   ActivateWormholeEvent();
+                }
+
+            }
+        }
+        //teleport to other wormhole
         ResetToBattleMenu();
     }
 
@@ -937,6 +961,38 @@ public class BattleManager : MonoBehaviour {
 
     }
 
+    private string StringifyModList(Unit unit) {
+        string modStr = "";
+        List<ModuleType> modList = unit.GetModuleTypes();
+        for(int i = 0; i < modList.Count; i++) {
+            modStr += modList[i].ToString();
+            modStr += "\n";
+        }
+        return modStr;
+    }
+    //triggered when a unit lands on a wormhole tile. Thi swill teleport the user to the empty wormhole
+    private void ActivateWormholeEvent(){
+        Debug.Log("Wormhole event activated!");
+        if(wormholeTileList[0].UnitOnTile && wormholeTileList[1].UnitOnTile) {
+            Debug.Log("Wormhole is blocked by another ship!");
+            //TODO - alert in ui about this
+            return;
+        }
+        Debug.Log("wormhole 0 " + (wormholeTileList[0].UnitOnTile));
+        Debug.Log("wormhole 1 " + (wormholeTileList[1].UnitOnTile));
+
+        if(wormholeTileList[0].UnitOnTile) {
+            Debug.Log("Wormhole 0 to 1");
+            wormholeTileList[0].UnitOnTile.PlaceOnTile(wormholeTileList[1]);
+            unitTeleported = true;
+
+        } else {
+            Debug.Log("Wormhole 1 to 0!");
+            wormholeTileList[1].UnitOnTile.PlaceOnTile(wormholeTileList[1]);
+            unitTeleported = true;
+        }
+        
+    }
     ////this will create the units on the map for this level
     //void GenerateUnits(){
     //	Unit unit;

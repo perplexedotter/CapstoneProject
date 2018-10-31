@@ -331,6 +331,15 @@ public class Map : MonoBehaviour {
         return allies;
     }
 
+    public List<Tile> GetWormholeTiles()
+    {
+        List<Tile> tiles = new List<Tile>();
+        foreach (var t in mapDict.Values)
+            if (t.Type == Tile.TileType.wormhole)
+                tiles.Add(t);
+        return tiles;
+    }
+    
     public Tile GetTileByCoord(int x, int y)
     {
         return GetTileByVector(new Vector2Int(x, y));

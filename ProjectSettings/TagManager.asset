@@ -12,6 +12,7 @@ TagManager:
   - Range
   - Heal
   - Slow
+  - Wormhole
   layers:
   - Default
   - TransparentFX
