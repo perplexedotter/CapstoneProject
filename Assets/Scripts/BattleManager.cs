@@ -151,6 +151,7 @@ public class BattleManager : MonoBehaviour {
         Debug.Log("Next round!");
         //TODO add other things assiciated with ending a round
         turnIndex = 0;
+        unitTeleported = false;
         roundNumber++;
         //unitSlowed = false;
         //roundTurnOrder = new List<Unit>(roundTurnOrder); //TODO Maybe make this the previous turnOrder as seed
@@ -186,7 +187,6 @@ public class BattleManager : MonoBehaviour {
         commandIndex = 0;
         unitMoved = false;
         actionsTaken = 0;
-        unitTeleported = false;
         //Reset Menus
         baseMenuOpen = false;
         moveMenuOpen = false;
