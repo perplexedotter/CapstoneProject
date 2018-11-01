@@ -988,7 +988,7 @@ public class BattleManager : MonoBehaviour {
 
         } else {
             Debug.Log("Wormhole 1 to 0!");
-            wormholeTileList[1].UnitOnTile.PlaceOnTile(wormholeTileList[1]);
+            wormholeTileList[1].UnitOnTile.PlaceOnTile(wormholeTileList[0]);
             unitTeleported = true;
         }
         
