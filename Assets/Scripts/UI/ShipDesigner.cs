@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//
 public class ShipDesigner : MonoBehaviour {
     [SerializeField] public GameObject Fighter;
     [SerializeField] public GameObject Frigate;
