@@ -30,7 +30,8 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected float mass = 400;
     [SerializeField] protected float shields = 0;
     [SerializeField] protected float hardPoints = 0;
-    [SerializeField] private int threat;
+    [SerializeField] protected int threat;
+    [SerializeField] protected int value;
     [SerializeField] protected int movementRange;
     [SerializeField] protected bool destroy = false;
 
@@ -256,37 +257,23 @@ public class Unit : MonoBehaviour {
 
     /**************************************CALCULATED GETTERS ***************************************/
 
+    public int GetValue()
+    {
+        int tempValue = value;
+        foreach(var m in modules)
+        {
+            tempValue += m.Value;
+        }
+        return tempValue;
+    }
+
     //calculate threat
     public int GetThreat()
     {
         int tempThreat = threat;
-
-        for (int i = 0; i < modules.Count; i++)
+        foreach(var m in modules)
         {
-            if (modules[i].Type == ModuleType.heal)
-            {
-                tempThreat += 30;
-            }
-            else if (modules[i].Type == ModuleType.longRange)
-            {
-                tempThreat += 25;
-            }
-            else if (modules[i].Type == ModuleType.shortRange)
-            {
-                tempThreat += 20;
-            }
-            else if (modules[i].Type == ModuleType.slow)
-            {
-                tempThreat += 15;
-            }
-            else if (modules[i].Type == ModuleType.engine)
-            {
-                tempThreat += 10;
-            }
-            else if (modules[i].Type == ModuleType.shields)
-            {
-                tempThreat += 5;
-            }
+            tempThreat += m.Threat;
         }
         return tempThreat;
     }

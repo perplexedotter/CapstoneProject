@@ -6966,7 +6966,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4354594491197540, guid: 77ee7706634cc914f8e7998cc4ef9be8, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 80
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 4354594491197540, guid: 77ee7706634cc914f8e7998cc4ef9be8, type: 2}
       propertyPath: m_LocalPosition.y
@@ -6974,7 +6974,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4354594491197540, guid: 77ee7706634cc914f8e7998cc4ef9be8, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 100
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 4354594491197540, guid: 77ee7706634cc914f8e7998cc4ef9be8, type: 2}
       propertyPath: m_LocalRotation.x
@@ -7003,7 +7003,7 @@ Prefab:
       objectReference: {fileID: 1340549745}
     - target: {fileID: 4604498506410604, guid: 77ee7706634cc914f8e7998cc4ef9be8, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77ee7706634cc914f8e7998cc4ef9be8, type: 2}
@@ -10337,6 +10337,7 @@ MonoBehaviour:
   shields: 0
   hardPoints: 0
   threat: 0
+  value: 0
   movementRange: 0
   destroy: 0
   modules: []

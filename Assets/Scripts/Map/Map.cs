@@ -35,31 +35,16 @@ public class Map : MonoBehaviour {
     {
         Tile tile;
         //The total threat this unit would experince in this location.
-        int enemyThreat;
+        int enemyThreat = 0;
         //TODO determine if this is just that action's range or movement + action range
         //These are the units that this units action's could target from this tile
-        int enemiesInUnitRange;
-        int alliesInUnitRange;
+        int distToNearestEnemy;
+        int enemiesInUnitRange = 0;
+        int alliesInUnitRange = 0;
 
         public TileData(Tile tile)
         {
-            this.tile = tile;
-            enemyThreat = 0;
-            enemiesInUnitRange = 0;
-            alliesInUnitRange = 0;
-        }
-
-        public Tile Tile
-        {
-            get
-            {
-                return tile;
-            }
-
-            set
-            {
-                tile = value;
-            }
+            Tile = tile;
         }
 
         public int Threat
@@ -98,6 +83,32 @@ public class Map : MonoBehaviour {
             set
             {
                 alliesInUnitRange = value;
+            }
+        }
+
+        public Tile Tile
+        {
+            get
+            {
+                return tile;
+            }
+
+            set
+            {
+                tile = value;
+            }
+        }
+
+        public int DistToNearestEnemy
+        {
+            get
+            {
+                return distToNearestEnemy;
+            }
+
+            set
+            {
+                distToNearestEnemy = value;
             }
         }
     }
@@ -403,24 +414,30 @@ public class Map : MonoBehaviour {
 
     /********************************* TILE DATA FUNCTIONS **************************************/
 
-    public List<TileData> GetMapTileData(int playerNumber, int range)
+    public Dictionary<Tile, TileData> GetTileData(Unit unit, int range)
     {
-        List<TileData> tileData = new List<TileData>();
+        return GetTileData(new List<Tile>(mapDict.Values), unit, range);
+    }
+
+    public Dictionary<Tile, TileData> GetTileData(List<Tile> tiles, Unit unit, int range)
+    {
+        int playerNumber = unit.PlayerNumber;
         List<Unit> units = GetAllUnits();
         Dictionary<Tile, int> threatValues = GetThreatValues(playerNumber);
-        foreach(var t in mapDict.Values)
+        Dictionary<Tile, TileData> dataDict = new Dictionary<Tile, TileData>();
+        foreach (var t in tiles)
         {
             TileData td = new TileData(t);
             td.Threat = threatValues[t];
             //For each unit determine if they are within range
-            foreach(var u in units)
+            foreach (var u in units)
             {
                 Tile unitTile = u.CurrentTile;
-                if (unitTile != null)
+                if (u != unit && unitTile != null)
                 {
                     //If the tiles coords are with range of the current tile increment apropriate count
-                    int distanceToUnit = (Math.Abs(t.GetGridPos().x - unitTile.GetGridPos().x) + Math.Abs(t.GetGridPos().y - unitTile.GetGridPos().y));
-                    if(distanceToUnit <= range)
+                    int distanceToUnit = GetTileDistance(unitTile, t);
+                    if (distanceToUnit <= range)
                     {
                         if (u.PlayerNumber == playerNumber)
                             td.AlliesInUnitRange++;
@@ -430,9 +447,11 @@ public class Map : MonoBehaviour {
 
                 }
             }
+            td.DistToNearestEnemy = DistanceToNearestEnemy(t, playerNumber);
+            dataDict.Add(t, td);
         }
 
-        return tileData;
+        return dataDict;
     }
 
     public Dictionary<Tile, int> GetThreatValues(int playerNumber)
@@ -451,7 +470,8 @@ public class Map : MonoBehaviour {
                 List<Tile> meleeRange = GetMeleeRange(e);
                 foreach(var t in meleeRange)
                 {
-                    threatValues[t] += e.GetThreat();
+                    int threat = e.GetThreat() - GetTileDistance(t, e.CurrentTile);
+                    threatValues[t] += threat;
                 }
             }
             else if (e.LongRangeCapability > 0)
@@ -459,7 +479,8 @@ public class Map : MonoBehaviour {
                 List<Tile> longRange = GetTilesInRange(e.CurrentTile, e.LongRangeCapability);
                 foreach(var t in longRange)
                 {
-                    threatValues[t] += e.GetThreat();
+                    int threat = e.GetThreat() - GetTileDistance(t, e.CurrentTile);
+                    threatValues[t] += threat;
                 }
             }
         }
@@ -506,6 +527,16 @@ public class Map : MonoBehaviour {
         return allies;
     }
 
+    public List<Unit> GetUnits(List<Tile> tiles)
+    {
+        List<Unit> units = new List<Unit>();
+        foreach (var t in tiles)
+            if (t.UnitOnTile != null)
+                units.Add(t.UnitOnTile);
+        return units;
+    }
+
+
     public List<Tile> GetWormholeTiles()
     {
         List<Tile> tiles = new List<Tile>();
@@ -549,6 +580,23 @@ public class Map : MonoBehaviour {
             tiles.Add(adjacentTile);
 
         return tiles;
+    }
+
+    public int DistanceToNearestEnemy(Tile tile, int playerNumber)
+    {
+        int distance = int.MaxValue;
+        List<Unit> enemies = GetAllEnemies(playerNumber);
+        foreach(var e in enemies)
+        {
+            if(e.CurrentTile != null)
+                distance = Math.Min(distance, GetTileDistance(tile, e.CurrentTile));
+        }
+        return distance;
+    }
+
+    public int GetTileDistance(Tile a, Tile b)
+    {
+        return (Math.Abs(a.GetGridPos().x - b.GetGridPos().x) + Math.Abs(a.GetGridPos().y - b.GetGridPos().y));
     }
 
     //Checks if units are adjacent to each other

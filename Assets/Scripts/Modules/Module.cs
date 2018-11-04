@@ -10,6 +10,8 @@ public class Module : MonoBehaviour {
     public Action Action { get; protected set; }
 
     [SerializeField] protected ModuleType type;
+    [SerializeField] protected int value;
+    [SerializeField] protected int threat = 0;
     [SerializeField] protected int mass;
 
     public int Mass
@@ -30,6 +32,22 @@ public class Module : MonoBehaviour {
         get
         {
             return type;
+        }
+    }
+
+    public int Value
+    {
+        get
+        {
+            return value;
+        }
+    }
+
+    public int Threat
+    {
+        get
+        {
+            return threat;
         }
     }
 

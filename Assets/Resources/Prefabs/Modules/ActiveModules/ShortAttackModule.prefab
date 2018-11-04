@@ -52,8 +52,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  value: 19
+  threat: 21
+  mass: 12
   Target: 1
   ActionType: 0
   Range: 1
   Power: 20
-  mass: 12

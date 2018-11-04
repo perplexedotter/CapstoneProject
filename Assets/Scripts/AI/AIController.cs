@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -62,25 +60,25 @@ public class AIController : MonoBehaviour {
         Action meleeAction = GetAction(ActionType.ShortAttack);
         List<Command> commands = new List<Command>();
         
-        //Determine if highest threat in melee range is adjacent
+        //Determine if highest value in melee range is adjacent
         List<Unit> adjEnemies = GetAdjacentUnits(unit.CurrentTile, Team.Enemy);
 
-        Unit highestThreatUnit = GetHighestThreat(map.GetEnemyUnitsInMeleeRange(unit));
+        Unit highestValueUnit = GetHighestValue(map.GetEnemyUnitsInMeleeRange(unit));
 
-        //If the highest threat unit is in range attack it
-        if (highestThreatUnit != null && adjEnemies.Count > 0 && adjEnemies.Contains(highestThreatUnit))
+        //If the highest value unit is in range attack it
+        if (highestValueUnit != null && adjEnemies.Count > 0 && adjEnemies.Contains(highestValueUnit))
         {
-            commands.Add(new Command(highestThreatUnit.CurrentTile, Command.CommandType.Action, meleeAction));
+            commands.Add(new Command(highestValueUnit.CurrentTile, Command.CommandType.Action, meleeAction));
         }
         else
         {
             //If there is not unit in melee range find the closest enemy and move to engage
-            if (highestThreatUnit == null)
+            if (highestValueUnit == null)
             {
-                highestThreatUnit = GetClosestUnit(unit.CurrentTile, Team.Enemy);
+                highestValueUnit = GetClosestUnit(unit.CurrentTile, Team.Enemy);
             }
-            //Move to the enemy with the highest threat
-            Tile closestTileToEnemy = GetClosestTile(map.GetMovementRange(unit), highestThreatUnit.CurrentTile);
+            //Move to the enemy with the highest value
+            Tile closestTileToEnemy = GetClosestTile(map.GetMovementRange(unit), highestValueUnit.CurrentTile);
             commands.Add(new Command(closestTileToEnemy, Command.CommandType.Move, null));
         }
         /*TODO Implement
@@ -96,7 +94,7 @@ public class AIController : MonoBehaviour {
         {
             //Get Enemies Adjacent to move
             adjEnemies = GetAdjacentUnits(GetFirstMoveTile(commands), Team.Enemy);
-            Unit target = GetHighestThreat(adjEnemies);
+            Unit target = GetHighestValue(adjEnemies);
             if (target != null)
                 commands.Add(new Command(target.CurrentTile, Command.CommandType.Action, meleeAction));
         }
@@ -113,67 +111,99 @@ public class AIController : MonoBehaviour {
 
         List<Command> commands = new List<Command>();
 
-        //Find Highest Value Damaged Unit (HVDU) in potential range
-        List<Unit> allies = map.GetAllAllies(unit)
+        //Find most damaged highest value unit in potential range
+        List<Unit> damagedAllies = map.GetAllAllies(unit)
             .Where(unit => unit.PlayerNumber == unit.PlayerNumber && unit.GetDamage() > 0)
-            .OrderBy(o=>o.GetThreat())
+            .OrderBy(o=>o.GetValue())
             .OrderByDescending(o=>o.GetHP())
             .ToList();
 
-        Unit HVDU = allies.Count > 0 ? allies[0] : null;
+        List<Tile> healRange = map.GetMovementRangeExtended(unit, action.Range);
+        HashSet<Unit> unitsInRange = new HashSet<Unit>(map.GetUnits(healRange));
 
+        Unit healTarget = null;
+        foreach(var u in damagedAllies)
+        {
+            if (unitsInRange.Contains(u))
+            {
+                healTarget = u;
+                break;
+            }
+        }
 
-        //If unit is in current range heal and move to lower threat area &&|| towards next best HVDU
-        List<Tile> tilesInHealRange = map.GetMovementRangeExtended(unit, 2);
-        
+        //Get information about threat and enemies and allies in range
+        HashSet<Tile> movementRange = new HashSet<Tile>(map.GetMovementRange(unit));
+        Dictionary<Tile, Map.TileData> tileData = map.GetTileData(map.GetMovementRange(unit), unit, action.Range);
+
+        //There is a damaged unit to heal
+        if (healTarget != null)
+        {
+            //If target is not in heal range move nearer to it first
+            if(!map.GetUnitsInRange(unit.CurrentTile, action.Range).Contains(healTarget))
+            {
+                //Move near heal target
+            }
+            //Heal target
+            commands.Add(new Command(healTarget.CurrentTile, Command.CommandType.Action, action);
+
+        }
+        //No damaged unit move to lowest threat area with allies in range
+        if (!ContainsMove(commands))
+        {
+            //Sort the tiles by least enemies in range -> lowest threat -> most allies in range 
+            List<Map.TileData> safestUsefulPos = tileData.Values
+                .OrderByDescending(o => o.DistToNearestEnemy)
+                .OrderBy(o => o.Threat)
+                .OrderByDescending(o => o.AlliesInUnitRange)
+                .ToList();
+
+            //TODO FIX to be better
+            List<Tile> bestPositions = safestUsefulPos.Select(o => o.Tile).ToList();
+            //Find the best move
+            foreach(var t in bestPositions)
+            {
+                if (movementRange.Contains(t))
+                {
+                    commands.Add(new Command(t, Command.CommandType.Move, null));
+                    break;
+                }
+
+            }
+        }
+
+        //If unit is in current range heal and move to lower threat area &&|| towards next best option
+        //List<Tile> tilesInHealRange = map.GetMovementRangeExtended(unit, action.Range);
+
 
         //Else move to lowest threat tile in range of HVDU and heal HVDU
 
         //TEST
-        commands.Add(new Command(unit.CurrentTile, Command.CommandType.Action, action));
-        map.ColorTiles(tilesInHealRange, Tile.TileColor.ally);
+        //commands.Add(new Command(unit.CurrentTile, Command.CommandType.Action, action));
+        //map.ColorTiles(tilesInHealRange, Tile.TileColor.ally);
         //map.ColorTiles(map.GetMovementRange(aiUnit), Tile.TileColor.move);
         return commands;
     }
 
+
+
     /************************************************* INFORMATION FUNCTIONS *************************************/
 
-    //private List<TileData> UpdateTileData(Action action)
-    //{
-    //    List<Tile> rangeList = map.GetMovementRange(unit);
-    //    List<TileData> annotatedRange = new List<TileData>();
-    //    foreach(var t in rangeList)
-    //    {
-    //        TileData tD = new TileData(t);
-    //        List<Unit> unitsInRange = map.GetUnitsInRange(t, action.Range); 
-    //        foreach(var u in unitsInRange)
-    //        {
-    //            if (u.PlayerNumber == unit.PlayerNumber)
-    //                tD.AlliesInUnitRange++;
-    //            else
-    //                tD.EnemiesInUnitRange++;
-    //        }
 
-    //    }
-    //    return annotatedRange;
-    //}
 
     /************************************************ UTILITY FUNCTIONS *****************************************/
 
-    //Returns the unit with highest threat from a list of units
-    private Unit GetHighestThreat(List<Unit> units)
+    //Returns the unit with highest value from a list of units
+    private Unit GetHighestValue(List<Unit> units)
     {
-        Unit highestThreat = null;
-        //TODO Convert this to find highest threat unit
-        //highestThreat = units.Count > 0 ? units[0] : null;
+        Unit highestValue = null;
         foreach(var u in units)
         {
-            if(highestThreat == null || highestThreat.GetThreat() < u.GetThreat())
+            if(highestValue == null || highestValue.GetValue() < u.GetValue())
             {
-                highestThreat = u;
+                highestValue = u;
             }
         }
-        return highestThreat;
+        return highestValue;
     }
 
     private Action GetAction(ActionType type)
@@ -272,16 +302,4 @@ public class AIController : MonoBehaviour {
         }
         return closestTile;
     }
-
-    /*This function will look at all units in melee range
-     *If the enemy flag is set the enemy with the highest threat will be returned
-     * If the flag is not set the ally with the highest threat will be retruned
-     * If no units are in range that meet the selected critera null will be returned
-     */
-    private Unit GetHighestThreatInMeleeRange(Team team)
-    {
-        return null;
-    }
-
-
 }
