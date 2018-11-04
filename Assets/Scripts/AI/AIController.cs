@@ -10,78 +10,19 @@ public class AIController : MonoBehaviour {
     enum Team {Enemy, Ally};
 
 
-    private class TileData
-    {
-        Tile tile;
-        //The total threat this unit would experince in this location.
-        int enemyThreat;
-        //TODO determine if this is just that action's range or movement + action range
-        //These are the units that this units action's could target from this tile
-        int enemiesInUnitRange; 
-        int alliesInUnitRange;
-
-        public Tile Tile
-        {
-            get
-            {
-                return tile;
-            }
-
-            set
-            {
-                tile = value;
-            }
-        }
-
-        public int EnemyThreat
-        {
-            get
-            {
-                return enemyThreat;
-            }
-
-            set
-            {
-                enemyThreat = value;
-            }
-        }
-
-        public int EnemiesInUnitRange
-        {
-            get
-            {
-                return enemiesInUnitRange;
-            }
-
-            set
-            {
-                enemiesInUnitRange = value;
-            }
-        }
-
-        public int AlliesInUnitRange
-        {
-            get
-            {
-                return alliesInUnitRange;
-            }
-
-            set
-            {
-                alliesInUnitRange = value;
-            }
-        }
-    }
+   
 
     /********************************************** FIELDS *****************************************/
 
-    Unit aiUnit;
+    Unit unit;
     ModuleType moduleType;
 
     List<Command> commands;
 
     public static AIController instance;
     [SerializeField] Map map;
+
+    //List<TileData> annotatedRange;
 
     /********************************************* UNITY METHODS ***************************************/
 
@@ -93,36 +34,38 @@ public class AIController : MonoBehaviour {
             Destroy(gameObject);
     }
 
+
+
+
+
+    /********************************************************** COMMAND FUNCTIONS ******************************/
+
     public List<Command> GetAICommands(Unit unit)
     {
-        this.aiUnit = unit;
+        this.unit = unit;
         commands = new List<Command>();
         GetAIUnitType();
         switch (moduleType)
         {
             case ModuleType.shortRange:
-                commands = ProcessMeleeUnitTurn();
+                commands = GetMeleeCommands();
                 break;
             case ModuleType.heal:
-                commands = ProcessHealUnitTurn();
+                commands = GetHealCommands();
                 break;
         }
         return commands;
     }
 
-
-
-    /********************************************************** AI TURN FUNCTIONS ******************************/
-
-    private List<Command> ProcessMeleeUnitTurn()
+    private List<Command> GetMeleeCommands()
     {
         Action meleeAction = GetAction(ActionType.ShortAttack);
         List<Command> commands = new List<Command>();
         
         //Determine if highest threat in melee range is adjacent
-        List<Unit> adjEnemies = GetAdjacentUnits(aiUnit.CurrentTile, Team.Enemy);
+        List<Unit> adjEnemies = GetAdjacentUnits(unit.CurrentTile, Team.Enemy);
 
-        Unit highestThreatUnit = GetHighestThreat(map.GetEnemyUnitsInMeleeRange(aiUnit));
+        Unit highestThreatUnit = GetHighestThreat(map.GetEnemyUnitsInMeleeRange(unit));
 
         //If the highest threat unit is in range attack it
         if (highestThreatUnit != null && adjEnemies.Count > 0 && adjEnemies.Contains(highestThreatUnit))
@@ -134,10 +77,10 @@ public class AIController : MonoBehaviour {
             //If there is not unit in melee range find the closest enemy and move to engage
             if (highestThreatUnit == null)
             {
-                highestThreatUnit = GetClosestUnit(aiUnit.CurrentTile, Team.Enemy);
+                highestThreatUnit = GetClosestUnit(unit.CurrentTile, Team.Enemy);
             }
             //Move to the enemy with the highest threat
-            Tile closestTileToEnemy = GetClosestTile(map.GetMovementRange(aiUnit), highestThreatUnit.CurrentTile);
+            Tile closestTileToEnemy = GetClosestTile(map.GetMovementRange(unit), highestThreatUnit.CurrentTile);
             commands.Add(new Command(closestTileToEnemy, Command.CommandType.Move, null));
         }
         /*TODO Implement
@@ -162,14 +105,17 @@ public class AIController : MonoBehaviour {
     }
 
 
-    private List<Command> ProcessHealUnitTurn()
+    private List<Command> GetHealCommands()
     {
         Action action = GetAction(ActionType.Heal);
+        //List<TileData> tileData = UpdateTileData(action);
+
+
         List<Command> commands = new List<Command>();
 
         //Find Highest Value Damaged Unit (HVDU) in potential range
-        List<Unit> allies = map.GetAllAllies(aiUnit)
-            .Where(unit => unit.PlayerNumber == aiUnit.PlayerNumber && unit.GetDamage() > 0)
+        List<Unit> allies = map.GetAllAllies(unit)
+            .Where(unit => unit.PlayerNumber == unit.PlayerNumber && unit.GetDamage() > 0)
             .OrderBy(o=>o.GetThreat())
             .OrderByDescending(o=>o.GetHP())
             .ToList();
@@ -178,19 +124,41 @@ public class AIController : MonoBehaviour {
 
 
         //If unit is in current range heal and move to lower threat area &&|| towards next best HVDU
-        List<Tile> tilesInHealRange = map.GetMovementRangeExtended(aiUnit, 2);
+        List<Tile> tilesInHealRange = map.GetMovementRangeExtended(unit, 2);
         
 
         //Else move to lowest threat tile in range of HVDU and heal HVDU
 
         //TEST
-        commands.Add(new Command(aiUnit.CurrentTile, Command.CommandType.Action, action));
+        commands.Add(new Command(unit.CurrentTile, Command.CommandType.Action, action));
         map.ColorTiles(tilesInHealRange, Tile.TileColor.ally);
         //map.ColorTiles(map.GetMovementRange(aiUnit), Tile.TileColor.move);
         return commands;
     }
 
-    //UTILITY FUNCTIONS
+    /************************************************* INFORMATION FUNCTIONS *************************************/
+
+    //private List<TileData> UpdateTileData(Action action)
+    //{
+    //    List<Tile> rangeList = map.GetMovementRange(unit);
+    //    List<TileData> annotatedRange = new List<TileData>();
+    //    foreach(var t in rangeList)
+    //    {
+    //        TileData tD = new TileData(t);
+    //        List<Unit> unitsInRange = map.GetUnitsInRange(t, action.Range); 
+    //        foreach(var u in unitsInRange)
+    //        {
+    //            if (u.PlayerNumber == unit.PlayerNumber)
+    //                tD.AlliesInUnitRange++;
+    //            else
+    //                tD.EnemiesInUnitRange++;
+    //        }
+
+    //    }
+    //    return annotatedRange;
+    //}
+
+    /************************************************ UTILITY FUNCTIONS *****************************************/
 
     //Returns the unit with highest threat from a list of units
     private Unit GetHighestThreat(List<Unit> units)
@@ -210,7 +178,7 @@ public class AIController : MonoBehaviour {
 
     private Action GetAction(ActionType type)
     {
-        List<Action> actions = aiUnit.GetActions();
+        List<Action> actions = unit.GetActions();
         Action bestAction = null;
         foreach(var a in actions)
         {
@@ -251,7 +219,7 @@ public class AIController : MonoBehaviour {
     //A ai unit without modules with break this which is fine because that unit wouldn't make sense in the current design
     private void GetAIUnitType()
     {
-        moduleType = aiUnit.GetModuleTypes()[0];
+        moduleType = unit.GetModuleTypes()[0];
     }
 
     //Gets and returns the Unit that is closest to the specified Tile
@@ -260,15 +228,15 @@ public class AIController : MonoBehaviour {
     //It will never return the current unit
     private Unit GetClosestUnit(Tile tile, Team team)
     {
-        int aiPlayerNumber = aiUnit.PlayerNumber;
+        int aiPlayerNumber = unit.PlayerNumber;
         List<Unit> units = map.GetAllUnits();
         float closestDist = float.MaxValue;
         Unit closestUnit = null;
         foreach (var u in units)
         {
-            if (u != aiUnit && ((team == Team.Enemy && u.PlayerNumber != aiPlayerNumber) || (team == Team.Ally && u.PlayerNumber == aiPlayerNumber)))
+            if (u != unit && ((team == Team.Enemy && u.PlayerNumber != aiPlayerNumber) || (team == Team.Ally && u.PlayerNumber == aiPlayerNumber)))
             {
-                float distToE = Vector2Int.Distance(u.CurrentTile.GetCoords(), aiUnit.CurrentTile.GetCoords());
+                float distToE = Vector2Int.Distance(u.CurrentTile.GetCoords(), unit.CurrentTile.GetCoords());
                 if (distToE < closestDist)
                 {
                     closestDist = distToE;
@@ -284,7 +252,7 @@ public class AIController : MonoBehaviour {
         List<Unit> units = map.GetAdjacentUnits(tile);
         List<Unit> adjacentUnits = new List<Unit>();
         foreach(var u in units)
-            if ((team == Team.Enemy && u.PlayerNumber != aiUnit.PlayerNumber) || (team == Team.Ally && u.PlayerNumber == aiUnit.PlayerNumber))
+            if ((team == Team.Enemy && u.PlayerNumber != unit.PlayerNumber) || (team == Team.Ally && u.PlayerNumber == unit.PlayerNumber))
                 adjacentUnits.Add(u);
         return adjacentUnits;
     }
@@ -315,8 +283,5 @@ public class AIController : MonoBehaviour {
         return null;
     }
 
-    private void UpdateTilesThreatLevel(List<TileData> tiles)
-    {
 
-    }
 }

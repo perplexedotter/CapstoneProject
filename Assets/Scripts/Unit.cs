@@ -30,7 +30,7 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected float mass = 400;
     [SerializeField] protected float shields = 0;
     [SerializeField] protected float hardPoints = 0;
-    [SerializeField] private float threat;
+    [SerializeField] private int threat;
     [SerializeField] protected int movementRange;
     [SerializeField] protected bool destroy = false;
 
@@ -45,6 +45,11 @@ public class Unit : MonoBehaviour {
     protected bool movementFinished = false;
     private List<Tile> path;
     private int pathIndex;
+
+    //Flags
+    private bool meleeCapable = false;
+    private bool longRangeCapable = false;
+    private int longRangeCapability = -1;
 
     /**************************************** UNITY FUNCTIONS **********************************/
 
@@ -64,10 +69,28 @@ public class Unit : MonoBehaviour {
         //wait allows for components to be added before they are added to module list
         //StartCoroutine (GetChildren());
         modules = new List<Module>(GetComponentsInChildren<Module>());
-
+        SetAttackCapabilityFlags();
 
 
     }
+
+    private void SetAttackCapabilityFlags()
+    {
+        List<Action> actions = GetActions();
+        foreach(var a in actions)
+        {
+            if(a.Type == ActionType.ShortAttack)
+            {
+                meleeCapable = true;
+            }
+            else if(a.Type == ActionType.LongAttack)
+            {
+                longRangeCapable = true;
+                longRangeCapability = Math.Max(longRangeCapability, a.Range);
+            }
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -204,6 +227,22 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    public bool MeleeCapable
+    {
+        get
+        {
+            return meleeCapable;
+        }
+    }
+
+    public int LongRangeCapability
+    {
+        get
+        {
+            return longRangeCapability;
+        }
+    }
+
     public float GetDamage()
     {
         return damageTaken;
@@ -218,9 +257,9 @@ public class Unit : MonoBehaviour {
     /**************************************CALCULATED GETTERS ***************************************/
 
     //calculate threat
-    public float GetThreat()
+    public int GetThreat()
     {
-        float tempThreat = threat;
+        int tempThreat = threat;
 
         for (int i = 0; i < modules.Count; i++)
         {

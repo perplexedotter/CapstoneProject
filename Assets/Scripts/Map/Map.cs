@@ -31,7 +31,80 @@ public class Map : MonoBehaviour {
         }
     }
 
+    public class TileData
+    {
+        Tile tile;
+        //The total threat this unit would experince in this location.
+        int enemyThreat;
+        //TODO determine if this is just that action's range or movement + action range
+        //These are the units that this units action's could target from this tile
+        int enemiesInUnitRange;
+        int alliesInUnitRange;
+
+        public TileData(Tile tile)
+        {
+            this.tile = tile;
+            enemyThreat = 0;
+            enemiesInUnitRange = 0;
+            alliesInUnitRange = 0;
+        }
+
+        public Tile Tile
+        {
+            get
+            {
+                return tile;
+            }
+
+            set
+            {
+                tile = value;
+            }
+        }
+
+        public int Threat
+        {
+            get
+            {
+                return enemyThreat;
+            }
+
+            set
+            {
+                enemyThreat = value;
+            }
+        }
+
+        public int EnemiesInUnitRange
+        {
+            get
+            {
+                return enemiesInUnitRange;
+            }
+
+            set
+            {
+                enemiesInUnitRange = value;
+            }
+        }
+
+        public int AlliesInUnitRange
+        {
+            get
+            {
+                return alliesInUnitRange;
+            }
+
+            set
+            {
+                alliesInUnitRange = value;
+            }
+        }
+    }
+
     Dictionary<Vector2Int, Tile> mapDict = new Dictionary<Vector2Int, Tile>();
+
+    /********************************************* UNITY FUNCTIONS ******************************************/
 
 	// Use this for initialization
 	void Awake () {
@@ -328,7 +401,70 @@ public class Map : MonoBehaviour {
         return new List<Tile>(range);
     }
 
+    /********************************* TILE DATA FUNCTIONS **************************************/
 
+    public List<TileData> GetMapTileData(int playerNumber, int range)
+    {
+        List<TileData> tileData = new List<TileData>();
+        List<Unit> units = GetAllUnits();
+        Dictionary<Tile, int> threatValues = GetThreatValues(playerNumber);
+        foreach(var t in mapDict.Values)
+        {
+            TileData td = new TileData(t);
+            td.Threat = threatValues[t];
+            //For each unit determine if they are within range
+            foreach(var u in units)
+            {
+                Tile unitTile = u.CurrentTile;
+                if (unitTile != null)
+                {
+                    //If the tiles coords are with range of the current tile increment apropriate count
+                    int distanceToUnit = (Math.Abs(t.GetGridPos().x - unitTile.GetGridPos().x) + Math.Abs(t.GetGridPos().y - unitTile.GetGridPos().y));
+                    if(distanceToUnit <= range)
+                    {
+                        if (u.PlayerNumber == playerNumber)
+                            td.AlliesInUnitRange++;
+                        else
+                            td.EnemiesInUnitRange++;
+                    }
+
+                }
+            }
+        }
+
+        return tileData;
+    }
+
+    public Dictionary<Tile, int> GetThreatValues(int playerNumber)
+    {
+        List<Unit> enemies = GetAllEnemies(playerNumber);
+        List<HashSet<Tile>> enemyMeleeRanges = new List<HashSet<Tile>>();
+        Dictionary<Tile, int> threatValues = new Dictionary<Tile, int>();
+        foreach (var t in mapDict.Values)
+        {
+            threatValues.Add(t, 0);
+        }
+        foreach (var e in enemies)
+        {
+            if (e.MeleeCapable)
+            {
+                List<Tile> meleeRange = GetMeleeRange(e);
+                foreach(var t in meleeRange)
+                {
+                    threatValues[t] += e.GetThreat();
+                }
+            }
+            else if (e.LongRangeCapability > 0)
+            {
+                List<Tile> longRange = GetTilesInRange(e.CurrentTile, e.LongRangeCapability);
+                foreach(var t in longRange)
+                {
+                    threatValues[t] += e.GetThreat();
+                }
+            }
+        }
+        return threatValues;
+    }
 
     /********************************* UTILITY FUNCTIONS **************************************/
 
@@ -348,10 +484,15 @@ public class Map : MonoBehaviour {
 
     public List<Unit> GetAllEnemies(Unit unit)
     {
+        return GetAllEnemies(unit.PlayerNumber);
+    }
+
+    private List<Unit> GetAllEnemies(int playerNumber)
+    {
         List<Unit> units = GetAllUnits();
         List<Unit> enemies = new List<Unit>();
-        foreach(var u in units)
-            if (unit.PlayerNumber != u.PlayerNumber)
+        foreach (var u in units)
+            if (playerNumber != u.PlayerNumber)
                 enemies.Add(u);
         return enemies;
     }
