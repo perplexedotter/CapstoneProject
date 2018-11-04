@@ -106,7 +106,8 @@ public class Map : MonoBehaviour {
                      *this will be useful for determining melee range. The function that gets movement will remove this tile before
                      *returning the list it creates
                      */
-                    else if (!tsf.visited && movement && tsf.Tile.UnitOnTile != null && tsf.Tile.UnitOnTile.PlayerNumber != playerNumber)
+                    if (!tsf.visited && ((movement && tsf.Tile.UnitOnTile != null && tsf.Tile.UnitOnTile.PlayerNumber != playerNumber)
+                        || (!traverseAsteroid && tsf.Tile.Type == Tile.TileType.asteroid)))
                     {
                         tsf.visited = true;
                         tilesInRange.Add(tsf);
@@ -134,13 +135,14 @@ public class Map : MonoBehaviour {
 
     public List<Tile> GetMovementRange(Unit unit)
     {
-        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, null, unit.GetMovementRange(), true, false, unit.PlayerNumber);
+        bool traverseAsteroid = false;
+        Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(unit.CurrentTile, null, unit.GetMovementRange(), true, traverseAsteroid, unit.PlayerNumber);
         if (tileDict == null)
             return null;
         List<Tile> tilesInRange = new List<Tile>();
         foreach(var t in tileDict.Keys)
         {
-            if (t.UnitOnTile == null)
+            if (t.UnitOnTile == null && (traverseAsteroid || t.Type != Tile.TileType.asteroid))
                 tilesInRange.Add(t);
         }
         return tilesInRange;
@@ -299,10 +301,42 @@ public class Map : MonoBehaviour {
             return null;
     }
 
+    /*********************************** SPECIAL RANGE FUNCTIONS ************************************/
+
+    /// <summary>
+    /// This method will take a unit and range extension and return all tiles the unit can move to
+    /// then for the outer edge of the tiles will add tiles that are with in the rangeExtension not based
+    /// on movement. This is to allow the AI and UI to know how far from a units current position it can
+    /// use an ability (like healing)
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="rangeExtension"></param>
+    /// <returns>A list of tiles that are in the units extended range</returns>
+    public List<Tile> GetMovementRangeExtended(Unit unit, int rangeExtension)
+    {
+        int moveRange = unit.GetMovementRange();
+        int pNumber = unit.PlayerNumber;
+        Tile start = unit.CurrentTile;
+
+        HashSet<Tile> range = new HashSet<Tile>(RangeLimitedSearch(start, null, moveRange, true, false, pNumber).Keys);
+        HashSet<Tile> outerEdge = new HashSet<Tile>(range);
+        outerEdge.ExceptWith(RangeLimitedSearch(start, null, moveRange - 1, true, false, pNumber).Keys);
+        foreach(var t in outerEdge)
+        {
+            range.UnionWith(RangeLimitedSearch(t, null, rangeExtension, false, true, pNumber).Keys);
+        }
+        return new List<Tile>(range);
+    }
+
+
 
     /********************************* UTILITY FUNCTIONS **************************************/
 
     //Returns a list of all units that are on the map
+    /// <summary>
+    /// Gets all the units currently on the map
+    /// </summary>
+    /// <returns>A list of units</returns>
     public List<Unit> GetAllUnits()
     {
         List<Unit> units = new List<Unit>();
@@ -406,6 +440,14 @@ public class Map : MonoBehaviour {
                 units.Add(t.UnitOnTile);
         }
         return units;
+    }
+
+    public void ColorTiles(List<Tile> tiles, Tile.TileColor tileColor)
+    {
+        foreach( var t in tiles)
+        {
+            t.SetTileColor(tileColor);
+        }
     }
 
     //Resets all tiles in map to base color

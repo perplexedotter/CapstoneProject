@@ -83,35 +83,35 @@ public class Unit : MonoBehaviour {
 
     /*********************************************** SETUP FUNCTIONS **********************************/
 
-    IEnumerator GetChildren()
-    {
-        yield return new WaitForSeconds(.5f);
-        Transform[] childModules = GetComponentsInChildren<Transform>();
-        foreach (Transform child in childModules)
-        {
-            if (child.tag == "Melee")
-            {
-                MeleeAttackModule melee = child.GetComponent<MeleeAttackModule>();
-                modules.Add(melee);
-            }
-            else if (child.tag == "Range")
-            {
-                RangeAttackModule range = child.GetComponent<RangeAttackModule>();
-                modules.Add(range);
-            }
-            else if (child.tag == "Heal")
-            {
-                Debug.Log("k");
-                HealModule heal = child.GetComponent<HealModule>();
-                modules.Add(heal);
-            }
-            else if (child.tag == "Slow")
-            {
-                SlowModule slow = child.GetComponent<SlowModule>();
-                modules.Add(slow);
-            }
-        }
-    }
+    //IEnumerator GetChildren()
+    //{
+    //    yield return new WaitForSeconds(.5f);
+    //    Transform[] childModules = GetComponentsInChildren<Transform>();
+    //    foreach (Transform child in childModules)
+    //    {
+    //        if (child.tag == "Melee")
+    //        {
+    //            MeleeAttackModule melee = child.GetComponent<MeleeAttackModule>();
+    //            modules.Add(melee);
+    //        }
+    //        else if (child.tag == "Range")
+    //        {
+    //            RangeAttackModule range = child.GetComponent<RangeAttackModule>();
+    //            modules.Add(range);
+    //        }
+    //        else if (child.tag == "Heal")
+    //        {
+    //            Debug.Log("k");
+    //            HealModule heal = child.GetComponent<HealModule>();
+    //            modules.Add(heal);
+    //        }
+    //        else if (child.tag == "Slow")
+    //        {
+    //            SlowModule slow = child.GetComponent<SlowModule>();
+    //            modules.Add(slow);
+    //        }
+    //    }
+    //}
 
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
@@ -224,27 +224,27 @@ public class Unit : MonoBehaviour {
 
         for (int i = 0; i < modules.Count; i++)
         {
-            if (modules[i].ModuleType == ModuleType.heal)
+            if (modules[i].Type == ModuleType.heal)
             {
                 tempThreat += 30;
             }
-            else if (modules[i].ModuleType == ModuleType.longRange)
+            else if (modules[i].Type == ModuleType.longRange)
             {
                 tempThreat += 25;
             }
-            else if (modules[i].ModuleType == ModuleType.shortRange)
+            else if (modules[i].Type == ModuleType.shortRange)
             {
                 tempThreat += 20;
             }
-            else if (modules[i].ModuleType == ModuleType.slow)
+            else if (modules[i].Type == ModuleType.slow)
             {
                 tempThreat += 15;
             }
-            else if (modules[i].ModuleType == ModuleType.engine)
+            else if (modules[i].Type == ModuleType.engine)
             {
                 tempThreat += 10;
             }
-            else if (modules[i].ModuleType == ModuleType.shields)
+            else if (modules[i].Type == ModuleType.shields)
             {
                 tempThreat += 5;
             }
@@ -306,7 +306,7 @@ public class Unit : MonoBehaviour {
         HashSet<ModuleType> moduleTypes = new HashSet<ModuleType>();
         foreach (var m in modules)
         {
-            moduleTypes.Add(m.ModuleType);
+            moduleTypes.Add(m.Type);
         }
         return new List<ModuleType>(moduleTypes);
     }
@@ -412,7 +412,7 @@ public class Unit : MonoBehaviour {
     {
         for(int i = 0; i < modules.Count; i++)
         {
-            if(modules[i].ModuleType == module)
+            if(modules[i].Type == module)
             {
                 modules.RemoveAt(i);
                 break;
@@ -524,6 +524,14 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    public void RemoveFromTile()
+    {
+        if(currentTile != null)
+        {
+            currentTile.UnitOnTile = null;
+        }
+        currentTile = null;
+    }
     public void FaceTile(Tile tile)
     {
         if(tile != null)

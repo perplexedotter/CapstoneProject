@@ -5,16 +5,11 @@ using UnityEngine;
 public class Module : MonoBehaviour {
     public int HitPoints { get; protected set; }
     //public int Mass { get; protected set; }
-    public Target ModuleTarget { get; protected set; }
-    public ModuleType ModuleType { get; set; }
+    //public Target ModuleTarget { get; protected set; }
+    //public ModuleType ModuleType { get; set; }
     public Action Action { get; protected set; }
 
-
     [SerializeField] protected ModuleType type;
-    [SerializeField] protected Target Target;
-    [SerializeField] protected ActionType ActionType;
-    [SerializeField] protected int Range;
-    [SerializeField] protected int Power;
     [SerializeField] protected int mass;
 
     public int Mass
@@ -30,6 +25,14 @@ public class Module : MonoBehaviour {
         }
     }
 
+    public ModuleType Type
+    {
+        get
+        {
+            return type;
+        }
+    }
+
     //virtual GetAction
     public virtual Action GetAction()
     {
@@ -40,22 +43,6 @@ public class Module : MonoBehaviour {
     {
         return null;
     }
-
- //   //set action of module
- //   public void SetAction(Action action)
- //   {
- //       this.Action = action;
- //   }
-    
- //   // Use this for initialization
- //   void Start () {
-		
-	//}
-	
-	//// Update is called once per frame
-	//void Update () {
-		
-	//}
 }
 
 //used to name module

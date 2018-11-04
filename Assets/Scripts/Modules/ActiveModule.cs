@@ -4,16 +4,10 @@ using UnityEngine;
 
 public class ActiveModule : Module {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
+    [SerializeField] protected Target Target;
+    [SerializeField] protected ActionType ActionType;
+    [SerializeField] protected int Range;
+    [SerializeField] protected int Power;
     public override Action GetAction()
     {
         return new Action(ActionType, Target, Power, Range);
