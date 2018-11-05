@@ -71,7 +71,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1777492685284630}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 40, y: 0, z: 120}
+  m_LocalPosition: {x: 90, y: 0, z: 80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4699838343816430}
@@ -188,11 +188,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
+  value: 0
+  threat: 0
+  mass: 32
   Target: 0
   ActionType: 2
   Range: 4
   Power: 35
-  mass: 32
 --- !u!114 &114235221438363304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -228,8 +230,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider: {fileID: 64905831304831956}
-  outlineShader: {fileID: 0}
-  standardShader: {fileID: 0}
+  outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
+  standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
   currentTile: {fileID: 0}
   playerNumber: 1
@@ -244,6 +246,7 @@ MonoBehaviour:
   shields: 0
   hardPoints: 0
   threat: 0
+  value: 0
   movementRange: 0
   destroy: 0
   modules: []

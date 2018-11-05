@@ -358,8 +358,8 @@ public class BattleManager : MonoBehaviour {
 
             //TODO add processing for other actions
             case Command.CommandType.Action:
-                //map.ResetTileColors();
-                //ShowActionRange(command.action);
+                map.ResetTileColors();
+                ShowActionRange(command.action);
                 StartCoroutine(DelayActionCommand(command));
                 break;
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class AIController : MonoBehaviour {
 
     /***************************************************CLASSES AND ENUMS *************************************/
-    enum Team {Enemy, Ally};
+
 
 
    
@@ -58,8 +58,9 @@ public class AIController : MonoBehaviour {
         
         //Determine if highest value in melee range is adjacent
         List<Unit> adjEnemies = GetAdjacentUnits(unit.CurrentTile, Team.Enemy);
+        List<Tile> meleeRange = map.GetMovementRangeExtended(unit, 1);
+        Unit highestValueUnit = GetHighestValue(map.GetUnits(meleeRange, unit.PlayerNumber, Team.Enemy));
 
-        Unit highestValueUnit = GetHighestValue(map.GetEnemyUnitsInMeleeRange(unit));
 
         //If the highest value unit is in range attack it
         if (highestValueUnit != null && adjEnemies.Count > 0 && adjEnemies.Contains(highestValueUnit))
@@ -190,7 +191,7 @@ public class AIController : MonoBehaviour {
         Unit highestValue = null;
         foreach(var u in units)
         {
-            if(highestValue == null || highestValue.GetValue() < u.GetValue())
+            if((highestValue == null || highestValue.GetValue() < u.GetValue()))
             {
                 highestValue = u;
             }

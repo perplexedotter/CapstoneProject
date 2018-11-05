@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Team {Enemy, Ally, Any};
 
 public class Map : MonoBehaviour {
 
@@ -114,6 +115,7 @@ public class Map : MonoBehaviour {
     }
 
     Dictionary<Vector2Int, Tile> mapDict = new Dictionary<Vector2Int, Tile>();
+    List<Tile> mapTiles = new List<Tile>();
 
     /********************************************* UNITY FUNCTIONS ******************************************/
 
@@ -121,6 +123,7 @@ public class Map : MonoBehaviour {
 	void Awake () {
         //Find all the tiles and add them to the dictionary. Ignoring duplicates
         var tiles = FindObjectsOfType<Tile>();
+        mapTiles = new List<Tile>(tiles);
         foreach(Tile t in tiles)
         {
             if (!mapDict.ContainsKey(t.GetGridPos()))
@@ -142,7 +145,7 @@ public class Map : MonoBehaviour {
         bool endFound = false;
         //Create a dictionary contian the TileSearchFields to be used in the search
         Dictionary<Vector2Int, TileSearchField> toSearch = new Dictionary<Vector2Int, TileSearchField>();
-        foreach(var t in mapDict.Values)
+        foreach(var t in mapTiles)
         {
             toSearch.Add(t.GetGridPos(), new TileSearchField(t));
         }
@@ -416,14 +419,14 @@ public class Map : MonoBehaviour {
 
     public Dictionary<Tile, TileData> GetTileData(Unit unit, int range)
     {
-        return GetTileData(new List<Tile>(mapDict.Values), unit, range);
+        return GetTileData(mapTiles, unit, range);
     }
 
     public Dictionary<Tile, TileData> GetTileData(List<Tile> tiles, Unit unit, int range)
     {
         int playerNumber = unit.PlayerNumber;
         List<Unit> units = GetAllUnits();
-        Dictionary<Tile, int> threatValues = GetThreatValues(playerNumber);
+        Dictionary<Tile, int> threatValues = GetThreatValues(tiles, playerNumber);
         Dictionary<Tile, TileData> dataDict = new Dictionary<Tile, TileData>();
         foreach (var t in tiles)
         {
@@ -454,12 +457,13 @@ public class Map : MonoBehaviour {
         return dataDict;
     }
 
-    public Dictionary<Tile, int> GetThreatValues(int playerNumber)
+    public Dictionary<Tile, int> GetThreatValues(List<Tile> tiles, int playerNumber)
     {
+
         List<Unit> enemies = GetAllEnemies(playerNumber);
         List<HashSet<Tile>> enemyMeleeRanges = new List<HashSet<Tile>>();
         Dictionary<Tile, int> threatValues = new Dictionary<Tile, int>();
-        foreach (var t in mapDict.Values)
+        foreach (var t in tiles)
         {
             threatValues.Add(t, 0);
         }
@@ -471,7 +475,11 @@ public class Map : MonoBehaviour {
                 foreach(var t in meleeRange)
                 {
                     int threat = e.GetThreat() - GetTileDistance(t, e.CurrentTile);
-                    threatValues[t] += threat;
+                    int currentThreat;
+                    if (threatValues.TryGetValue(t, out currentThreat))
+                    {
+                        threatValues[t] += threat;
+                    }
                 }
             }
             else if (e.LongRangeCapability > 0)
@@ -480,7 +488,11 @@ public class Map : MonoBehaviour {
                 foreach(var t in longRange)
                 {
                     int threat = e.GetThreat() - GetTileDistance(t, e.CurrentTile);
-                    threatValues[t] += threat;
+                    int currentThreat;
+                    if (threatValues.TryGetValue(t, out currentThreat))
+                    {
+                        threatValues[t] += threat;
+                    }
                 }
             }
         }
@@ -496,11 +508,12 @@ public class Map : MonoBehaviour {
     /// <returns>A list of units</returns>
     public List<Unit> GetAllUnits()
     {
-        List<Unit> units = new List<Unit>();
-        foreach (var t in mapDict.Values)
-            if (t.UnitOnTile != null)
-                units.Add(t.UnitOnTile);
-        return units;
+        //List<Unit> units = new List<Unit>();
+        //foreach (var t in mapDict.Values)
+        //    if (t.UnitOnTile != null)
+        //        units.Add(t.UnitOnTile);
+        //return units;
+        return GetUnits(mapTiles, -1, Team.Any);
     }
 
     public List<Unit> GetAllEnemies(Unit unit)
@@ -510,32 +523,48 @@ public class Map : MonoBehaviour {
 
     private List<Unit> GetAllEnemies(int playerNumber)
     {
-        List<Unit> units = GetAllUnits();
-        List<Unit> enemies = new List<Unit>();
-        foreach (var u in units)
-            if (playerNumber != u.PlayerNumber)
-                enemies.Add(u);
-        return enemies;
+        //List<Unit> units = GetAllUnits();
+        //List<Unit> enemies = new List<Unit>();
+        //foreach (var u in units)
+        //    if (playerNumber != u.PlayerNumber)
+        //        enemies.Add(u);
+        //return enemies;
+        return GetUnits(mapTiles, playerNumber, Team.Enemy);
+
     }
     public List<Unit> GetAllAllies(Unit unit)
     {
-        List<Unit> units = GetAllUnits();
-        List<Unit> allies = new List<Unit>();
-        foreach (var u in units)
-            if (unit.PlayerNumber == u.PlayerNumber)
-                allies.Add(u);
-        return allies;
+        //List<Unit> units = GetAllUnits();
+        //List<Unit> allies = new List<Unit>();
+        //foreach (var u in units)
+        //    if (unit.PlayerNumber == u.PlayerNumber)
+        //        allies.Add(u);
+        //return allies;
+        return GetUnits(mapTiles, unit.PlayerNumber, Team.Ally);
     }
 
     public List<Unit> GetUnits(List<Tile> tiles)
     {
-        List<Unit> units = new List<Unit>();
-        foreach (var t in tiles)
-            if (t.UnitOnTile != null)
-                units.Add(t.UnitOnTile);
-        return units;
+        return GetUnits(tiles, -1, Team.Any);
     }
 
+    public List<Unit> GetUnits(List<Tile> tiles, int playerNumber, Team team)
+    {
+        List<Unit> units = new List<Unit>();
+        foreach (var t in tiles)
+        {
+            Unit unit = t.UnitOnTile;
+            if (unit != null)
+            {
+                if (team == Team.Any 
+                    || (team == Team.Ally && unit.PlayerNumber == playerNumber) 
+                    || (team == Team.Enemy && unit.PlayerNumber != playerNumber))
+                    units.Add(t.UnitOnTile);
+
+            }
+        }
+        return units;
+    }
 
     public List<Tile> GetWormholeTiles()
     {
