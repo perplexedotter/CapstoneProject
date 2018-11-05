@@ -594,4 +594,5 @@ public enum UnitType
 {
     fighter,
     frigate,
+    none,
 }
