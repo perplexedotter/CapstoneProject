@@ -20,8 +20,6 @@ public class AIController : MonoBehaviour {
     public static AIController instance;
     [SerializeField] Map map;
 
-    //List<TileData> annotatedRange;
-
     /********************************************* UNITY METHODS ***************************************/
 
     private void Awake()
@@ -32,12 +30,9 @@ public class AIController : MonoBehaviour {
             Destroy(gameObject);
     }
 
-
-
-
-
     /********************************************************** COMMAND FUNCTIONS ******************************/
 
+    //TODO possibly add logic for units to have multiple diff modules
     public List<Command> GetAICommands(Unit unit)
     {
         this.unit = unit;
@@ -55,6 +50,7 @@ public class AIController : MonoBehaviour {
         return commands;
     }
 
+    //TODO Add logic to find enemies that can be destroyed in single attack and target them first
     private List<Command> GetMeleeCommands()
     {
         Action meleeAction = GetAction(ActionType.ShortAttack);
@@ -84,6 +80,7 @@ public class AIController : MonoBehaviour {
         /*TODO Implement
          * Check if the commands include a movement. If it doesn't unit has attacked without moving
          * If this is the case move away to a lower threat location
+         * Possibly not staying put should block enemies from healers and such
          */
         if (!ContainsMove(commands))
         {
@@ -106,9 +103,6 @@ public class AIController : MonoBehaviour {
     private List<Command> GetHealCommands()
     {
         Action action = GetAction(ActionType.Heal);
-        //List<TileData> tileData = UpdateTileData(action);
-
-
         List<Command> commands = new List<Command>();
 
         //Find most damaged highest value unit in potential range
@@ -130,65 +124,63 @@ public class AIController : MonoBehaviour {
                 break;
             }
         }
-
         //Get information about threat and enemies and allies in range
         HashSet<Tile> movementRange = new HashSet<Tile>(map.GetMovementRange(unit));
         Dictionary<Tile, Map.TileData> tileData = map.GetTileData(map.GetMovementRange(unit), unit, action.Range);
-
+        //Sort the tiles by least enemies in range -> lowest threat -> most allies in range 
+        List<Map.TileData> safestUsefulPos = tileData.Values
+            .OrderByDescending(o => o.DistToNearestEnemy)
+            .OrderBy(o => o.Threat)
+            .OrderByDescending(o => o.AlliesInUnitRange)
+            .ToList();
         //There is a damaged unit to heal
         if (healTarget != null)
         {
             //If target is not in heal range move nearer to it first
             if(!map.GetUnitsInRange(unit.CurrentTile, action.Range).Contains(healTarget))
             {
-                //Move near heal target
+                //Get the tiles that are within movement range and healing range of target
+                HashSet<Tile> tilesInRange = new HashSet<Tile>(map.GetTilesInRange(unit.CurrentTile, action.Range));
+                tilesInRange.UnionWith(movementRange);
+                //Find the safest tile of these options based on previous sort
+                foreach(var t in safestUsefulPos)
+                {
+                    if (tilesInRange.Contains(t.Tile))
+                    {
+                        commands.Add(new Command(t.Tile, Command.CommandType.Move, null));
+                        break;
+                    }
+                }
             }
             //Heal target
-            commands.Add(new Command(healTarget.CurrentTile, Command.CommandType.Action, action);
-
+            commands.Add(new Command(healTarget.CurrentTile, Command.CommandType.Action, action));
         }
-        //No damaged unit move to lowest threat area with allies in range
+        //If no movement has occured move to the safest useful position
         if (!ContainsMove(commands))
         {
-            //Sort the tiles by least enemies in range -> lowest threat -> most allies in range 
-            List<Map.TileData> safestUsefulPos = tileData.Values
-                .OrderByDescending(o => o.DistToNearestEnemy)
-                .OrderBy(o => o.Threat)
-                .OrderByDescending(o => o.AlliesInUnitRange)
-                .ToList();
-
-            //TODO FIX to be better
-            List<Tile> bestPositions = safestUsefulPos.Select(o => o.Tile).ToList();
-            //Find the best move
-            foreach(var t in bestPositions)
-            {
-                if (movementRange.Contains(t))
-                {
-                    commands.Add(new Command(t, Command.CommandType.Move, null));
-                    break;
-                }
-
-            }
+            if(safestUsefulPos.Count > 0)
+                commands.Add(new Command(safestUsefulPos[0].Tile, Command.CommandType.Move, null));
         }
-
-        //If unit is in current range heal and move to lower threat area &&|| towards next best option
-        //List<Tile> tilesInHealRange = map.GetMovementRangeExtended(unit, action.Range);
-
-
-        //Else move to lowest threat tile in range of HVDU and heal HVDU
-
-        //TEST
-        //commands.Add(new Command(unit.CurrentTile, Command.CommandType.Action, action));
-        //map.ColorTiles(tilesInHealRange, Tile.TileColor.ally);
-        //map.ColorTiles(map.GetMovementRange(aiUnit), Tile.TileColor.move);
         return commands;
     }
 
+    private List<Command> GetRangeCommands()
+    {
+        //If unit has firing opportunites fire
 
+        //Move to a better location
 
-    /************************************************* INFORMATION FUNCTIONS *************************************/
+        return null;
+    }
 
+    private List<Command> GetSlowCommands()
+    {
+        //Get allies current experienced threat levels.
+        
+        //Target enemy unit the reduces allies experienced threat the most
 
+        return null;
+    }
 
     /************************************************ UTILITY FUNCTIONS *****************************************/
 
