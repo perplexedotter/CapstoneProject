@@ -21,6 +21,7 @@ public class Unit : MonoBehaviour {
     [Tooltip("Which player controls this unit")]
     [SerializeField] protected int playerNumber = 0;
     [SerializeField] private bool aIUnit = false;
+    [SerializeField] private bool bossUnit = false;
     [SerializeField] protected UnitType type;
     [SerializeField] protected float hitPoints = 100;
     [SerializeField] protected float damageTaken = 0;
@@ -216,6 +217,14 @@ public class Unit : MonoBehaviour {
         get
         {
             return aIUnit;
+        }
+    }
+
+    public bool BossUnit
+    {
+        get
+        {
+            return bossUnit;
         }
     }
 
