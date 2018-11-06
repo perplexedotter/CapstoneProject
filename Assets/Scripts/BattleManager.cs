@@ -539,6 +539,8 @@ public class BattleManager : MonoBehaviour {
             turnIndex--;
         }
         roundTurnOrder.Remove(unit);
+        unit.RemoveFromTile();
+        //TODO have the unit it self handle the explosion and destruction
         Explode(unit.transform.position);
         Destroy(unit.gameObject);
     }
@@ -827,43 +829,43 @@ public class BattleManager : MonoBehaviour {
         activeUnit.DefineUnit(UnitType.fighter);
     }
     //add short range module to active unit
-    public void AddShortRangeModule()
-    {
-        activeUnit.AddModule(new MeleeAttackModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
+    //public void AddShortRangeModule()
+    //{
+    //    activeUnit.AddModule(new MeleeAttackModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
 
-    //add long range module to active unit
-    public void AddLongRangeModule()
-    {
-        activeUnit.AddModule(new RangeAttackModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-    //add Healing module to active unit
-    public void AddHealModule()
-    {
-        activeUnit.AddModule(new HealModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
+    ////add long range module to active unit
+    //public void AddLongRangeModule()
+    //{
+    //    activeUnit.AddModule(new RangeAttackModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
+    ////add Healing module to active unit
+    //public void AddHealModule()
+    //{
+    //    activeUnit.AddModule(new HealModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
 
-    //add Slowing module to active unit
-    public void AddSlowModule()
-    {
-        activeUnit.AddModule(new SlowModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
+    ////add Slowing module to active unit
+    //public void AddSlowModule()
+    //{
+    //    activeUnit.AddModule(new SlowModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
     //remove short ranged module from active unit
     public void RemoveShortRangeModule()
     {

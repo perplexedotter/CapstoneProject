@@ -30,7 +30,8 @@ public class Unit : MonoBehaviour {
     [SerializeField] protected float mass = 400;
     [SerializeField] protected float shields = 0;
     [SerializeField] protected float hardPoints = 0;
-    [SerializeField] private float threat;
+    [SerializeField] protected int threat;
+    [SerializeField] protected int value;
     [SerializeField] protected int movementRange;
     [SerializeField] protected bool destroy = false;
 
@@ -45,6 +46,11 @@ public class Unit : MonoBehaviour {
     protected bool movementFinished = false;
     private List<Tile> path;
     private int pathIndex;
+
+    //Flags
+    private bool meleeCapable = false;
+    private bool longRangeCapable = false;
+    private int longRangeCapability = -1;
 
     /**************************************** UNITY FUNCTIONS **********************************/
 
@@ -64,10 +70,28 @@ public class Unit : MonoBehaviour {
         //wait allows for components to be added before they are added to module list
         //StartCoroutine (GetChildren());
         modules = new List<Module>(GetComponentsInChildren<Module>());
-
+        SetAttackCapabilityFlags();
 
 
     }
+
+    private void SetAttackCapabilityFlags()
+    {
+        List<Action> actions = GetActions();
+        foreach(var a in actions)
+        {
+            if(a.Type == ActionType.ShortAttack)
+            {
+                meleeCapable = true;
+            }
+            else if(a.Type == ActionType.LongAttack)
+            {
+                longRangeCapable = true;
+                longRangeCapability = Math.Max(longRangeCapability, a.Range);
+            }
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -83,35 +107,35 @@ public class Unit : MonoBehaviour {
 
     /*********************************************** SETUP FUNCTIONS **********************************/
 
-    IEnumerator GetChildren()
-    {
-        yield return new WaitForSeconds(.5f);
-        Transform[] childModules = GetComponentsInChildren<Transform>();
-        foreach (Transform child in childModules)
-        {
-            if (child.tag == "Melee")
-            {
-                MeleeAttackModule melee = child.GetComponent<MeleeAttackModule>();
-                modules.Add(melee);
-            }
-            else if (child.tag == "Range")
-            {
-                RangeAttackModule range = child.GetComponent<RangeAttackModule>();
-                modules.Add(range);
-            }
-            else if (child.tag == "Heal")
-            {
-                Debug.Log("k");
-                HealModule heal = child.GetComponent<HealModule>();
-                modules.Add(heal);
-            }
-            else if (child.tag == "Slow")
-            {
-                SlowModule slow = child.GetComponent<SlowModule>();
-                modules.Add(slow);
-            }
-        }
-    }
+    //IEnumerator GetChildren()
+    //{
+    //    yield return new WaitForSeconds(.5f);
+    //    Transform[] childModules = GetComponentsInChildren<Transform>();
+    //    foreach (Transform child in childModules)
+    //    {
+    //        if (child.tag == "Melee")
+    //        {
+    //            MeleeAttackModule melee = child.GetComponent<MeleeAttackModule>();
+    //            modules.Add(melee);
+    //        }
+    //        else if (child.tag == "Range")
+    //        {
+    //            RangeAttackModule range = child.GetComponent<RangeAttackModule>();
+    //            modules.Add(range);
+    //        }
+    //        else if (child.tag == "Heal")
+    //        {
+    //            Debug.Log("k");
+    //            HealModule heal = child.GetComponent<HealModule>();
+    //            modules.Add(heal);
+    //        }
+    //        else if (child.tag == "Slow")
+    //        {
+    //            SlowModule slow = child.GetComponent<SlowModule>();
+    //            modules.Add(slow);
+    //        }
+    //    }
+    //}
 
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
@@ -204,6 +228,22 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    public bool MeleeCapable
+    {
+        get
+        {
+            return meleeCapable;
+        }
+    }
+
+    public int LongRangeCapability
+    {
+        get
+        {
+            return longRangeCapability;
+        }
+    }
+
     public float GetDamage()
     {
         return damageTaken;
@@ -217,37 +257,23 @@ public class Unit : MonoBehaviour {
 
     /**************************************CALCULATED GETTERS ***************************************/
 
-    //calculate threat
-    public float GetThreat()
+    public int GetValue()
     {
-        float tempThreat = threat;
-
-        for (int i = 0; i < modules.Count; i++)
+        int tempValue = value;
+        foreach(var m in modules)
         {
-            if (modules[i].ModuleType == ModuleType.heal)
-            {
-                tempThreat += 30;
-            }
-            else if (modules[i].ModuleType == ModuleType.longRange)
-            {
-                tempThreat += 25;
-            }
-            else if (modules[i].ModuleType == ModuleType.shortRange)
-            {
-                tempThreat += 20;
-            }
-            else if (modules[i].ModuleType == ModuleType.slow)
-            {
-                tempThreat += 15;
-            }
-            else if (modules[i].ModuleType == ModuleType.engine)
-            {
-                tempThreat += 10;
-            }
-            else if (modules[i].ModuleType == ModuleType.shields)
-            {
-                tempThreat += 5;
-            }
+            tempValue += m.Value;
+        }
+        return tempValue;
+    }
+
+    //calculate threat
+    public int GetThreat()
+    {
+        int tempThreat = threat;
+        foreach(var m in modules)
+        {
+            tempThreat += m.Threat;
         }
         return tempThreat;
     }
@@ -306,7 +332,7 @@ public class Unit : MonoBehaviour {
         HashSet<ModuleType> moduleTypes = new HashSet<ModuleType>();
         foreach (var m in modules)
         {
-            moduleTypes.Add(m.ModuleType);
+            moduleTypes.Add(m.Type);
         }
         return new List<ModuleType>(moduleTypes);
     }
@@ -412,7 +438,7 @@ public class Unit : MonoBehaviour {
     {
         for(int i = 0; i < modules.Count; i++)
         {
-            if(modules[i].ModuleType == module)
+            if(modules[i].Type == module)
             {
                 modules.RemoveAt(i);
                 break;
@@ -524,6 +550,14 @@ public class Unit : MonoBehaviour {
         }
     }
 
+    public void RemoveFromTile()
+    {
+        if(currentTile != null)
+        {
+            currentTile.UnitOnTile = null;
+        }
+        currentTile = null;
+    }
     public void FaceTile(Tile tile)
     {
         if(tile != null)
