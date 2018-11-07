@@ -12,7 +12,6 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Text statusText;
 
     public static BattleManager instance;
-
     private List<Tile> activeUnitPosMoves;
     private List<Tile> activeUnitPosMelee;
     private List<Tile> wormholeTileList;
@@ -23,6 +22,14 @@ public class BattleManager : MonoBehaviour {
     private List<Tile> activeUnitPosLong;
 
     private List<Action> activeUnitPosActions;
+
+    //for checking victories
+    
+   	public enum VictoryType {waveSurvival, bossKill, destroyAll};
+    private static VictoryType victoryType = VictoryType.destroyAll;
+    [SerializeField] int RoundsToSurvive;
+    public int ShipsLeft { get; protected set; }
+     public int EnemiesLeft { get; protected set; }
 
     //Units in battle
     List<Unit> units = new List<Unit>();
@@ -69,8 +76,15 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Button EndButton;
     [SerializeField] CanvasGroup BattleMenuCanvas;
     [SerializeField] CanvasGroup ActionMenuCanvas;
+    [SerializeField] CanvasGroup GameOverMenuCanvas;
     [SerializeField] GameObject BattleMenu;
     [SerializeField] GameObject ActionMenu;
+    [SerializeField] GameObject GameOverMenu;
+    [SerializeField] Button NextGameButton;
+    [SerializeField] Button TryAgainButton;
+    [SerializeField] Text GameOverText;
+    [SerializeField] Text WinLoseText;
+
 
     enum ActionChosen { longRange, shortRange, heal, slow};
     ActionChosen actionChosen;
@@ -87,7 +101,8 @@ public class BattleManager : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
-
+        ShipsLeft = 0;
+        EnemiesLeft = 0;
         instance = this;
         ToggleActionMenu(false);
 
@@ -106,8 +121,10 @@ public class BattleManager : MonoBehaviour {
     }
     void Start() {
         //AddUnitsFromMap();
+        ToggleGameOverMenu(false);
         units = new List<Unit>(FindObjectsOfType<Unit>());
-
+        GetUnitCounts(units);
+        roundNumber = 0;
         wormholeTileList = map.GetWormholeTiles();
         roundTurnOrder = new List<Unit>(units);
         NextRound();
@@ -176,6 +193,15 @@ public class BattleManager : MonoBehaviour {
         } else {
             ToggleBattleMenu(false);
             ToggleActionMenu(false);
+        }
+
+        if(CheckForVictory(units, ShipsLeft, EnemiesLeft, roundNumber, victoryType)) {
+            Debug.Log("GAME IS OVER!!!!!!!");
+            GameOver(true);
+        }
+        if(ShipsLeft <=0) {
+            Debug.Log("GAME IS OVER!!!!!!!");
+            GameOver(false);
         }
         ProcessTurn(); //Begin processing the next turn
     }
@@ -374,7 +400,12 @@ public class BattleManager : MonoBehaviour {
 
     /****************************************** UTILITY FUNCTIONS ******************************/
 
-    //enables or disables the clickability and the physical button object
+    private void ToggleGameOverMenu(bool on)
+    {
+        GameOverMenuCanvas.interactable = (on);
+        GameOverMenu.SetActive(on);
+
+    } 
     private void ToggleBattleMenu(bool on)
     {
         BattleMenuCanvas.interactable = (on);
@@ -543,6 +574,8 @@ public class BattleManager : MonoBehaviour {
         //TODO have the unit it self handle the explosion and destruction
         Explode(unit.transform.position);
         Destroy(unit.gameObject);
+        if(unit.AIUnit) {EnemiesLeft--;} else {ShipsLeft--;};
+        Debug.Log("EnemiesLeft: " + EnemiesLeft + ", ShipsLeft: " + ShipsLeft);
     }
 
     private void MoveActiveUnitToTile(Tile tile)
@@ -995,6 +1028,54 @@ public class BattleManager : MonoBehaviour {
         }
         
     }
+
+
+    private void GetUnitCounts(List<Unit> units) {
+        foreach (Unit unit in units)
+        {
+            if(unit.AIUnit) {
+                EnemiesLeft++;
+            } else {
+                ShipsLeft++;
+            }
+        }
+    }
+	public bool CheckForVictory(List<Unit> units, int ShipsLeft, int EnemiesLeft, int roundNumber, VictoryType vt){
+        Debug.Log("checking victory state" +vt);
+		switch (vt)
+		{
+			case VictoryType.waveSurvival:
+				if(roundNumber > RoundsToSurvive){ return true;} else {return false;}
+			case VictoryType.bossKill:
+                //boss still in unit list = game keeps going
+                foreach (Unit unit in units)
+                {
+                    if(unit.BossUnit) {return false;}
+                }
+                return true;
+			case VictoryType.destroyAll:
+				if(EnemiesLeft <= 0){ return true;} else {return false;}
+			
+            default:
+                return false;
+		}
+	}
+
+    //initiates end of level
+    private void GameOver(bool won) {
+        ToggleBattleMenu(false);
+        ToggleActionMenu(false);
+        if(won) {
+            WinLoseText.text = "YOU WON!!";
+        } else {
+            WinLoseText.text = "YOU LOSE";
+            NextGameButton.interactable = false;
+
+                      
+        }
+        ToggleGameOverMenu(true);
+    }
+
     ////this will create the units on the map for this level
     //void GenerateUnits(){
     //	Unit unit;
