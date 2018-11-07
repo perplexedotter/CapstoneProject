@@ -605,21 +605,26 @@ public class BattleManager : MonoBehaviour {
     }
 
     //Called by a unit when it has finished moving so that BattleManager can resume control
+    //TODO make this take a tile so that it can be used for wormhole instead of list
     public void FinishedMovement()
     {
         unitMoved = true;
         //if unit is on wormhole
         Debug.Log("wormholeTileList list:" + wormholeTileList.ToString());
-        for (int i = 0; i < wormholeTileList.Count; i++)
+        if(activeUnit.CurrentTile.Type == Tile.TileType.wormhole && !unitTeleported)
         {
-            if(wormholeTileList[i].UnitOnTile) {
-                Debug.Log("unit on wormhole: " + wormholeTileList[i].UnitOnTile);
-                if(!unitTeleported) {
-                   ActivateWormholeEvent();
-                }
-
-            }
+            ActivateWormholeEvent(activeUnit.CurrentTile);
         }
+        //for (int i = 0; i < wormholeTileList.Count; i++)
+        //{
+        //    if(wormholeTileList[i].UnitOnTile) {
+        //        Debug.Log("unit on wormhole: " + wormholeTileList[i].UnitOnTile);
+        //        if(!unitTeleported) {
+        //           ActivateWormholeEvent(wormholeTileList[i]);
+        //        }
+
+        //    }
+        //}
         //teleport to other wormhole
         ResetToBattleMenu();
     }
@@ -761,6 +766,11 @@ public class BattleManager : MonoBehaviour {
         //makes sure end isnt clicked in error during other work states
         if (!actionState && !movingState)
         {
+            //The player has chosen to end their turn while on a wormhole and has not already teleported
+            if (activeUnit.CurrentTile.Type == Tile.TileType.wormhole && !unitTeleported)
+            {
+                ActivateWormholeEvent(activeUnit.CurrentTile);
+            }
             NextTurn();
         }
 
@@ -1006,27 +1016,40 @@ public class BattleManager : MonoBehaviour {
         return modStr;
     }
     //triggered when a unit lands on a wormhole tile. Thi swill teleport the user to the empty wormhole
-    private void ActivateWormholeEvent(){
+    private void ActivateWormholeEvent(Tile wormhole){
         Debug.Log("Wormhole event activated!");
-        if(wormholeTileList[0].UnitOnTile && wormholeTileList[1].UnitOnTile) {
-            Debug.Log("Wormhole is blocked by another ship!");
-            //TODO - alert in ui about this
+        //if(wormholeTileList[0].UnitOnTile && wormholeTileList[1].UnitOnTile) {
+        //    Debug.Log("Wormhole is blocked by another ship!");
+        //    //TODO - alert in ui about this
+        //    return;
+        //}
+        //Debug.Log("wormhole 0 " + (wormholeTileList[0].UnitOnTile));
+        //Debug.Log("wormhole 1 " + (wormholeTileList[1].UnitOnTile));
+
+        //if(wormholeTileList[0].UnitOnTile) {
+        //    Debug.Log("Wormhole 0 to 1");
+        //    wormholeTileList[0].UnitOnTile.PlaceOnTile(wormholeTileList[1]);
+        //    unitTeleported = true;
+
+        //} else {
+        //    Debug.Log("Wormhole 1 to 0!");
+        //    wormholeTileList[1].UnitOnTile.PlaceOnTile(wormholeTileList[0]);
+        //    unitTeleported = true;
+        //}
+        if(wormhole.WormholeDestination == null || wormhole.UnitOnTile == null)
+        {
+            Debug.Log("Error no destination or unit to transport");
             return;
         }
-        Debug.Log("wormhole 0 " + (wormholeTileList[0].UnitOnTile));
-        Debug.Log("wormhole 1 " + (wormholeTileList[1].UnitOnTile));
-
-        if(wormholeTileList[0].UnitOnTile) {
-            Debug.Log("Wormhole 0 to 1");
-            wormholeTileList[0].UnitOnTile.PlaceOnTile(wormholeTileList[1]);
-            unitTeleported = true;
-
-        } else {
-            Debug.Log("Wormhole 1 to 0!");
-            wormholeTileList[1].UnitOnTile.PlaceOnTile(wormholeTileList[0]);
+        if(wormhole.WormholeDestination.UnitOnTile != null)
+        {
+            Debug.Log("Wormhole is blocked by another ship!");
+        }
+        else
+        {
+            wormhole.UnitOnTile.PlaceOnTile(wormhole.WormholeDestination);
             unitTeleported = true;
         }
-        
     }
 
 
