@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour {
     private Vector2Int gridPos;
 
     [SerializeField] Unit unitOnTile;
+    [SerializeField] Tile wormholeConnection;
     [SerializeField] TileType type;
     [SerializeField] Collider collider;
 
@@ -58,6 +59,19 @@ public class Tile : MonoBehaviour {
         set
         {
             type = value;
+        }
+    }
+
+    public Tile WormholeDestination
+    {
+        get
+        {
+            return wormholeConnection;
+        }
+
+        set
+        {
+            wormholeConnection = value;
         }
     }
 

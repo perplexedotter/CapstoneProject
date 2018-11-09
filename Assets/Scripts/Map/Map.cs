@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -454,6 +455,45 @@ public class Map : MonoBehaviour {
             dataDict.Add(t, td);
         }
 
+        //Create a map of wormholes and their current destinations
+        Dictionary<Tile, Tile> wormholeMap = new Dictionary<Tile, Tile>();
+        List<Tile> wormholeTiles = tiles.Where(t => t.Type == Tile.TileType.wormhole).ToList();
+        foreach(var wt in wormholeTiles)
+        {
+            wormholeMap.Add(wt, getWormholeDestination(wt));
+        }
+        foreach(var wormholePair in wormholeMap)
+        {
+            //If the destination is valid replace its TileData with the destinations 
+            if (wormholePair.Value != null)
+            {
+                //Intilize the data with the wormhole start
+                TileData td = new TileData(wormholePair.Key);
+                //Get destination threat
+                td.Threat = GetThreatValues(new List<Tile>(new[] {wormholePair.Value}), playerNumber).Values.ToArray()[0];
+                //Get units in range of destination
+                foreach (var u in units)
+                {
+                    Tile unitTile = u.CurrentTile;
+                    if (u != unit && unitTile != null)
+                    {
+                        //If the tiles coords are with range of the current tile increment apropriate count
+                        int distanceToUnit = GetTileDistance(unitTile, wormholePair.Value);
+                        if (distanceToUnit <= range)
+                        {
+                            if (u.PlayerNumber == playerNumber)
+                                td.AlliesInUnitRange++;
+                            else
+                                td.EnemiesInUnitRange++;
+                        }
+
+                    }
+                }
+                td.DistToNearestEnemy = DistanceToNearestEnemy(wormholePair.Value, playerNumber);
+                dataDict[wormholePair.Key] = td;
+            }
+        }
+
         return dataDict;
     }
 
@@ -474,6 +514,8 @@ public class Map : MonoBehaviour {
                 List<Tile> meleeRange = GetMeleeRange(e);
                 foreach(var t in meleeRange)
                 {
+                    //If the tile is a wormhole check if the unit can pass through.
+                    //If it can the threat value will be what
                     int threat = e.GetThreat() - GetTileDistance(t, e.CurrentTile);
                     int currentThreat;
                     if (threatValues.TryGetValue(t, out currentThreat))
@@ -565,6 +607,18 @@ public class Map : MonoBehaviour {
         }
         return units;
     }
+
+    //public List<Unit> GetUnitsInRange(Tile tile, int playerNumber, Team team)
+    //{
+    //    List<Unit> unitsInRange = new List<Unit>();
+    //    List<Unit> allUnits = GetAllUnits();
+    //    foreach(var u in allUnits)
+    //    {
+    //        Tile unitTile = u.CurrentTile;
+    //        if(unitTile != null && )
+    //    }
+    //    return unitsInRange;
+    //}
 
     public List<Tile> GetWormholeTiles()
     {
@@ -675,4 +729,17 @@ public class Map : MonoBehaviour {
             tile.ResetTileColor();
     }
 
+    /// <summary>
+    /// If the tile passed is a wormhole, has a destination, and is not blocked, then the destination is returned
+    /// </summary>
+    /// <param name="tile">Tile to check</param>
+    /// <returns>The tiles destination</returns>
+    public Tile getWormholeDestination(Tile tile)
+    {
+        if (tile.Type == Tile.TileType.wormhole
+            && tile.WormholeDestination != null
+            && tile.WormholeDestination.UnitOnTile == null)
+            return tile.WormholeDestination;
+        return null;
+    }
 }
