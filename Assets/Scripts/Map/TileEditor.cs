@@ -17,6 +17,7 @@ public class TileEditor : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         gameObject.name = "Tile " + tile.GetGridPos().x + "," + tile.GetGridPos().y;
+
         transform.position = new Vector3(tile.GetCoords().x, 0, tile.GetCoords().y);
 	}
 #endif

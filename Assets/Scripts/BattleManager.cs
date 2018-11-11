@@ -834,7 +834,6 @@ public class BattleManager : MonoBehaviour {
                 actionsTaken++;
                 Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
                 ResetToBattleMenu();
-
             }
         }
 
