@@ -297,7 +297,10 @@ public class Unit : MonoBehaviour {
         }
         return new List<Action>(actions.Values);
     }
-
+    public UnitType getUnitType()
+    {
+        return type;
+    }
     public List<ModuleType> GetModuleTypes()
     {
         HashSet<ModuleType> moduleTypes = new HashSet<ModuleType>();
