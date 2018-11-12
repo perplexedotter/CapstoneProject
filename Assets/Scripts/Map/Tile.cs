@@ -7,13 +7,14 @@ using UnityEngine;
 public class Tile : MonoBehaviour {
 
     public enum TileColor { standard, move, attack, ally }
-    public enum TileType { normal, asteroid, debris}
+    public enum TileType { normal, asteroid, debris, wormhole}
 
     private const int gridSize = 10;
 
     private Vector2Int gridPos;
 
     [SerializeField] Unit unitOnTile;
+    [SerializeField] Tile wormholeConnection;
     [SerializeField] TileType type;
     [SerializeField] Collider collider;
 
@@ -58,6 +59,19 @@ public class Tile : MonoBehaviour {
         set
         {
             type = value;
+        }
+    }
+
+    public Tile WormholeDestination
+    {
+        get
+        {
+            return wormholeConnection;
+        }
+
+        set
+        {
+            wormholeConnection = value;
         }
     }
 
