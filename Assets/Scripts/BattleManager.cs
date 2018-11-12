@@ -460,7 +460,7 @@ public class BattleManager : MonoBehaviour {
                     case ActionType.LongAttack:
                         LongRangeButton.interactable = true;
                         break;
-                    case ActionType.ShortAttack:
+                    case ActionType.MeleeAttack:
                         ShortRangeButton.interactable = true;
                         break;
                     case ActionType.Slow:
@@ -527,7 +527,7 @@ public class BattleManager : MonoBehaviour {
             //TODO update the ifs to follow the actions actual Target value
             switch (action.Type)
             {
-                case ActionType.ShortAttack:
+                case ActionType.MeleeAttack:
                 case ActionType.LongAttack:
                     if (targetedUnit.PlayerNumber != playerNumber)
                     {
@@ -790,7 +790,7 @@ public class BattleManager : MonoBehaviour {
         actionChosen = (ActionChosen)1;
         actionState = true;
         //Should only be possible if action is avaliable
-        unitAction = GetActionOfType(ActionType.ShortAttack);
+        unitAction = GetActionOfType(ActionType.MeleeAttack);
         ProcessTurn();
     }
     public void HealButtonClicked()
@@ -834,7 +834,6 @@ public class BattleManager : MonoBehaviour {
                 actionsTaken++;
                 Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
                 ResetToBattleMenu();
-
             }
         }
 
