@@ -46,7 +46,7 @@ public class ActionListControl : MonoBehaviour
 
             string actionType = "";
 
-            if (action[i].Type == ActionType.ShortAttack)
+            if (action[i].Type == ActionType.MeleeAttack)
             {
                 actionType = "Close Attack";
             }
