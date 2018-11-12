@@ -9,11 +9,13 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Map map;
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
+    [SerializeField] Text statusText;
 
     public static BattleManager instance;
-
     private List<Tile> activeUnitPosMoves;
     private List<Tile> activeUnitPosMelee;
+    private List<Tile> wormholeTileList;
+    
 
     //To show tiles for player during attack
     private List<Tile> activeUnitPosShort;
@@ -21,11 +23,20 @@ public class BattleManager : MonoBehaviour {
 
     private List<Action> activeUnitPosActions;
 
+    //for checking victories
+    
+   	public enum VictoryType {waveSurvival, bossKill, destroyAll};
+    private static VictoryType victoryType = VictoryType.destroyAll;
+    [SerializeField] int RoundsToSurvive;
+    public int ShipsLeft { get; protected set; }
+     public int EnemiesLeft { get; protected set; }
+
     //Units in battle
     List<Unit> units = new List<Unit>();
     Unit activeUnit;
+    string statusBarMods = "";
     int unitIndex = 0;
-
+    bool unitTeleported = false;
     //Turn Order
     [SerializeField] List<Unit> roundTurnOrder;
     [SerializeField] int turnIndex;
@@ -65,8 +76,15 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Button EndButton;
     [SerializeField] CanvasGroup BattleMenuCanvas;
     [SerializeField] CanvasGroup ActionMenuCanvas;
+    [SerializeField] CanvasGroup GameOverMenuCanvas;
     [SerializeField] GameObject BattleMenu;
     [SerializeField] GameObject ActionMenu;
+    [SerializeField] GameObject GameOverMenu;
+    [SerializeField] Button NextGameButton;
+    [SerializeField] Button TryAgainButton;
+    [SerializeField] Text GameOverText;
+    [SerializeField] Text WinLoseText;
+
 
     enum ActionChosen { longRange, shortRange, heal, slow};
     ActionChosen actionChosen;
@@ -95,7 +113,8 @@ public class BattleManager : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
-
+        ShipsLeft = 0;
+        EnemiesLeft = 0;
         instance = this;
         ToggleActionMenu(false);
 
@@ -114,11 +133,16 @@ public class BattleManager : MonoBehaviour {
     }
     void Start() {
         //AddUnitsFromMap();
+        ToggleGameOverMenu(false);
         units = new List<Unit>(FindObjectsOfType<Unit>());
+        GetUnitCounts(units);
+        roundNumber = 0;
+        wormholeTileList = map.GetWormholeTiles();
         roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
         activeUnit.UnitOutline(true);
+        statusBarMods = StringifyModList(activeUnit);
         activeUnitPosActions = activeUnit.GetActions();
         ProcessTurn();
     }
@@ -126,7 +150,10 @@ public class BattleManager : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        //keep info by activeunit TODO: put in own function
+        Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
+        statusText.transform.position = statusPos;
+        statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -153,6 +180,7 @@ public class BattleManager : MonoBehaviour {
         Debug.Log("Next round!");
         //TODO add other things assiciated with ending a round
         turnIndex = 0;
+        unitTeleported = false;
         roundNumber++;
         //unitSlowed = false;
         //roundTurnOrder = new List<Unit>(roundTurnOrder); //TODO Maybe make this the previous turnOrder as seed
@@ -168,6 +196,7 @@ public class BattleManager : MonoBehaviour {
         ResetForNextTurn();
         activeUnit.DecrementStatuses(); //Decrement current units statues
         UpdateActiveUnit(); //Update the current unit
+        statusBarMods = StringifyModList(activeUnit);
         Debug.Log("It is "+ activeUnit + "\'s turn!");
 
         if (!activeUnit.AIUnit) {
@@ -176,6 +205,15 @@ public class BattleManager : MonoBehaviour {
         } else {
             ToggleBattleMenu(false);
             ToggleActionMenu(false);
+        }
+
+        if(CheckForVictory(units, ShipsLeft, EnemiesLeft, roundNumber, victoryType)) {
+            Debug.Log("GAME IS OVER!!!!!!!");
+            GameOver(true);
+        }
+        if(ShipsLeft <=0) {
+            Debug.Log("GAME IS OVER!!!!!!!");
+            GameOver(false);
         }
         ProcessTurn(); //Begin processing the next turn
     }
@@ -187,7 +225,6 @@ public class BattleManager : MonoBehaviour {
         commandIndex = 0;
         unitMoved = false;
         actionsTaken = 0;
-
         //Reset Menus
         baseMenuOpen = false;
         moveMenuOpen = false;
@@ -376,7 +413,12 @@ public class BattleManager : MonoBehaviour {
 
     /****************************************** UTILITY FUNCTIONS ******************************/
 
-    //enables or disables the clickability and the physical button object
+    private void ToggleGameOverMenu(bool on)
+    {
+        GameOverMenuCanvas.interactable = (on);
+        GameOverMenu.SetActive(on);
+
+    } 
     private void ToggleBattleMenu(bool on)
     {
         BattleMenuCanvas.interactable = (on);
@@ -541,8 +583,12 @@ public class BattleManager : MonoBehaviour {
             turnIndex--;
         }
         roundTurnOrder.Remove(unit);
+        unit.RemoveFromTile();
+        //TODO have the unit it self handle the explosion and destruction
         Explode(unit.transform.position);
         Destroy(unit.gameObject);
+        if(unit.AIUnit) {EnemiesLeft--;} else {ShipsLeft--;};
+        Debug.Log("EnemiesLeft: " + EnemiesLeft + ", ShipsLeft: " + ShipsLeft);
     }
 
     private void MoveActiveUnitToTile(Tile tile)
@@ -572,9 +618,27 @@ public class BattleManager : MonoBehaviour {
     }
 
     //Called by a unit when it has finished moving so that BattleManager can resume control
+    //TODO make this take a tile so that it can be used for wormhole instead of list
     public void FinishedMovement()
     {
         unitMoved = true;
+        //if unit is on wormhole
+        Debug.Log("wormholeTileList list:" + wormholeTileList.ToString());
+        if(activeUnit.CurrentTile.Type == Tile.TileType.wormhole && !unitTeleported)
+        {
+            ActivateWormholeEvent(activeUnit.CurrentTile);
+        }
+        //for (int i = 0; i < wormholeTileList.Count; i++)
+        //{
+        //    if(wormholeTileList[i].UnitOnTile) {
+        //        Debug.Log("unit on wormhole: " + wormholeTileList[i].UnitOnTile);
+        //        if(!unitTeleported) {
+        //           ActivateWormholeEvent(wormholeTileList[i]);
+        //        }
+
+        //    }
+        //}
+        //teleport to other wormhole
         ResetToBattleMenu();
     }
 
@@ -715,6 +779,11 @@ public class BattleManager : MonoBehaviour {
         //makes sure end isnt clicked in error during other work states
         if (!actionState && !movingState)
         {
+            //The player has chosen to end their turn while on a wormhole and has not already teleported
+            if (activeUnit.CurrentTile.Type == Tile.TileType.wormhole && !unitTeleported)
+            {
+                ActivateWormholeEvent(activeUnit.CurrentTile);
+            }
             NextTurn();
         }
 
@@ -918,43 +987,43 @@ public class BattleManager : MonoBehaviour {
         activeUnit.DefineUnit(UnitType.fighter);
     }
     //add short range module to active unit
-    public void AddShortRangeModule()
-    {
-        activeUnit.AddModule(new MeleeAttackModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
+    //public void AddShortRangeModule()
+    //{
+    //    activeUnit.AddModule(new MeleeAttackModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
 
-    //add long range module to active unit
-    public void AddLongRangeModule()
-    {
-        activeUnit.AddModule(new RangeAttackModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-    //add Healing module to active unit
-    public void AddHealModule()
-    {
-        activeUnit.AddModule(new HealModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
+    ////add long range module to active unit
+    //public void AddLongRangeModule()
+    //{
+    //    activeUnit.AddModule(new RangeAttackModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
+    ////add Healing module to active unit
+    //public void AddHealModule()
+    //{
+    //    activeUnit.AddModule(new HealModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
 
-    //add Slowing module to active unit
-    public void AddSlowModule()
-    {
-        activeUnit.AddModule(new SlowModule());
-        Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
+    ////add Slowing module to active unit
+    //public void AddSlowModule()
+    //{
+    //    activeUnit.AddModule(new SlowModule());
+    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
+    //    map.ResetTileColors();
+    //    UpdateCurrentPossibleMoves();
+    //    ShowCurrentPossibleMoves();
+    //}
     //remove short ranged module from active unit
     public void RemoveShortRangeModule()
     {
@@ -1050,6 +1119,99 @@ public class BattleManager : MonoBehaviour {
             actButton4.SetActive(true);
         }
 
+    }
+
+    private string StringifyModList(Unit unit) {
+        string modStr = "";
+        List<ModuleType> modList = unit.GetModuleTypes();
+        for(int i = 0; i < modList.Count; i++) {
+            modStr += modList[i].ToString();
+            modStr += "\n";
+        }
+        return modStr;
+    }
+    //triggered when a unit lands on a wormhole tile. Thi swill teleport the user to the empty wormhole
+    private void ActivateWormholeEvent(Tile wormhole){
+        Debug.Log("Wormhole event activated!");
+        //if(wormholeTileList[0].UnitOnTile && wormholeTileList[1].UnitOnTile) {
+        //    Debug.Log("Wormhole is blocked by another ship!");
+        //    //TODO - alert in ui about this
+        //    return;
+        //}
+        //Debug.Log("wormhole 0 " + (wormholeTileList[0].UnitOnTile));
+        //Debug.Log("wormhole 1 " + (wormholeTileList[1].UnitOnTile));
+
+        //if(wormholeTileList[0].UnitOnTile) {
+        //    Debug.Log("Wormhole 0 to 1");
+        //    wormholeTileList[0].UnitOnTile.PlaceOnTile(wormholeTileList[1]);
+        //    unitTeleported = true;
+
+        //} else {
+        //    Debug.Log("Wormhole 1 to 0!");
+        //    wormholeTileList[1].UnitOnTile.PlaceOnTile(wormholeTileList[0]);
+        //    unitTeleported = true;
+        //}
+        if(wormhole.WormholeDestination == null || wormhole.UnitOnTile == null)
+        {
+            Debug.Log("Error no destination or unit to transport");
+            return;
+        }
+        if(wormhole.WormholeDestination.UnitOnTile != null)
+        {
+            Debug.Log("Wormhole is blocked by another ship!");
+        }
+        else
+        {
+            wormhole.UnitOnTile.PlaceOnTile(wormhole.WormholeDestination);
+            unitTeleported = true;
+        }
+    }
+
+
+    private void GetUnitCounts(List<Unit> units) {
+        foreach (Unit unit in units)
+        {
+            if(unit.AIUnit) {
+                EnemiesLeft++;
+            } else {
+                ShipsLeft++;
+            }
+        }
+    }
+	public bool CheckForVictory(List<Unit> units, int ShipsLeft, int EnemiesLeft, int roundNumber, VictoryType vt){
+        Debug.Log("checking victory state" +vt);
+		switch (vt)
+		{
+			case VictoryType.waveSurvival:
+				if(roundNumber > RoundsToSurvive){ return true;} else {return false;}
+			case VictoryType.bossKill:
+                //boss still in unit list = game keeps going
+                foreach (Unit unit in units)
+                {
+                    if(unit.BossUnit) {return false;}
+                }
+                return true;
+			case VictoryType.destroyAll:
+				if(EnemiesLeft <= 0){ return true;} else {return false;}
+			
+            default:
+                return false;
+		}
+	}
+
+    //initiates end of level
+    private void GameOver(bool won) {
+        ToggleBattleMenu(false);
+        ToggleActionMenu(false);
+        if(won) {
+            WinLoseText.text = "YOU WON!!";
+        } else {
+            WinLoseText.text = "YOU LOSE";
+            NextGameButton.interactable = false;
+
+                      
+        }
+        ToggleGameOverMenu(true);
     }
 
     ////this will create the units on the map for this level
