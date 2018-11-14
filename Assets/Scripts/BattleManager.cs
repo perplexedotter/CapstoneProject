@@ -97,6 +97,18 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] GameObject actButton4;
     [SerializeField] ActionListControl makeAction;
 
+    //for unit ui
+    [SerializeField] public GameObject currentUnit;
+    [SerializeField] public GameObject highlightedUnit;
+    [SerializeField] public Text currentUnitText;
+    [SerializeField] public Text currentUnitTextInfo;
+    [SerializeField] public Text highlightedUnitText;
+    [SerializeField] public Text highlightedUnitTextInfo;
+    [SerializeField] public GameObject currentFighter;
+    [SerializeField] public GameObject currentFrigate;
+    [SerializeField] public GameObject highlightedFighter;
+    [SerializeField] public GameObject highlightedFrigate;
+
     //UNITY FUNCTIONS
 
     // Use this for initialization
@@ -278,6 +290,7 @@ public class BattleManager : MonoBehaviour {
         {
             ProcessPlayerTurn();
         }
+        currentUnitUI();
     }
 
     private void ProcessPlayerTurn()
@@ -847,6 +860,108 @@ public class BattleManager : MonoBehaviour {
 
 /**************************************** TEST FUNCTIONS *********************************/
 
+    //show hovered Unit UI
+    public void HoveredUI(Unit unit)
+    {
+        if(highlightedUnit.activeSelf == false){
+            highlightedUnit.SetActive(true);
+            highlightedUnitText.text = "";
+            highlightedUnitTextInfo.text = "";
+            float currentHP = unit.GetHP() - unit.GetDamage();
+            highlightedUnitTextInfo.text = "  Current HP: " + currentHP +"\n";
+            List<ModuleType> list = unit.GetModuleTypes();
+
+            if(unit.getUnitType() == UnitType.fighter)
+            {
+                highlightedUnitText.text = "Fighter";
+                highlightedFighter.gameObject.SetActive(true);
+                highlightedFrigate.gameObject.SetActive(false);
+            }
+            else if (unit.getUnitType() == UnitType.frigate)
+            {
+                highlightedUnitText.text = "Frigate";
+                highlightedFighter.gameObject.SetActive(false);
+                highlightedFrigate.gameObject.SetActive(true);
+            }
+
+            List<Action> actionsList = unit.GetActions();
+            int counter = 1;
+            foreach (var a in actionsList)
+            {
+                switch (a.Type)
+                {
+                    case ActionType.Heal:
+                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Heal\n");
+                        break;
+                    case ActionType.LongAttack:
+                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
+                        break;
+                    case ActionType.ShortAttack:
+                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
+                        break;
+                    case ActionType.Slow:
+                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Slow\n");
+                        break;
+                }
+                counter++;
+            }
+        }
+        else
+        {
+            highlightedUnit.SetActive(false);
+        }
+    }
+
+    //show current Unit UI (stats + modules)
+    public void currentUnitUI()
+    {
+        if (currentUnit.activeSelf == false)
+        {
+            currentUnit.gameObject.SetActive(true);
+        }
+        currentUnit.gameObject.SetActive(true);
+        highlightedUnitText.text = "";
+        highlightedUnitTextInfo.text = "";
+
+        float currentHP = activeUnit.GetHP() - activeUnit.GetDamage();
+        currentUnitTextInfo.text = "  Current HP: " + currentHP + "\n";
+        List<ModuleType> list = activeUnit.GetModuleTypes();
+
+        if (activeUnit.getUnitType() == UnitType.fighter)
+        {
+            currentUnitText.text = "Fighter";
+            currentFighter.gameObject.SetActive(true);
+            currentFrigate.gameObject.SetActive(false);
+        }
+        else if (activeUnit.getUnitType() == UnitType.frigate)
+        {
+            currentUnitText.text = "Frigate";
+            currentFighter.gameObject.SetActive(false);
+            currentFrigate.gameObject.SetActive(true);
+        }
+
+        List<Action> actionsList = activeUnit.GetActions();
+        int counter = 1;
+        foreach (var a in actionsList)
+        {
+            switch (a.Type)
+            {
+                case ActionType.Heal:
+                    currentUnitTextInfo.text += ("  Module " + counter + ": Heal\n");
+                    break;
+                case ActionType.LongAttack:
+                    currentUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
+                    break;
+                case ActionType.ShortAttack:
+                    currentUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
+                    break;
+                case ActionType.Slow:
+                    currentUnitTextInfo.text += ("  Module " + counter + ": Slow\n");
+                    break;
+            }
+            counter++;
+        }
+    }
     //make explosion at location passed to function
     public void Explode(Vector3 Pos)
     {
