@@ -10,6 +10,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
     [SerializeField] Text statusText;
+    [SerializeField] Text roundsLeftText;
 
     public static BattleManager instance;
     private List<Tile> activeUnitPosMoves;
@@ -154,6 +155,7 @@ public class BattleManager : MonoBehaviour {
         Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
         statusText.transform.position = statusPos;
         statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
+        roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {

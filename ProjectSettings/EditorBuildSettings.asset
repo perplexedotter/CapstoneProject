@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ShipBuilder.unity
     guid: a57892079642c574f89ed289ccefc2cd
+  - enabled: 1
+    path: Assets/Scenes/credits.unity
+    guid: 943f15ef58736d04fb2e9a5259fc8276
   m_configObjects: {}
