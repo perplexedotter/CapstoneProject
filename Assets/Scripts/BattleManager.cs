@@ -26,11 +26,11 @@ public class BattleManager : MonoBehaviour {
     //for checking victories
     
    	public enum VictoryType {waveSurvival, bossKill, destroyAll};
-    private static VictoryType victoryType = VictoryType.destroyAll;
+    [SerializeField] VictoryType victoryType;
     [SerializeField] int RoundsToSurvive;
     public int ShipsLeft { get; protected set; }
-     public int EnemiesLeft { get; protected set; }
-
+    public int EnemiesLeft { get; protected set; }
+    private bool bossDead;
     //Units in battle
     List<Unit> units = new List<Unit>();
     Unit activeUnit;
@@ -117,7 +117,7 @@ public class BattleManager : MonoBehaviour {
         EnemiesLeft = 0;
         instance = this;
         ToggleActionMenu(false);
-
+        bossDead = false;
 
 
         //this is how to add modules to units via children
@@ -578,6 +578,10 @@ public class BattleManager : MonoBehaviour {
     private void DestroyUnit(Unit unit)
     {
         int unitIndex = roundTurnOrder.IndexOf(unit);
+        if(unit.BossUnit) 
+        {
+            bossDead = true;
+        }
         if(unitIndex > -1 && unitIndex < turnIndex)
         {
             turnIndex--;
@@ -896,7 +900,7 @@ public class BattleManager : MonoBehaviour {
                     case ActionType.LongAttack:
                         highlightedUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
                         break;
-                    case ActionType.ShortAttack:
+                    case ActionType.MeleeAttack:
                         highlightedUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
                         break;
                     case ActionType.Slow:
@@ -952,7 +956,7 @@ public class BattleManager : MonoBehaviour {
                 case ActionType.LongAttack:
                     currentUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
                     break;
-                case ActionType.ShortAttack:
+                case ActionType.MeleeAttack:
                     currentUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
                     break;
                 case ActionType.Slow:
@@ -1185,11 +1189,7 @@ public class BattleManager : MonoBehaviour {
 				if(roundNumber > RoundsToSurvive){ return true;} else {return false;}
 			case VictoryType.bossKill:
                 //boss still in unit list = game keeps going
-                foreach (Unit unit in units)
-                {
-                    if(unit.BossUnit) {return false;}
-                }
-                return true;
+                return bossDead;
 			case VictoryType.destroyAll:
 				if(EnemiesLeft <= 0){ return true;} else {return false;}
 			
