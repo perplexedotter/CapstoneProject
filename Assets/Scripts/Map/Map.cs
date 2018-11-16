@@ -425,8 +425,17 @@ public class Map : MonoBehaviour {
         outerEdge.ExceptWith(RangeLimitedSearch(start, null, moveRange - 1, true, false, pNumber).Keys);
         foreach(var t in outerEdge)
         {
-            range.UnionWith(RangeLimitedSearch(t, null, rangeExtension, false, true, pNumber).Keys);
+            //if(t.Type != Tile.TileType.wormhole && t.WormholeDestination != null && t.WormholeDestination.UnitOnTile == null)
+                range.UnionWith(RangeLimitedSearch(t, null, rangeExtension, false, true, pNumber).Keys);
         }
+        //Add
+        //foreach(var t in range)
+        //{
+        //    if(t.Type == Tile.TileType.wormhole && t.WormholeDestination != null && t.WormholeDestination.UnitOnTile == null)
+        //    {
+        //        range.UnionWith(RangeLimitedSearch(t.WormholeDestination, null, rangeExtension, false, true, pNumber).Keys);
+        //    }
+        //}
         return new List<Tile>(range);
     }
 

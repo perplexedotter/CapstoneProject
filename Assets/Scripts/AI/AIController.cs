@@ -381,9 +381,9 @@ public class AIController : MonoBehaviour {
 
         //Sort based on allies or enemies in range based on team passed
         if (team == Team.Ally)
-            safestUsefulPositions.OrderByDescending(o => o.AlliesInUnitRange);
+            safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.AlliesInUnitRange);
         else if(team == Team.Enemy)
-            safestUsefulPositions.OrderByDescending(o => o.EnemiesInUnitRange);
+            safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.EnemiesInUnitRange);
 
         //Return the actual tiles
         return safestUsefulPositions.Select(o=>o.Tile).ToList();
