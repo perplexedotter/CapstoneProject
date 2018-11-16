@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -100,6 +101,7 @@ public class AIController : MonoBehaviour {
             if (!closestTileToEnemy)
                 closestTileToEnemy = GetClosestTile(movementRange, highestValueUnit.CurrentTile);
             //Check if a wormhole destination is closer then the chosen tile
+
                 //TODO Implement
 
 
@@ -308,8 +310,7 @@ public class AIController : MonoBehaviour {
                 break;
             }
         //If the Tile is a wormhole and useable return the destination
-        if (moveTile && moveTile.WormholeDestination != null && moveTile.WormholeDestination.UnitOnTile == null)
-            moveTile = moveTile.WormholeDestination;
+        moveTile = CheckForWormhole(moveTile);
         return moveTile;
     }
 
@@ -365,7 +366,8 @@ public class AIController : MonoBehaviour {
         float closestDist = float.MaxValue; //Reset distance
         foreach (var t in avaliableTiles)
         {
-            float distToTile = Vector2Int.Distance(target.GetCoords(), t.GetCoords());
+            Tile tile = CheckForWormhole(t);
+            float distToTile = Vector2Int.Distance(target.GetCoords(), tile.GetCoords());
             if (distToTile < closestDist)
             {
                 closestDist = distToTile;
@@ -375,6 +377,13 @@ public class AIController : MonoBehaviour {
         return closestTile;
     }
 
+    private Tile CheckForWormhole(Tile t)
+    {
+        //Checks if a tile is a wormhole and if it is and the destination is avaliable returns the destination
+        return t.WormholeDestination != null && t.WormholeDestination.UnitOnTile == null 
+            ? t.WormholeDestination : t;
+    }
+
     private Tile FindTileInRange(List<Tile> tilesToSearch, Tile target, int range)
     {
         Tile tileInRange = null;
@@ -382,11 +391,7 @@ public class AIController : MonoBehaviour {
         foreach(var t in tilesToSearch)
         {
             //If the tile is a wormhole and its destination is not blocked replace with destination
-            Tile tile = t;
-            if(t.WormholeDestination != null && t.WormholeDestination.UnitOnTile == null)
-            {
-                tile = t.WormholeDestination;
-            }
+            Tile tile = CheckForWormhole(t);
             //Test is the tile is in range
             if (inRangeOfTarget.Contains(tile))
             {
