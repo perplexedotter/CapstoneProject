@@ -38,6 +38,10 @@ public class BattleManager : MonoBehaviour {
     string statusBarMods = "";
     int unitIndex = 0;
     bool unitTeleported = false;
+
+    //adding waves
+
+    [SerializeField] Tile enemyWarp;
     //Turn Order
     [SerializeField] List<Unit> roundTurnOrder;
     [SerializeField] int turnIndex;
@@ -110,6 +114,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] public GameObject highlightedFighter;
     [SerializeField] public GameObject highlightedFrigate;
 
+    [SerializeField] AudioSource explosionSound;
     //UNITY FUNCTIONS
 
     // Use this for initialization
@@ -155,7 +160,10 @@ public class BattleManager : MonoBehaviour {
         Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
         statusText.transform.position = statusPos;
         statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
-        roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
+        if(victoryType == VictoryType.waveSurvival)
+        {
+            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
+        }
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -971,6 +979,7 @@ public class BattleManager : MonoBehaviour {
     //make explosion at location passed to function
     public void Explode(Vector3 Pos)
     {
+        explosionSound.Play();
         Destroy(GameObject.Instantiate(Resources.Load("Prefabs/Explode"), Pos, Quaternion.identity) as GameObject, 5);
 
     }
@@ -1214,7 +1223,11 @@ public class BattleManager : MonoBehaviour {
         }
         ToggleGameOverMenu(true);
     }
+    //IN PROGRESS
+    private void generateWave(int index) {
 
+        Unit u;
+    }
     ////this will create the units on the map for this level
     //void GenerateUnits(){
     //	Unit unit;
