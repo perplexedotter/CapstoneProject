@@ -41,6 +41,7 @@ public class Map : MonoBehaviour {
         //TODO determine if this is just that action's range or movement + action range
         //These are the units that this units action's could target from this tile
         int distToNearestEnemy;
+        int distToNearestAlly;
         int enemiesInUnitRange = 0;
         int alliesInUnitRange = 0;
 
@@ -111,6 +112,19 @@ public class Map : MonoBehaviour {
             set
             {
                 distToNearestEnemy = value;
+            }
+        }
+
+        public int DistToNearestAlly
+        {
+            get
+            {
+                return distToNearestAlly;
+            }
+
+            set
+            {
+                distToNearestAlly = value;
             }
         }
     }
@@ -451,7 +465,9 @@ public class Map : MonoBehaviour {
 
                 }
             }
-            td.DistToNearestEnemy = DistanceToNearestEnemy(t, playerNumber);
+            td.DistToNearestAlly = DistanceToNearestUnit(t, playerNumber, Team.Ally);
+            td.DistToNearestEnemy = DistanceToNearestUnit(t, playerNumber, Team.Enemy);
+            //td.DistToNearestEnemy = DistanceToNearestEnemy(t, playerNumber);
             dataDict.Add(t, td);
         }
 
@@ -524,7 +540,7 @@ public class Map : MonoBehaviour {
                     }
                 }
             }
-            else if (e.LongRangeCapability > 0)
+            if (e.LongRangeCapability > 0)
             {
                 List<Tile> longRange = GetTilesInRange(e.CurrentTile, e.LongRangeCapability);
                 foreach(var t in longRange)
@@ -588,6 +604,11 @@ public class Map : MonoBehaviour {
     public List<Unit> GetUnits(List<Tile> tiles)
     {
         return GetUnits(tiles, -1, Team.Any);
+    }
+
+    public List<Unit> GetUnits(int playerNumber, Team team)
+    {
+        return GetUnits(mapTiles, playerNumber, team);
     }
 
     public List<Unit> GetUnits(List<Tile> tiles, int playerNumber, Team team)
@@ -673,6 +694,18 @@ public class Map : MonoBehaviour {
         {
             if(e.CurrentTile != null)
                 distance = Math.Min(distance, GetTileDistance(tile, e.CurrentTile));
+        }
+        return distance;
+    }
+
+    public int DistanceToNearestUnit(Tile tile, int playerNumber, Team team)
+    {
+        int distance = int.MaxValue;
+        List<Unit> units = GetUnits(playerNumber, team);
+        foreach(var u in units)
+        {
+            if (u.CurrentTile != null)
+                distance = Math.Min(distance, GetTileDistance(tile, u.CurrentTile));
         }
         return distance;
     }

@@ -71,7 +71,7 @@ public class Action {
         return new Action(type, target, power, range);
     }
 }
-public enum ActionType { ShortAttack, LongAttack, Heal, Slow };
+public enum ActionType { MeleeAttack, LongAttack, Heal, Slow };
 
 public enum Target
 {

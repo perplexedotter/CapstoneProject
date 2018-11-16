@@ -81,7 +81,7 @@ public class Unit : MonoBehaviour {
         List<Action> actions = GetActions();
         foreach(var a in actions)
         {
-            if(a.Type == ActionType.ShortAttack)
+            if(a.Type == ActionType.MeleeAttack)
             {
                 meleeCapable = true;
             }

@@ -10,6 +10,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
     [SerializeField] Text statusText;
+    [SerializeField] Text roundsLeftText;
 
     public static BattleManager instance;
     private List<Tile> activeUnitPosMoves;
@@ -26,17 +27,21 @@ public class BattleManager : MonoBehaviour {
     //for checking victories
     
    	public enum VictoryType {waveSurvival, bossKill, destroyAll};
-    private static VictoryType victoryType = VictoryType.destroyAll;
+    [SerializeField] VictoryType victoryType;
     [SerializeField] int RoundsToSurvive;
     public int ShipsLeft { get; protected set; }
-     public int EnemiesLeft { get; protected set; }
-
+    public int EnemiesLeft { get; protected set; }
+    private bool bossDead;
     //Units in battle
     List<Unit> units = new List<Unit>();
     Unit activeUnit;
     string statusBarMods = "";
     int unitIndex = 0;
     bool unitTeleported = false;
+
+    //adding waves
+
+    [SerializeField] Tile enemyWarp;
     //Turn Order
     [SerializeField] List<Unit> roundTurnOrder;
     [SerializeField] int turnIndex;
@@ -109,6 +114,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] public GameObject highlightedFighter;
     [SerializeField] public GameObject highlightedFrigate;
 
+    [SerializeField] AudioSource explosionSound;
     //UNITY FUNCTIONS
 
     // Use this for initialization
@@ -117,7 +123,7 @@ public class BattleManager : MonoBehaviour {
         EnemiesLeft = 0;
         instance = this;
         ToggleActionMenu(false);
-
+        bossDead = false;
 
 
         //this is how to add modules to units via children
@@ -154,6 +160,10 @@ public class BattleManager : MonoBehaviour {
         Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
         statusText.transform.position = statusPos;
         statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
+        if(victoryType == VictoryType.waveSurvival)
+        {
+            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
+        }
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -473,7 +483,7 @@ public class BattleManager : MonoBehaviour {
                     case ActionType.LongAttack:
                         LongRangeButton.interactable = true;
                         break;
-                    case ActionType.ShortAttack:
+                    case ActionType.MeleeAttack:
                         ShortRangeButton.interactable = true;
                         break;
                     case ActionType.Slow:
@@ -540,7 +550,7 @@ public class BattleManager : MonoBehaviour {
             //TODO update the ifs to follow the actions actual Target value
             switch (action.Type)
             {
-                case ActionType.ShortAttack:
+                case ActionType.MeleeAttack:
                 case ActionType.LongAttack:
                     if (targetedUnit.PlayerNumber != playerNumber)
                     {
@@ -569,6 +579,7 @@ public class BattleManager : MonoBehaviour {
             }
             if (targetedUnit.Destroyed)
             {
+                explosionSound.Play();
                 DestroyUnit(targetedUnit);
             }
         }
@@ -578,6 +589,10 @@ public class BattleManager : MonoBehaviour {
     private void DestroyUnit(Unit unit)
     {
         int unitIndex = roundTurnOrder.IndexOf(unit);
+        if(unit.BossUnit) 
+        {
+            bossDead = true;
+        }
         if(unitIndex > -1 && unitIndex < turnIndex)
         {
             turnIndex--;
@@ -585,6 +600,7 @@ public class BattleManager : MonoBehaviour {
         roundTurnOrder.Remove(unit);
         unit.RemoveFromTile();
         //TODO have the unit it self handle the explosion and destruction
+        
         Explode(unit.transform.position);
         Destroy(unit.gameObject);
         if(unit.AIUnit) {EnemiesLeft--;} else {ShipsLeft--;};
@@ -803,7 +819,7 @@ public class BattleManager : MonoBehaviour {
         actionChosen = (ActionChosen)1;
         actionState = true;
         //Should only be possible if action is avaliable
-        unitAction = GetActionOfType(ActionType.ShortAttack);
+        unitAction = GetActionOfType(ActionType.MeleeAttack);
         ProcessTurn();
     }
     public void HealButtonClicked()
@@ -847,7 +863,6 @@ public class BattleManager : MonoBehaviour {
                 actionsTaken++;
                 Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
                 ResetToBattleMenu();
-
             }
         }
 
@@ -897,7 +912,7 @@ public class BattleManager : MonoBehaviour {
                     case ActionType.LongAttack:
                         highlightedUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
                         break;
-                    case ActionType.ShortAttack:
+                    case ActionType.MeleeAttack:
                         highlightedUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
                         break;
                     case ActionType.Slow:
@@ -953,7 +968,7 @@ public class BattleManager : MonoBehaviour {
                 case ActionType.LongAttack:
                     currentUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
                     break;
-                case ActionType.ShortAttack:
+                case ActionType.MeleeAttack:
                     currentUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
                     break;
                 case ActionType.Slow:
@@ -1186,11 +1201,7 @@ public class BattleManager : MonoBehaviour {
 				if(roundNumber > RoundsToSurvive){ return true;} else {return false;}
 			case VictoryType.bossKill:
                 //boss still in unit list = game keeps going
-                foreach (Unit unit in units)
-                {
-                    if(unit.BossUnit) {return false;}
-                }
-                return true;
+                return bossDead;
 			case VictoryType.destroyAll:
 				if(EnemiesLeft <= 0){ return true;} else {return false;}
 			
@@ -1213,7 +1224,11 @@ public class BattleManager : MonoBehaviour {
         }
         ToggleGameOverMenu(true);
     }
+    //IN PROGRESS
+    private void generateWave(int index) {
 
+        Unit u;
+    }
     ////this will create the units on the map for this level
     //void GenerateUnits(){
     //	Unit unit;

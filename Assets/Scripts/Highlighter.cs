@@ -7,10 +7,12 @@ public class Highlighter : MonoBehaviour {
     [SerializeField] Color highlightColor = Color.yellow;
     Renderer[] childRenderers;
     Queue<Color> childColors;
+    UnityEngine.EventSystems.EventSystem eventSystem;
 
 	// Use this for initialization
 	void Start () {
         childRenderers = GetComponentsInChildren<Renderer>();
+        eventSystem = GameObject.Find("EventSystem").GetComponent<UnityEngine.EventSystems.EventSystem>();
 	}
 	
 	// Update is called once per frame
@@ -32,7 +34,7 @@ public class Highlighter : MonoBehaviour {
 
     public void Highlight()
     {
-        if (childRenderers != null)
+        if (childRenderers != null && !eventSystem.IsPointerOverGameObject())
         {
             childColors = new Queue<Color>();
             foreach (Renderer r in childRenderers)

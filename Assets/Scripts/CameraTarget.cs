@@ -53,7 +53,7 @@ public class CameraTarget : MonoBehaviour {
 				//rotate
 				Vector3 center = GetPanTarget();
 				Vector3 distToCenter = transform.position - center;
-				Vector3 angles =new Vector3(0,scrollValue, 0);
+				Vector3 angles =new Vector3(0,scrollValue*4, 0);
 				Quaternion rotation = Quaternion.Euler(angles);
 				Vector3 direction = rotation * distToCenter;
 				transform.position = center + direction;
