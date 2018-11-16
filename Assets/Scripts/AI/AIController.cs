@@ -66,7 +66,7 @@ public class AIController : MonoBehaviour {
         
         //Determine if highest value in melee range is adjacent
         List<Unit> adjEnemies = GetAdjacentUnits(unit.CurrentTile, Team.Enemy);
-        List<Tile> meleeRange = map.GetMovementRangeExtended(unit, 1);
+        List<Tile> meleeRange = map.GetMovementRangeExtended(unit, meleeAction.Range);
         Unit highestValueUnit = GetHighestValue(map.GetUnits(meleeRange, unit.PlayerNumber, Team.Enemy));
 
 
@@ -82,24 +82,38 @@ public class AIController : MonoBehaviour {
             {
                 highestValueUnit = GetClosestUnit(unit.CurrentTile, Team.Enemy);
             }
+
+            List<Tile> movementRange = map.GetMovementRange(unit);
+            
+            //Check if the highestValueUnit is in range because it is adjacent to a wormhole destination
+            List<Tile> tilesAroundHVU = map.GetTilesInRange(highestValueUnit.CurrentTile, meleeAction.Range);
+            Tile closestTileToEnemy = null;
+            foreach (var t in tilesAroundHVU)
+            {
+                //If the tile within the HVU is a wormhole and that wormholes destination is within the AI units movement range
+                //The unit should move to the wormhole tile within its range to warp to the enemy
+                if (t.WormholeDestination != null && movementRange.Contains(t.WormholeDestination))
+                    closestTileToEnemy = t.WormholeDestination;
+            }
+
+            //If there is no optimal wormhole move, move normally
+            if (!closestTileToEnemy)
+                closestTileToEnemy = GetClosestTile(movementRange, highestValueUnit.CurrentTile);
+            //Check if a wormhole destination is closer then the chosen tile
+                //TODO Implement
+
+
+            //if (highestValueUnit.CurrentTile)
+            //    GetClosestTile(map.GetMovementRange(unit), highestValueUnit.CurrentTile);
             //Move to the enemy with the highest value
-            Tile closestTileToEnemy = GetClosestTile(map.GetMovementRange(unit), highestValueUnit.CurrentTile);
             commands.Add(new Command(closestTileToEnemy, Command.CommandType.Move, null));
         }
-        ///*TODO Implement
-        // * Check if the commands include a movement. If it doesn't unit has attacked without moving
-        // * If this is the case move away to a lower threat location
-        // * Possibly not staying put should block enemies from healers and such
-        // */
-        //if (!ContainsMove(commands))
-        //{
-        //    //Move to a lower threat area
-        //}
         /* The unit has moved without attacking. Attack if possible*/
         if (!ContainsAction(commands) && ContainsMove(commands))
         {
             //Get Enemies Adjacent to move
-            adjEnemies = GetAdjacentUnits(GetFirstMoveTile(commands), Team.Enemy);
+            Tile moveTile = GetFirstMoveTile(commands);
+            adjEnemies = GetAdjacentUnits(moveTile, Team.Enemy);
             Unit target = GetHighestValue(adjEnemies);
             if (target != null)
                 commands.Add(new Command(target.CurrentTile, Command.CommandType.Action, meleeAction));
@@ -286,10 +300,17 @@ public class AIController : MonoBehaviour {
 
     private Tile GetFirstMoveTile(List<Command> commands)
     {
+        Tile moveTile = null;
         foreach (var c in commands)
             if (c.commandType == Command.CommandType.Move)
-                return c.target;
-        return null;
+            {
+                moveTile = c.target;
+                break;
+            }
+        //If the Tile is a wormhole and useable return the destination
+        if (moveTile && moveTile.WormholeDestination != null && moveTile.WormholeDestination.UnitOnTile == null)
+            moveTile = moveTile.WormholeDestination;
+        return moveTile;
     }
 
     private void UpdateModuleTypes()
@@ -360,12 +381,22 @@ public class AIController : MonoBehaviour {
         HashSet<Tile> inRangeOfTarget = new HashSet<Tile>(map.GetTilesInRange(target, range));
         foreach(var t in tilesToSearch)
         {
-            if (inRangeOfTarget.Contains(t))
+            //If the tile is a wormhole and its destination is not blocked replace with destination
+            Tile tile = t;
+            if(t.WormholeDestination != null && t.WormholeDestination.UnitOnTile == null)
             {
+                tile = t.WormholeDestination;
+            }
+            //Test is the tile is in range
+            if (inRangeOfTarget.Contains(tile))
+            {
+                //If it is add the original tile (not wormhole destination)
                 tileInRange = t;
                 break;
             }
         }
+
+
         return tileInRange;
     }
 
@@ -381,9 +412,9 @@ public class AIController : MonoBehaviour {
 
         //Sort based on allies or enemies in range based on team passed
         if (team == Team.Ally)
-            safestUsefulPositions.OrderByDescending(o => o.AlliesInUnitRange);
+            safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.AlliesInUnitRange);
         else if(team == Team.Enemy)
-            safestUsefulPositions.OrderByDescending(o => o.EnemiesInUnitRange);
+            safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.EnemiesInUnitRange);
 
         //Return the actual tiles
         return safestUsefulPositions.Select(o=>o.Tile).ToList();

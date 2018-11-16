@@ -257,8 +257,10 @@ public class Map : MonoBehaviour {
 
     public List<Tile> GetMovementPath(Tile start, Tile end, int playerNumber)
     {
-        if (start == end)//Can't get a path from a tile to itself
+        //Can't get a path from a tile to itself and the end tile cannot be occupied
+        if (start == end || end.UnitOnTile != null)
             return null;
+
         //Use the size to ensure that range is unlimited regardless of the size of the map
         Dictionary<Tile, TileSearchField> tileDict = RangeLimitedSearch(start, end, mapDict.Count, true, false, playerNumber);
         if (tileDict == null)
@@ -423,10 +425,25 @@ public class Map : MonoBehaviour {
         HashSet<Tile> range = new HashSet<Tile>(RangeLimitedSearch(start, null, moveRange, true, false, pNumber).Keys);
         HashSet<Tile> outerEdge = new HashSet<Tile>(range);
         outerEdge.ExceptWith(RangeLimitedSearch(start, null, moveRange - 1, true, false, pNumber).Keys);
-        foreach(var t in outerEdge)
+        HashSet<Tile> rangeCopy = new HashSet<Tile>(range);
+
+        //For each tile within the units movement range if the tile is a wormhole and its destination is unoccupied
+        //Get the tiles in range of its destination
+        foreach (var t in rangeCopy)
+        {
+            if (t.Type == Tile.TileType.wormhole && t.WormholeDestination != null && t.WormholeDestination.UnitOnTile == null)
+            {
+                List<Tile> wormholeDestRange = new List<Tile>(RangeLimitedSearch(t.WormholeDestination, null, rangeExtension, false, true, pNumber).Keys);
+                //Remove the wormhole destination
+                wormholeDestRange.Remove(t.WormholeDestination);
+                range.UnionWith(wormholeDestRange);
+            }
+        }
+        foreach (var t in outerEdge)
         {
             range.UnionWith(RangeLimitedSearch(t, null, rangeExtension, false, true, pNumber).Keys);
         }
+
         return new List<Tile>(range);
     }
 
