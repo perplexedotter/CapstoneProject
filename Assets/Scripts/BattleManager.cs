@@ -579,6 +579,7 @@ public class BattleManager : MonoBehaviour {
             }
             if (targetedUnit.Destroyed)
             {
+                explosionSound.Play();
                 DestroyUnit(targetedUnit);
             }
         }
@@ -599,6 +600,7 @@ public class BattleManager : MonoBehaviour {
         roundTurnOrder.Remove(unit);
         unit.RemoveFromTile();
         //TODO have the unit it self handle the explosion and destruction
+        
         Explode(unit.transform.position);
         Destroy(unit.gameObject);
         if(unit.AIUnit) {EnemiesLeft--;} else {ShipsLeft--;};
@@ -979,7 +981,6 @@ public class BattleManager : MonoBehaviour {
     //make explosion at location passed to function
     public void Explode(Vector3 Pos)
     {
-        explosionSound.Play();
         Destroy(GameObject.Instantiate(Resources.Load("Prefabs/Explode"), Pos, Quaternion.identity) as GameObject, 5);
 
     }
