@@ -8554,7 +8554,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1713429978}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 100}
+  m_LocalPosition: {x: 10, y: 0, z: 80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 825467906}
@@ -8604,7 +8604,7 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
-  currentTile: {fileID: 2036118040}
+  currentTile: {fileID: 2059441322}
   playerNumber: 0
   aIUnit: 0
   bossUnit: 0
@@ -10856,12 +10856,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a016727452de7bf49aeb5694f0b9145b, type: 2}
   m_IsPrefabAsset: 0
---- !u!114 &2036118040 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114193524029788770, guid: a016727452de7bf49aeb5694f0b9145b,
-    type: 2}
-  m_PrefabInternal: {fileID: 1274954349}
-  m_Script: {fileID: 11500000, guid: 08408fb76814f1d4eb58f406db9c807a, type: 3}
 --- !u!1001 &2037925320
 Prefab:
   m_ObjectHideFlags: 0
@@ -11012,6 +11006,12 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a016727452de7bf49aeb5694f0b9145b, type: 2}
   m_IsPrefabAsset: 0
+--- !u!114 &2059441322 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114193524029788770, guid: a016727452de7bf49aeb5694f0b9145b,
+    type: 2}
+  m_PrefabInternal: {fileID: 1891810017}
+  m_Script: {fileID: 11500000, guid: 08408fb76814f1d4eb58f406db9c807a, type: 3}
 --- !u!1 &2078517645
 GameObject:
   m_ObjectHideFlags: 0
