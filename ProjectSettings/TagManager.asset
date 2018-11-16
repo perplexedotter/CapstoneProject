@@ -13,6 +13,7 @@ TagManager:
   - Heal
   - Slow
   - Wormhole
+  - Music
   layers:
   - Default
   - TransparentFX
