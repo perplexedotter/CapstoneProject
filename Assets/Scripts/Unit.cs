@@ -137,6 +137,12 @@ public class Unit : MonoBehaviour {
     //        }
     //    }
     //}
+    
+    public void customUnit()
+    {
+        modules = new List<Module>(GetComponentsInChildren<Module>());
+        SetAttackCapabilityFlags();
+    }
 
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
