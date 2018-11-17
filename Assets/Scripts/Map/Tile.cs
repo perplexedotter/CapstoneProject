@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour {
     private const int gridSize = 10;
 
     private Vector2Int gridPos;
+    [SerializeField] private bool shipBuilderTile;
 
     [SerializeField] Unit unitOnTile;
     [SerializeField] Tile wormholeConnection;
@@ -114,7 +115,10 @@ public class Tile : MonoBehaviour {
 
     //TODO Convert to SendMessageUpwards
     void OnMouseDown(){
-        BattleManager.instance.TileClicked(this);
+        if (!shipBuilderTile)
+        {
+            BattleManager.instance.TileClicked(this);
+        }
 	}
 
 

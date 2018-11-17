@@ -879,12 +879,20 @@ public class BattleManager : MonoBehaviour {
     //show hovered Unit UI
     public void HoveredUI(Unit unit)
     {
-        if(highlightedUnit.activeSelf == false){
+        if (unit.PlayerNumber == 0)
+        {
+            highlightedUnit.GetComponent<Image>().color = new Color32(74, 81, 161, 141);
+        }
+        else
+        {
+            highlightedUnit.GetComponent<Image>().color = new Color32(144, 42, 42, 141);
+        }
+        if (highlightedUnit.activeSelf == false){
             highlightedUnit.SetActive(true);
             highlightedUnitText.text = "";
             highlightedUnitTextInfo.text = "";
             float currentHP = unit.GetHP() - unit.GetDamage();
-            highlightedUnitTextInfo.text = "  Current HP: " + currentHP +"\n";
+            highlightedUnitTextInfo.text = "  Current HP: " + currentHP;
             List<ModuleType> list = unit.GetModuleTypes();
 
             if(unit.getUnitType() == UnitType.fighter)
@@ -901,26 +909,33 @@ public class BattleManager : MonoBehaviour {
             }
 
             List<Action> actionsList = unit.GetActions();
-            int counter = 1;
-            foreach (var a in actionsList)
+
+            List<ModuleType> modList = unit.GetModuleTypes();
+            string modstr = "";
+            foreach (ModuleType mod in modList)
             {
-                switch (a.Type)
+                if (mod == ModuleType.shortRange)
                 {
-                    case ActionType.Heal:
-                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Heal\n");
-                        break;
-                    case ActionType.LongAttack:
-                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
-                        break;
-                    case ActionType.MeleeAttack:
-                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
-                        break;
-                    case ActionType.Slow:
-                        highlightedUnitTextInfo.text += ("  Module " + counter + ": Slow\n");
-                        break;
+                    modstr += "Short Range";
+                    modstr += "   ";
                 }
-                counter++;
+                else if (mod == ModuleType.longRange)
+                {
+                    modstr += "Long Range";
+                    modstr += "   ";
+                }
+                else if (mod == ModuleType.heal)
+                {
+                    modstr += "Heal";
+                    modstr += "   ";
+                }
+                else if (mod == ModuleType.slow)
+                {
+                    modstr += "Slow";
+                    modstr += "   ";
+                }
             }
+            highlightedUnitTextInfo.text += "     Type: " + unit.GetShipType() + "\n  Mods: " + modstr;
         }
         else
         {
@@ -935,12 +950,20 @@ public class BattleManager : MonoBehaviour {
         {
             currentUnit.gameObject.SetActive(true);
         }
+        if(activeUnit.PlayerNumber == 0)
+        {
+            currentUnit.GetComponent<Image>().color = new Color32(74, 81, 161, 141);
+        }
+        else
+        {
+            currentUnit.GetComponent<Image>().color = new Color32(144, 42, 42, 141);
+        }
         currentUnit.gameObject.SetActive(true);
         highlightedUnitText.text = "";
         highlightedUnitTextInfo.text = "";
 
         float currentHP = activeUnit.GetHP() - activeUnit.GetDamage();
-        currentUnitTextInfo.text = "  Current HP: " + currentHP + "\n";
+        currentUnitTextInfo.text = "  Current HP: " + currentHP;
         List<ModuleType> list = activeUnit.GetModuleTypes();
 
         if (activeUnit.getUnitType() == UnitType.fighter)
@@ -957,26 +980,34 @@ public class BattleManager : MonoBehaviour {
         }
 
         List<Action> actionsList = activeUnit.GetActions();
-        int counter = 1;
-        foreach (var a in actionsList)
+
+        List<ModuleType> modList = activeUnit.GetModuleTypes();
+        string modstr = "";
+        foreach(ModuleType mod in modList)
         {
-            switch (a.Type)
+            if(mod == ModuleType.shortRange)
             {
-                case ActionType.Heal:
-                    currentUnitTextInfo.text += ("  Module " + counter + ": Heal\n");
-                    break;
-                case ActionType.LongAttack:
-                    currentUnitTextInfo.text += ("  Module " + counter + ": Long Range\n");
-                    break;
-                case ActionType.MeleeAttack:
-                    currentUnitTextInfo.text += ("  Module " + counter + ": Short Range\n");
-                    break;
-                case ActionType.Slow:
-                    currentUnitTextInfo.text += ("  Module " + counter + ": Slow\n");
-                    break;
+                modstr += "Short Range";
+                modstr += "   ";
             }
-            counter++;
+            else if (mod == ModuleType.longRange)
+            {
+                modstr += "Long Range";
+                modstr += "   ";
+            }
+            else if (mod == ModuleType.heal)
+            {
+                modstr += "Heal";
+                modstr += "   ";
+            }
+            else if (mod == ModuleType.slow)
+            {
+                modstr += "Slow";
+                modstr += "   ";
+            }
         }
+        currentUnitTextInfo.text += "     Type: " + activeUnit.GetShipType() + "\n  Mods: " + modstr;
+        
     }
     //make explosion at location passed to function
     public void Explode(Vector3 Pos)
@@ -1141,7 +1172,7 @@ public class BattleManager : MonoBehaviour {
         List<ModuleType> modList = unit.GetModuleTypes();
         for(int i = 0; i < modList.Count; i++) {
             modStr += modList[i].ToString();
-            modStr += "\n";
+            modStr += "   ";
         }
         return modStr;
     }

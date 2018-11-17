@@ -236,6 +236,7 @@ MonoBehaviour:
   currentTile: {fileID: 0}
   playerNumber: 1
   aIUnit: 1
+  bossUnit: 0
   type: 0
   hitPoints: 100
   damageTaken: 0

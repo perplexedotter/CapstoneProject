@@ -12,4 +12,16 @@ public class ActiveModule : Module {
     {
         return new Action(ActionType, Target, Power, Range);
     }
+
+    public void SetActive(Target Target, ActionType ActionType, int Range, int Power, int mass, ModuleType type, int value, int threat)
+    {
+        this.Target = Target;
+        this.ActionType = ActionType;
+        this.Range = Range;
+        this.Power = Power;
+        this.mass = mass;
+        this.type = type;
+        this.value = value;
+        this.threat = threat;
+    }
 }
