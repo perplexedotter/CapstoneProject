@@ -175,7 +175,7 @@ MonoBehaviour:
   moveSpeed: 75
   currentTile: {fileID: 0}
   playerNumber: 0
-  aIUnit: 0
+  aIUnit: 1
   bossUnit: 0
   type: 0
   hitPoints: 100

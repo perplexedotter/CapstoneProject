@@ -368,7 +368,7 @@ MonoBehaviour:
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
   currentTile: {fileID: 0}
-  playerNumber: 0
+  playerNumber: 1
   aIUnit: 1
   bossUnit: 0
   type: 0

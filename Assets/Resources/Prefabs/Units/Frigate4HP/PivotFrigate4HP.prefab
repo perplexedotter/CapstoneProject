@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114466327503931776}
   - component: {fileID: 114946408712238414}
   m_Layer: 0
-  m_Name: Frigate4HPBase 1
+  m_Name: PivotFrigate4HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
