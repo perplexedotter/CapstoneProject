@@ -124,6 +124,7 @@ public class AIController : MonoBehaviour {
         return commands;
     }
 
+    //TODO Move Heal towards allies if no one can be healed
     private List<Command> GetHealCommands()
     {
         Action action = GetAction(ActionType.Heal);
