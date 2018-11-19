@@ -245,11 +245,38 @@ public class AIController : MonoBehaviour {
 
     private List<Command> GetSlowCommands()
     {
+        //TODO possibly alter to this
         //Get allies current experienced threat levels.
-        
         //Target enemy unit the reduces allies experienced threat the most
 
-        return null;
+        Action action = GetAction(ActionType.Slow);
+        List<Command> commands = new List<Command>();
+
+        List<Tile> extendedRange = map.GetMovementRangeExtended(unit, action.Range);
+        List<Tile> movementRange = map.GetMovementRange(unit);
+        //Get highest value enemy in extended range 
+        Unit HVU = GetHighestValue(map.GetUnits(extendedRange, unit.PlayerNumber, Team.Enemy));
+
+        if (HVU)
+        {
+            //If enemy is not in range move in range
+
+            //If enemy is in range slow
+
+        }
+        //If there is no enemy in range get closest enemy and move near
+        else
+        {
+
+        }
+
+        if (!ContainsMove(commands))
+        {
+            //Else if no move has been made move to safestUseful position
+
+        }
+
+        return commands;
     }
 
     /************************************************ UTILITY FUNCTIONS *****************************************/
@@ -410,16 +437,64 @@ public class AIController : MonoBehaviour {
         //Get tiledata for the unit and range passed
         Dictionary<Tile, Map.TileData> tileData = map.GetTileData(map.GetMovementRange(unit), unit, range);
         //Sort the tiles by least enemies in range -> lowest threat
-        IEnumerable<Map.TileData> safestUsefulPositions = tileData.Values
+        List<Map.TileData> safestUsefulPositions = tileData.Values
             .OrderBy(o => o.DistToNearestAlly)
             .OrderByDescending(o => o.DistToNearestEnemy)
-            .OrderBy(o => o.Threat);
+            .OrderBy(o => o.Threat)
+            .ToList();
+
+
+        bool unitsInRange = false;
 
         //Sort based on allies or enemies in range based on team passed
         if (team == Team.Ally)
-            safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.AlliesInUnitRange);
+        {
+            //Check if there are actually units in range
+            foreach (var td in safestUsefulPositions)
+            {
+                if(td.AlliesInUnitRange > 0)
+                {
+                    unitsInRange = true;
+                    break;
+                }
+            }
+            if (unitsInRange)
+            {
+                safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.AlliesInUnitRange).ToList();
+            }
+            //If there are no allies in range sort by the least threatened position in the direction allies
+            else
+            {
+                safestUsefulPositions = safestUsefulPositions
+                    .OrderBy(o => o.DistToNearestAlly)
+                    .OrderBy(o => o.Threat)
+                    .ToList();
+            }
+        }
         else if(team == Team.Enemy)
-            safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.EnemiesInUnitRange);
+        {
+            //Check if there are actually units in range
+            foreach (var td in safestUsefulPositions)
+            {
+                if (td.EnemiesInUnitRange > 0)
+                {
+                    unitsInRange = true;
+                    break;
+                }
+            }
+            if (unitsInRange)
+            {
+                safestUsefulPositions = safestUsefulPositions.OrderByDescending(o => o.EnemiesInUnitRange).ToList();
+            }
+            //If there are no enemies in range sort by the least threatened position in the direction enemies
+            else
+            {
+                safestUsefulPositions = safestUsefulPositions
+                    .OrderBy(o => o.DistToNearestEnemy)
+                    .OrderBy(o => o.Threat)
+                    .ToList();
+            }
+        }
 
         //Return the actual tiles
         return safestUsefulPositions.Select(o=>o.Tile).ToList();
