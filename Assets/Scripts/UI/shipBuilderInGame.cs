@@ -108,7 +108,6 @@ public class shipBuilderInGame : MonoBehaviour {
         print("Default Map is Running");
         battleMenu.SetActive(true);
         BM.gameObject.SetActive(true);
-        gameOverMenu.SetActive(true);
         defaultButton.SetActive(false);
         customButton.SetActive(false);
     }
@@ -130,7 +129,7 @@ public class shipBuilderInGame : MonoBehaviour {
 
     public void addUnit(Vector3 position)
     {
-        GameObject unit = GameObject.Instantiate(Resources.Load("Prefabs/Units/FighterNothing"), BM.transform) as GameObject;
+        GameObject unit = GameObject.Instantiate(Resources.Load("Prefabs/Units/" + type), BM.transform) as GameObject;
         BM.gameObject.SetActive(true);
         unit.gameObject.transform.position = position;
 
