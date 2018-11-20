@@ -606,19 +606,35 @@ public class Unit : MonoBehaviour {
 
     public void UnitOutline(bool outlined)
     {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        foreach(var r in renderers)
+        //Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        //foreach(var r in renderers)
+        //{
+        //    if (outlined)
+        //    {
+        //        r.material.shader = this.outlineShader;
+        //    }
+        //    else
+        //    {
+        //        r.material.shader = this.standardShader;
+        //    }
+        //}
+        return;
+    }
+
+    /******************************************** FX METHODS ***********************************************/
+    public void DisplayAction(Action action, Unit target)
+    {
+        UnitBody unitBody = target.GetComponentInChildren<UnitBody>();
+        if (unitBody)
         {
-            if (outlined)
+            foreach (var m in modules)
             {
-                r.material.shader = this.outlineShader;
-            }
-            else
-            {
-                r.material.shader = this.standardShader;
+                m.DisplayAction(action, unitBody.transform);
             }
         }
+
     }
+
     /******************************************** TEST FUNCTIONS ********************************************/
 
     //for testing getactions

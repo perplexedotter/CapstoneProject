@@ -9,6 +9,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Map map;
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
+    [SerializeField] float actionDelay = 1f;
     [SerializeField] Text statusText;
     [SerializeField] Text roundsLeftText;
 
@@ -227,7 +228,8 @@ public class BattleManager : MonoBehaviour {
             Debug.Log("GAME IS OVER!!!!!!!");
             GameOver(false);
         }
-        ProcessTurn(); //Begin processing the next turn
+        ResetToBattleMenu();
+        //ProcessTurn(); //Begin processing the next turn
     }
 
     private void ResetForNextTurn()
@@ -411,7 +413,8 @@ public class BattleManager : MonoBehaviour {
             case Command.CommandType.Action:
                 map.ResetTileColors();
                 ShowActionRange(command.action);
-                StartCoroutine(DelayActionCommand(command));
+                //StartCoroutine(DelayActionCommand(command));
+                StartCoroutine(ProcessAction(command.action, command.target));
                 break;
         }
     }
@@ -421,6 +424,24 @@ public class BattleManager : MonoBehaviour {
         yield return new WaitForSeconds(aiDelay);
         ResolveAction(command.action, command.target);
         ProcessAITurn();
+    }
+
+    IEnumerator ProcessAction(Action action, Tile target)
+    {
+        Unit unit = target.UnitOnTile;
+        if(ResolveAction(action, target))
+        {
+            actionsTaken++;
+            activeUnit.DisplayAction(action, unit); //Animate Action
+            yield return new WaitForSeconds(actionDelay); //Wait for animation
+            //Check if unit is destroyed
+            if (unit.Destroyed)
+            {
+                explosionSound.Play();
+                DestroyUnit(unit);
+            }
+        }
+        ResetToBattleMenu();
     }
 
     /****************************************** UTILITY FUNCTIONS ******************************/
@@ -457,10 +478,16 @@ public class BattleManager : MonoBehaviour {
     {
         inputPaused = true;
         yield return new WaitForSeconds(.1f);
-        inputPaused = false;
-        ToggleBattleMenu(true);
+        if (!activeUnit.AIUnit)
+        {
+            inputPaused = false;
+            ToggleBattleMenu(true);            
+        }
+        else
+        {
+            ToggleBattleMenu(false);
+        }
         ToggleActionMenu(false);
-
         movingState = false;
         actionState = false;
         menuState = true;
@@ -578,11 +605,6 @@ public class BattleManager : MonoBehaviour {
                         resolved = true;
                     }
                     break;
-            }
-            if (targetedUnit.Destroyed)
-            {
-                explosionSound.Play();
-                DestroyUnit(targetedUnit);
             }
         }
         return resolved;
@@ -861,10 +883,11 @@ public class BattleManager : MonoBehaviour {
             if (actionState && !activeUnit.AIUnit && tile.UnitOnTile)
             {
                 //ResolveAction(tile);
-                ResolveAction(unitAction, tile);
-                actionsTaken++;
-                Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
-                ResetToBattleMenu();
+                //ResolveAction(unitAction, tile);
+                //actionsTaken++;
+                //Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
+                //ResetToBattleMenu();
+                StartCoroutine(ProcessAction(unitAction, tile));
             }
         }
 

@@ -57,6 +57,11 @@ public class Module : MonoBehaviour {
         return null;
     }
 
+    public virtual void DisplayAction(Action action, Transform target)
+    {
+        return;
+    }
+
     public virtual Buff GetBuff()
     {
         return null;
