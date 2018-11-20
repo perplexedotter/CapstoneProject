@@ -5,14 +5,14 @@ using UnityEngine;
 public class StatusEffects{
     public float Duration { get; protected set; }
     public float Amount { get; protected set; }
-    public statusType StatusName{ get; protected set; }
+    public statusType Type{ get; protected set; }
 
     // constructor
     public StatusEffects(float duration, float amount, statusType statusName) 
     {
         this.Duration = duration;
         this.Amount = amount;
-        this.StatusName = statusName;
+        this.Type = statusName;
 	}
 
     //used for decreasing by 1 each turn
@@ -20,11 +20,6 @@ public class StatusEffects{
     {
         this.Duration -= 1;
     }
-
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
 
 public enum statusType

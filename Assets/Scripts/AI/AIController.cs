@@ -158,7 +158,7 @@ public class AIController : MonoBehaviour {
         //    .OrderByDescending(o => o.AlliesInUnitRange)
         //    .ToList();
 
-        List<Tile> bestPossibleMoves = SafestPositionsWithUnitsInRange(unit, action.Range, Team.Ally);
+        List<Tile> bestPossibleMoves = GetBestPossibleMoves(unit, action.Range, Team.Ally);
         //There is a damaged unit to heal
         if (healTarget != null)
         {
@@ -209,7 +209,7 @@ public class AIController : MonoBehaviour {
 
         //Handle Movement
         //Get best tiles for movement
-        List<Tile> bestPossibleMoves = SafestPositionsWithUnitsInRange(unit, action.Range, Team.Enemy);
+        List<Tile> bestPossibleMoves = GetBestPossibleMoves(unit, action.Range, Team.Enemy);
 
         //Find the most valueable unit in extended range
         List<Tile> extendedRange = map.GetMovementRangeExtended(unit, action.Range);
@@ -254,26 +254,53 @@ public class AIController : MonoBehaviour {
 
         List<Tile> extendedRange = map.GetMovementRangeExtended(unit, action.Range);
         List<Tile> movementRange = map.GetMovementRange(unit);
+        //This unit doesn't need lots of enemies in range since it has no offence
+        List<Tile> bestPossibleMoves = GetBestPossibleMoves(unit, action.Range, Team.Enemy);
         //Get highest value enemy in extended range 
-        Unit HVU = GetHighestValue(map.GetUnits(extendedRange, unit.PlayerNumber, Team.Enemy));
+        List<Unit> enemies = map.GetUnits(extendedRange, unit.PlayerNumber, Team.Enemy);
+        //Get rid of all slowed units TODO update this to be more robust
+        enemies.RemoveAll(o => o.HasStatus(statusType.mass));
+        Unit HVU = GetHighestValue(enemies);
+
+        Tile destination = unit.CurrentTile;
 
         if (HVU)
         {
             //If enemy is not in range move in range
-
+            HashSet<Tile> tilesInRange = new HashSet<Tile>(map.GetTilesInRange(HVU.CurrentTile, action.Range));
+            if (!map.GetUnitsInRange(unit.CurrentTile, action.Range).Contains(HVU))
+            {
+                foreach (var t in bestPossibleMoves)
+                {
+                    Tile tile = CheckForWormhole(t);
+                    if (tilesInRange.Contains(tile))
+                    {
+                        destination = t;
+                        break;
+                    }
+                }
+                commands.Add(new Command(destination, Command.CommandType.Move, null));
+            }
             //If enemy is in range slow
-
+            destination = CheckForWormhole(destination);
+            if (tilesInRange.Contains(destination))
+                commands.Add(new Command(HVU.CurrentTile, Command.CommandType.Action, action));
         }
         //If there is no enemy in range get closest enemy and move near
-        else
-        {
-
-        }
-
+        //else
+        //{
+        //    List<Tile> tilesNearEnemies = GetBestPossibleMoves(unit, action.Range, Team.Enemy);
+        //    destination = tilesNearEnemies.Count > 0 ? tilesNearEnemies[0] : null;
+        //    if (destination)
+        //        commands.Add(new Command(destination, Command.CommandType.Move, null));
+        //}
+   
+        //Else if no move has been made move to safestUseful position
         if (!ContainsMove(commands))
         {
-            //Else if no move has been made move to safestUseful position
-
+            destination = bestPossibleMoves.Count > 0 ? bestPossibleMoves[0] : null;
+            if (destination)
+                commands.Add(new Command(destination, Command.CommandType.Move, null));
         }
 
         return commands;
@@ -432,7 +459,7 @@ public class AIController : MonoBehaviour {
         return tileInRange;
     }
 
-    private List<Tile> SafestPositionsWithUnitsInRange(Unit unit, int range, Team team)
+    private List<Tile> GetBestPossibleMoves(Unit unit, int range, Team team)
     {
         //Get tiledata for the unit and range passed
         Dictionary<Tile, Map.TileData> tileData = map.GetTileData(map.GetMovementRange(unit), unit, range);
