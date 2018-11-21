@@ -64,7 +64,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1638320625674834}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7897968, y: -5.1721697, z: 3.5367808}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4430855693546478}
@@ -132,3 +132,5 @@ MonoBehaviour:
   ActionType: 1
   Range: 4
   Power: 40
+  moduleEffectFX: {fileID: 0}
+  effectFXLocation: {x: 0, y: 0, z: 0}

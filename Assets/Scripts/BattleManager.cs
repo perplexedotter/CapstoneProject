@@ -115,7 +115,11 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] public GameObject highlightedFighter;
     [SerializeField] public GameObject highlightedFrigate;
 
+    [Header("BattleFX")]
     [SerializeField] AudioSource explosionSound;
+    [SerializeField] GameObject dmgFX;
+    [SerializeField] GameObject healFX;
+    [SerializeField] GameObject slowFX;
     //UNITY FUNCTIONS
 
     // Use this for initialization
@@ -432,16 +436,43 @@ public class BattleManager : MonoBehaviour {
         if(ResolveAction(action, target))
         {
             actionsTaken++;
-            activeUnit.DisplayAction(action, unit); //Animate Action
+            activeUnit.DisplayAction(action); //Animate Action
+            DisplayActionEffect(action, target.UnitOnTile);
             yield return new WaitForSeconds(actionDelay); //Wait for animation
             //Check if unit is destroyed
             if (unit.Destroyed)
             {
-                explosionSound.Play();
+                //explosionSound.Play();
                 DestroyUnit(unit);
             }
         }
         ResetToBattleMenu();
+    }
+
+    private void DisplayActionEffect(Action action, Unit target)
+    {
+        GameObject fx = null;
+        switch (action.Type)
+        {
+            case ActionType.LongAttack:
+            case ActionType.MeleeAttack:
+                fx = dmgFX;
+                break;
+            case ActionType.Heal:
+                fx = healFX;
+                break;
+            case ActionType.Slow:
+                fx = slowFX;
+                break;
+           
+        }
+        if (fx)
+        {
+            Vector3 trueTarget = target.transform.position + new Vector3(0, target.HeightOffset, 0);
+            var effect = Instantiate(fx, trueTarget, Quaternion.Euler(-90, 0, 0));
+            //effect.SetActive(true);
+        }
+       
     }
 
     /****************************************** UTILITY FUNCTIONS ******************************/

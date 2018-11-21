@@ -57,7 +57,7 @@ public class Module : MonoBehaviour {
         return null;
     }
 
-    public virtual void DisplayAction(Action action, Transform target)
+    public virtual void DisplayAction(Action action)
     {
         return;
     }
@@ -66,6 +66,7 @@ public class Module : MonoBehaviour {
     {
         return null;
     }
+
 }
 
 //used to name module

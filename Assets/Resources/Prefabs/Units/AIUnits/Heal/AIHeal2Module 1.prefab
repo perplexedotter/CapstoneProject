@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 114122168795287954}
   - component: {fileID: 114490888298809428}
   m_Layer: 0
-  m_Name: AIHeal2Module
+  m_Name: AIHeal2Module 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

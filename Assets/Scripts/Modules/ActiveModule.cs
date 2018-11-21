@@ -11,11 +11,15 @@ public class ActiveModule : Module {
     [SerializeField] protected int Range;
     [SerializeField] protected int Power;
 
-    [SerializeField] protected ParticleSystem particleSystem;
+    //[SerializeField] protected GameObject moduleEffectFX;
+    [SerializeField] protected Vector3 effectFXLocation;
+    //[SerializeField] protected GameObject fx;
+
+    protected GameObject fx;
 
     public void Start()
     {
-        particleSystem = GetComponentInChildren<ParticleSystem>();
+        fx = GameObject.Find("HealModuleFX");
     }
 
     public override Action GetAction()
@@ -37,14 +41,22 @@ public class ActiveModule : Module {
 
     //This function will activate a modules particle system if it is present 
     //and the correct action type is passed
-    public override void DisplayAction(Action action, Transform target)
+    public override void DisplayAction(Action action)
     {
-        if(ActionType == action.Type && particleSystem)
+        if(ActionType == action.Type && fx)
         {
-            //var emission = particleSystem.emission;
-            if (target)
-                gameObject.transform.LookAt(target);
-            particleSystem.Play();
+            var parent = transform.parent;
+            List<ParticleSystem> parts = new List<ParticleSystem>( GetComponentsInChildren<ParticleSystem>());
+            foreach(var p in parts)
+            {
+                p.Play();
+            }
+            //if(fx.activeInHierarchy)
+            //    fx.SetActive(false);
+            //fx.SetActive(true);
+            //GetComponentInChildren<ParticleSystem>().Play();
+
+            return;
         }
     }
 }
