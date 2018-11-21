@@ -188,11 +188,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  value: 0
+  threat: 0
+  mass: 12
   Target: 1
   ActionType: 0
   Range: 1
   Power: 20
-  mass: 12
 --- !u!114 &114635903130731672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -228,11 +230,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collider: {fileID: 64674710856418756}
+  outlineShader: {fileID: 0}
+  standardShader: {fileID: 0}
   moveSpeed: 75
   currentTile: {fileID: 0}
   playerNumber: 1
   aIUnit: 1
-  type: 0
+  bossUnit: 0
+  type: 1
   hitPoints: 100
   damageTaken: 0
   damageDealt: 0
@@ -242,6 +247,7 @@ MonoBehaviour:
   shields: 0
   hardPoints: 0
   threat: 0
+  value: 0
   movementRange: 0
   destroy: 0
   modules: []

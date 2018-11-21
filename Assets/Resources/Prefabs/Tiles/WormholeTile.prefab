@@ -742,6 +742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitOnTile: {fileID: 0}
+  wormholeConnection: {fileID: 0}
   type: 3
   collider: {fileID: 0}
   baseColor: {r: 1, g: 1, b: 1, a: 0.4627451}

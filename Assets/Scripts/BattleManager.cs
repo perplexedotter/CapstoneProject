@@ -42,6 +42,10 @@ public class BattleManager : MonoBehaviour {
     //adding waves
 
     [SerializeField] Tile enemyWarp;
+    public enum waveEnemyType {attackerAI, healerAI, longAI};
+    [SerializeField] GameObject meleeAIObj;
+    [SerializeField] GameObject healAIObj;
+    [SerializeField] GameObject longAIObj;
     //Turn Order
     [SerializeField] List<Unit> roundTurnOrder;
     [SerializeField] int turnIndex;
@@ -162,7 +166,7 @@ public class BattleManager : MonoBehaviour {
         statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
         if(victoryType == VictoryType.waveSurvival)
         {
-            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
+            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-(roundNumber)).ToString();
         }
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -192,6 +196,11 @@ public class BattleManager : MonoBehaviour {
         turnIndex = 0;
         unitTeleported = false;
         roundNumber++;
+        if (roundNumber%5==0)
+        {
+            generateWave();
+
+        }
         //unitSlowed = false;
         //roundTurnOrder = new List<Unit>(roundTurnOrder); //TODO Maybe make this the previous turnOrder as seed
         UpdateTurnOrder(turnIndex); //Update the turn order for all units
@@ -579,7 +588,6 @@ public class BattleManager : MonoBehaviour {
             }
             if (targetedUnit.Destroyed)
             {
-                explosionSound.Play();
                 DestroyUnit(targetedUnit);
             }
         }
@@ -1225,9 +1233,28 @@ public class BattleManager : MonoBehaviour {
         ToggleGameOverMenu(true);
     }
     //IN PROGRESS
-    private void generateWave(int index) {
-
-        Unit u;
+    private void generateWave() {
+        Unit waveUnit;
+        GameObject spawnObject = healAIObj;
+        int spawnIndex = UnityEngine.Random.Range(0,3);
+        switch (spawnIndex)
+        {
+            case 0:
+            spawnObject = healAIObj;
+            break;
+            case 1:
+            spawnObject = meleeAIObj;
+            break;
+            case 2:
+            spawnObject = longAIObj;
+            break;
+            default:
+            break;
+        }
+        GameObject go = Instantiate(spawnObject, enemyWarp.transform.position, Quaternion.identity) as GameObject; 
+        go.transform.parent = GameObject.Find("BattleManager").transform;
+        waveUnit = go.GetComponent<Unit>();
+        roundTurnOrder.Add(waveUnit);
     }
     ////this will create the units on the map for this level
     //void GenerateUnits(){
