@@ -40,7 +40,10 @@ public class BattleManager : MonoBehaviour {
     bool unitTeleported = false;
 
     //adding waves
-
+    public enum waveEnemyType {attackerAI, healerAI, longAI};
+    [SerializeField] GameObject meleeAIObj;
+    [SerializeField] GameObject healAIObj;
+    [SerializeField] GameObject longAIObj;
     [SerializeField] Tile enemyWarp;
     //Turn Order
     [SerializeField] List<Unit> roundTurnOrder;
@@ -195,6 +198,10 @@ public class BattleManager : MonoBehaviour {
         turnIndex = 0;
         unitTeleported = false;
         roundNumber++;
+        if (roundNumber%5==0)
+        {
+            generateWave();
+        }
         //unitSlowed = false;
         //roundTurnOrder = new List<Unit>(roundTurnOrder); //TODO Maybe make this the previous turnOrder as seed
         UpdateTurnOrder(turnIndex); //Update the turn order for all units
@@ -1259,9 +1266,28 @@ public class BattleManager : MonoBehaviour {
         ToggleGameOverMenu(true);
     }
     //IN PROGRESS
-    private void generateWave(int index) {
-
-        Unit u;
+    private void generateWave() {
+        Unit waveUnit;
+        GameObject spawnObject = healAIObj;
+        int spawnIndex = UnityEngine.Random.Range(0,3);
+        switch (spawnIndex)
+        {
+            case 0:
+            spawnObject = healAIObj;
+            break;
+            case 1:
+            spawnObject = meleeAIObj;
+            break;
+            case 2:
+            spawnObject = longAIObj;
+            break;
+            default:
+            break;
+        }
+        GameObject go = Instantiate(spawnObject, enemyWarp.transform.position, Quaternion.identity) as GameObject; 
+        go.transform.parent = GameObject.Find("BattleManager").transform;
+        waveUnit = go.GetComponent<Unit>();
+        roundTurnOrder.Add(waveUnit);
     }
     ////this will create the units on the map for this level
     //void GenerateUnits(){
