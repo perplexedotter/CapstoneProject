@@ -370,7 +370,7 @@ public class Unit : MonoBehaviour {
 
         for (int i = 0; i < statuses.Count; i++)
         {
-            if (statuses[i].StatusName == statusType.hitPoints)
+            if (statuses[i].Type == statusType.hitPoints)
             {
                 moddedStat += statuses[i].Amount;
             }
@@ -390,12 +390,20 @@ public class Unit : MonoBehaviour {
 
         for (int i = 0; i < statuses.Count; i++)
         {
-            if (statuses[i].StatusName == statusType.mass)
+            if (statuses[i].Type == statusType.mass)
             {
                 moddedStat += statuses[i].Amount;
             }
         }
         return moddedStat;
+    }
+
+    public bool HasStatus(statusType type)
+    {
+        foreach(var s in statuses)
+            if (s.Type == type)
+                return true;
+        return false;
     }
 
     /*********************************************** UNIT VALUE EFFECTING FUNCTIONS ***************************/
@@ -430,15 +438,9 @@ public class Unit : MonoBehaviour {
     //decrease each status by one -- remove if duration reaches 0
     public void DecrementStatuses()
     {
-        for (int i = 0; i < statuses.Count; i++)
-        {
-            statuses[i].DecrementDuration();
-            if (statuses[i].Duration == 1)
-            {
-                statuses.RemoveAt(i);
-                i -= 1;
-            }
-        }
+        foreach (var s in statuses)
+            s.DecrementDuration();
+        statuses.RemoveAll(o => o.Duration <= 0);
     }
 
     //Adds module to unit
@@ -635,7 +637,7 @@ public class Unit : MonoBehaviour {
     {
         for (int i = 0; i < statuses.Count; i++)
         {
-            Debug.Log(statuses[i].StatusName + " " + statuses[i].Duration);
+            Debug.Log(statuses[i].Type + " " + statuses[i].Duration);
         }
     }
 
