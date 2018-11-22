@@ -11,16 +11,8 @@ public class ActiveModule : Module {
     [SerializeField] protected int Range;
     [SerializeField] protected int Power;
 
-    //[SerializeField] protected GameObject moduleEffectFX;
     [SerializeField] protected Vector3 effectFXLocation;
-    //[SerializeField] protected GameObject fx;
 
-    protected GameObject fx;
-
-    public void Start()
-    {
-        fx = GameObject.Find("HealModuleFX");
-    }
 
     public override Action GetAction()
     {
@@ -43,20 +35,13 @@ public class ActiveModule : Module {
     //and the correct action type is passed
     public override void DisplayAction(Action action)
     {
-        if(ActionType == action.Type && fx)
+        if(ActionType == action.Type)
         {
-            var parent = transform.parent;
             List<ParticleSystem> parts = new List<ParticleSystem>( GetComponentsInChildren<ParticleSystem>());
             foreach(var p in parts)
             {
-                p.Play();
+                p.Play(true);
             }
-            //if(fx.activeInHierarchy)
-            //    fx.SetActive(false);
-            //fx.SetActive(true);
-            //GetComponentInChildren<ParticleSystem>().Play();
-
-            return;
         }
     }
 }

@@ -10,6 +10,7 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
     [SerializeField] float actionDelay = 1f;
+    [SerializeField] float actionEffectsWait = 1f;
     [SerializeField] Text statusText;
     [SerializeField] Text roundsLeftText;
 
@@ -437,6 +438,7 @@ public class BattleManager : MonoBehaviour {
         {
             actionsTaken++;
             activeUnit.DisplayAction(action); //Animate Action
+            yield return new WaitForSeconds(actionEffectsWait);
             DisplayActionEffect(action, target.UnitOnTile);
             yield return new WaitForSeconds(actionDelay); //Wait for animation
             //Check if unit is destroyed
