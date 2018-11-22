@@ -32,6 +32,8 @@ public class UnitSnapEditor : MonoBehaviour {
             Tile tile = null;
             if (tileDict.TryGetValue(unit.GetCoords(), out tile))
             {
+                if (unit.CurrentTile)
+                    unit.CurrentTile.UnitOnTile = null;
                 unit.CurrentTile = tile;
                 tile.UnitOnTile = unit;
             }

@@ -124,6 +124,7 @@ public class BattleManager : MonoBehaviour {
         EnemiesLeft = 0;
         instance = this;
         ToggleActionMenu(false);
+        ToggleBattleMenu(false);
         bossDead = false;
 
 
@@ -141,6 +142,7 @@ public class BattleManager : MonoBehaviour {
     void Start() {
         //AddUnitsFromMap();
         ToggleGameOverMenu(false);
+        //TODO Only search children
         units = new List<Unit>(FindObjectsOfType<Unit>());
         GetUnitCounts(units);
         roundNumber = 0;
