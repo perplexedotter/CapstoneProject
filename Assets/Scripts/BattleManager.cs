@@ -168,9 +168,9 @@ public class BattleManager : MonoBehaviour {
     void Update()
     {
         //keep info by activeunit TODO: put in own function
-        Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
-        statusText.transform.position = statusPos;
-        statusText.text = "HP: " + activeUnit.DamageUnit(0) + "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
+        //Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
+        //statusText.transform.position = statusPos;
+        //statusText.text = "HP: " + activeUnit.DamageUnit(0) + "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
         if (victoryType == VictoryType.waveSurvival)
         {
             roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive - roundNumber).ToString();
