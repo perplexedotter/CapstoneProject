@@ -155,32 +155,36 @@ public class BattleManager : MonoBehaviour {
         roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
-        activeUnit.UnitOutline(true);
+        //activeUnit.UnitOutline(true);
         statusBarMods = StringifyModList(activeUnit);
         activeUnitPosActions = activeUnit.GetActions();
-        ProcessTurn();
+        ResetToBattleMenu();
+        //ProcessTurn();
     }
 
     // Update is called once per frame
     void Update()
     {
         //keep info by activeunit TODO: put in own function
-        Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
-        statusText.transform.position = statusPos;
-        statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
-        if(victoryType == VictoryType.waveSurvival)
-        {
-            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
-        }
+        //Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
+        //statusText.transform.position = statusPos;
+        //statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
+        //if(victoryType == VictoryType.waveSurvival)
+        //{
+        //    roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
+        //}
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            print("escape key was Clicked");
-            if (!activeUnit.AIUnit)
-            {
-                ResetToBattleMenu();
-            }
+            //print("escape key was Clicked");
+            ResetToBattleMenu();
         }
+        //Highlight activeUnit
+        //Highlighter h = activeUnit.CurrentTile.GetComponent<Highlighter>();
+        //if(h && !h.Highlighted)
+        //{
+        //    h.Highlight();
+        //}
     }
 
     private void AddUnitsFromMap()
@@ -292,9 +296,15 @@ public class BattleManager : MonoBehaviour {
             turnIndex++;
         else
             NextRound();
-        activeUnit.UnitOutline(false);
+        //activeUnit.UnitOutline(false);
+        //Get rid of the old active Units highlight
+        //Highlighter h = activeUnit.CurrentTile.GetComponent<Highlighter>();
+        //if (h && h.Highlighted)
+        //{
+        //    h.RemoveHighlight();
+        //}
         activeUnit = roundTurnOrder[turnIndex];
-        activeUnit.UnitOutline(true);
+        //activeUnit.UnitOutline(true);
         activeUnitPosActions = activeUnit.GetActions();
 
     }

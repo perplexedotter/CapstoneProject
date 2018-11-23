@@ -628,6 +628,15 @@ public class Unit : MonoBehaviour {
 
     public void UnitOutline(bool outlined)
     {
+        Renderer renderer = GetComponentInChildren<UnitBody>().GetComponent<Renderer>();
+        if (outlined)
+        {
+            renderer.material.shader = this.outlineShader;
+        }
+        else
+        {
+            renderer.material.shader = this.standardShader;
+        }
         //Renderer[] renderers = GetComponentsInChildren<Renderer>();
         //foreach(var r in renderers)
         //{
@@ -640,6 +649,7 @@ public class Unit : MonoBehaviour {
         //        r.material.shader = this.standardShader;
         //    }
         //}
+
         return;
     }
 
