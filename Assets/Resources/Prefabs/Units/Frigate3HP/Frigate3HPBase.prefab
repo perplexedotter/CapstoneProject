@@ -177,7 +177,7 @@ MonoBehaviour:
   playerNumber: 0
   aIUnit: 0
   bossUnit: 0
-  type: 0
+  type: 1
   hitPoints: 100
   damageTaken: 0
   damageDealt: 0

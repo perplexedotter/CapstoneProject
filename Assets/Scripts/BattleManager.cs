@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+
 
 public class BattleManager : MonoBehaviour {
 
@@ -271,7 +273,9 @@ public class BattleManager : MonoBehaviour {
             turnsToUpdate.Add(roundTurnOrder[i]);
         }
         //TODO Convert this to a GetSpeed and Reverse the sort (Might keep mass)
-        turnsToUpdate.Sort((a, b) => a.GetMass().CompareTo(b.GetMass()));
+
+        turnsToUpdate = turnsToUpdate.OrderBy(o => o.GetMass()).ToList();
+        //turnsToUpdate.Sort((a, b) => a.GetMass().CompareTo(b.GetMass()));
         //Replace updated units
         for(int i = index; i < roundTurnOrder.Count; i++)
         {

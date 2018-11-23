@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114921976032943660}
   - component: {fileID: 114935245439651294}
   m_Layer: 0
-  m_Name: AIFrigate2HPBase
+  m_Name: Frigate2HPPlayer1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -55,14 +55,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1734163069621192}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 50}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 80, y: 0, z: 60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4834515988741324}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!4 &4834515988741324
 Transform:
   m_ObjectHideFlags: 1
@@ -165,11 +165,11 @@ MonoBehaviour:
   heightOffset: 2
   currentTile: {fileID: 0}
   playerNumber: 1
-  aIUnit: 0
+  aIUnit: 1
   bossUnit: 0
-  type: 0
+  type: 1
   hitPoints: 100
-  damageTaken: 75
+  damageTaken: 0
   damageDealt: 0
   attack: 0
   speed: 100
@@ -181,8 +181,8 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules:
-  - {fileID: 114750274332693228, guid: f29669dcd1f351e439cff038f51da8b6, type: 2}
-  - {fileID: 114750274332693228, guid: f29669dcd1f351e439cff038f51da8b6, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   modulePositions:
   - {x: -1.1, y: 3.2, z: 0}
   - {x: 0, y: 2.55, z: 2.56}

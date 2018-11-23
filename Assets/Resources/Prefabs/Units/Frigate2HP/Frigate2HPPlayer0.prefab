@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 114409788480649248}
   - component: {fileID: 114089313276010150}
   m_Layer: 0
-  m_Name: Frigate2HPBase
+  m_Name: Frigate2HPPlayer0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -189,13 +189,13 @@ MonoBehaviour:
   playerNumber: 0
   aIUnit: 0
   bossUnit: 0
-  type: 0
+  type: 1
   hitPoints: 100
   damageTaken: 0
   damageDealt: 0
   attack: 0
   speed: 100
-  mass: 455
+  mass: 400
   shields: 0
   hardPoints: 2
   threat: 0

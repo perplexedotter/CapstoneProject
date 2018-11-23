@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114466327503931776}
   - component: {fileID: 114946408712238414}
   m_Layer: 0
-  m_Name: Frigate4HPBase
+  m_Name: Frigate4HPPlayer0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -163,7 +163,7 @@ MonoBehaviour:
   moveSpeed: 75
   heightOffset: 2
   currentTile: {fileID: 0}
-  playerNumber: 0
+  playerNumber: 1
   aIUnit: 0
   bossUnit: 0
   type: 0
