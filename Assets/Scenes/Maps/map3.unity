@@ -2102,6 +2102,7 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
+  heightOffset: 2
   currentTile: {fileID: 257850650}
   playerNumber: 0
   aIUnit: 0
@@ -2120,6 +2121,7 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules: []
+  modulePositions: []
 --- !u!54 &159052601
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4941,6 +4943,7 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
+  heightOffset: 2
   currentTile: {fileID: 1763016538}
   playerNumber: 0
   aIUnit: 0
@@ -4959,6 +4962,7 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules: []
+  modulePositions: []
 --- !u!54 &392560469
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5684,8 +5688,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 90282627}
   m_HandleRect: {fileID: 90282626}
   m_Direction: 2
-  m_Value: 0.9999887
-  m_Size: 0.8495433
+  m_Value: 0.9999954
+  m_Size: 0.8495432
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5798,6 +5802,16 @@ Prefab:
     - target: {fileID: 4992268409936748, guid: 4798379d8a05cc949b6eb1adca68a624, type: 2}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -30.897001
+      objectReference: {fileID: 0}
+    - target: {fileID: 108571608701268762, guid: 4798379d8a05cc949b6eb1adca68a624,
+        type: 2}
+      propertyPath: m_BounceIntensity
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 108571608701268762, guid: 4798379d8a05cc949b6eb1adca68a624,
+        type: 2}
+      propertyPath: m_Intensity
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4798379d8a05cc949b6eb1adca68a624, type: 2}
@@ -7948,8 +7962,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1502054914}
   m_HandleRect: {fileID: 1502054913}
   m_Direction: 2
-  m_Value: 0.99999857
-  m_Size: 0.48047617
+  m_Value: 0.9999983
+  m_Size: 0.48047623
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11099,6 +11113,8 @@ MonoBehaviour:
   map: {fileID: 1645087134}
   ai: {fileID: 610783505}
   aiDelay: 1
+  actionDelay: 1
+  actionEffectsWait: 1
   statusText: {fileID: 1568376190}
   roundsLeftText: {fileID: 0}
   victoryType: 1
@@ -11140,6 +11156,9 @@ MonoBehaviour:
   highlightedFighter: {fileID: 1986854545}
   highlightedFrigate: {fileID: 1124689441}
   explosionSound: {fileID: 1747679361}
+  dmgFX: {fileID: 0}
+  healFX: {fileID: 0}
+  slowFX: {fileID: 0}
 --- !u!4 &982764463
 Transform:
   m_ObjectHideFlags: 0
@@ -12439,6 +12458,7 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
+  heightOffset: 2
   currentTile: {fileID: 1200231071}
   playerNumber: 0
   aIUnit: 0
@@ -12457,6 +12477,7 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules: []
+  modulePositions: []
 --- !u!54 &1082760355
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -12741,6 +12762,7 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
+  heightOffset: 2
   currentTile: {fileID: 202386817}
   playerNumber: 1
   aIUnit: 1
@@ -12759,6 +12781,7 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules: []
+  modulePositions: []
 --- !u!54 &1103005053
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -14385,6 +14408,7 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
+  heightOffset: 2
   currentTile: {fileID: 216727655}
   playerNumber: 0
   aIUnit: 0
@@ -14403,6 +14427,7 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules: []
+  modulePositions: []
 --- !u!54 &1201284548
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -15586,6 +15611,7 @@ MonoBehaviour:
   ActionType: 0
   Range: 1
   Power: 20
+  effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!1 &1290707739
 GameObject:
   m_ObjectHideFlags: 0
@@ -17845,6 +17871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08408fb76814f1d4eb58f406db9c807a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipBuilderTile: 0
   unitOnTile: {fileID: 0}
   wormholeConnection: {fileID: 0}
   type: 0
@@ -21274,6 +21301,7 @@ MonoBehaviour:
   ActionType: 0
   Range: 1
   Power: 20
+  effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!4 &1736357254 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4429949836186490, guid: a016727452de7bf49aeb5694f0b9145b,
