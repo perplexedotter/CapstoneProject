@@ -117,6 +117,7 @@ public class Tile : MonoBehaviour {
     void OnMouseDown(){
         if (!shipBuilderTile)
         {
+            Debug.Log("clicked");
             BattleManager.instance.TileClicked(this);
         }
 	}

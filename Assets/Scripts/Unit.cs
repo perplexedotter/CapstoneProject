@@ -47,7 +47,7 @@ public class Unit : MonoBehaviour {
     //Movement fields
     private bool isMoving = false;
     protected bool movementFinished = false;
-    private List<Tile> path;
+    public List<Tile> path;
     private int pathIndex;
 
     //Flags
@@ -154,10 +154,32 @@ public class Unit : MonoBehaviour {
     
     public void customUnit()
     {
+        modules.Clear();
         modules = new List<Module>(GetComponentsInChildren<Module>());
-        SetAttackCapabilityFlags();
+        StartCoroutine(customUnitWait());
     }
 
+    public void CustomUpdate()
+    {
+        int i = 0, j = 0;
+        while (i < modules.Count && j < modulePositions.Count)
+        {
+            if (modules[i] != null)
+            {
+                GameObject module = modules[i].gameObject;
+                module.transform.localPosition = modulePositions[j];
+            }
+            i++;
+            j++;
+        }
+    }
+    IEnumerator customUnitWait()
+    {
+        yield return new WaitForSeconds(.01f);
+        SetAttackCapabilityFlags();
+
+        CustomUpdate();
+    }
     //based on unit type provide this will give base stats to unit
     public void DefineUnit(UnitType Type)
     {
@@ -503,9 +525,10 @@ public class Unit : MonoBehaviour {
     /************************************** MOVEMENT FUNCTIONS ***********************************/
 
     private void ProcessMovement()
-    {
+    { 
         if (IsMoving)
         {
+            Debug.Log("Test 6");
             ContinuePathTraversal();
         }
         if (movementFinished)
@@ -536,15 +559,19 @@ public class Unit : MonoBehaviour {
             this.path = path;
             isMoving = true;
             pathIndex = 0;
+            Debug.Log("Test3");
         }
     }
 
     private void ContinuePathTraversal()
     {
+        Debug.Log(currentTile.gameObject.name + "  " + path[path.Count - 1]);
         if(currentTile != path[path.Count - 1]) //If the Unit hasn't reached the end of the path
         {
+            Debug.Log("Test4");
             if (currentTile != path[pathIndex]) //If the current Tile isn't the same as the next tile
             {
+                Debug.Log("Test5");
                 Vector3 destination = path[pathIndex].transform.position;
                 float step = moveSpeed * Time.deltaTime;
                 //Vector3.RotateTowards(transform.position, destination);

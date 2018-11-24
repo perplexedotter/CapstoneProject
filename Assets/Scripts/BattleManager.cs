@@ -37,8 +37,8 @@ public class BattleManager : MonoBehaviour {
     public int EnemiesLeft { get; protected set; }
     private bool bossDead;
     //Units in battle
-    List<Unit> units = new List<Unit>();
-    Unit activeUnit;
+    public List<Unit> units = new List<Unit>();
+    public Unit activeUnit;
     string statusBarMods = "";
     int unitIndex = 0;
     bool unitTeleported = false;
@@ -117,9 +117,13 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] public Text highlightedUnitText;
     [SerializeField] public Text highlightedUnitTextInfo;
     [SerializeField] public GameObject currentFighter;
+    [SerializeField] public GameObject currentFighterEnemy;
     [SerializeField] public GameObject currentFrigate;
+    [SerializeField] public GameObject currentFrigateEnemy;
     [SerializeField] public GameObject highlightedFighter;
+    [SerializeField] public GameObject highlightedFighterEnemy;
     [SerializeField] public GameObject highlightedFrigate;
+    [SerializeField] public GameObject highlightedFrigateEnemy;
 
     [Header("BattleFX")]
     [SerializeField] AudioSource explosionSound;
@@ -130,13 +134,13 @@ public class BattleManager : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
-        this.gameObject.SetActive(false);
         ShipsLeft = 0;
         EnemiesLeft = 0;
         instance = this;
         ToggleActionMenu(false);
         ToggleBattleMenu(false);
         bossDead = false;
+        this.gameObject.SetActive(false);
 
 
         //this is how to add modules to units via children
@@ -151,6 +155,7 @@ public class BattleManager : MonoBehaviour {
 
     }
     void Start() {
+        
         //AddUnitsFromMap();
         ToggleGameOverMenu(false);
         //TODO Only search children
@@ -166,6 +171,7 @@ public class BattleManager : MonoBehaviour {
         activeUnitPosActions = activeUnit.GetActions();
         ResetToBattleMenu();
         //ProcessTurn();
+        
     }
 
     // Update is called once per frame
@@ -927,11 +933,13 @@ public class BattleManager : MonoBehaviour {
     {
         if (!inputPaused)
         {
+           
             //TODO Add logic for attacking and abilities
             if (activeUnitPosMoves != null && activeUnitPosMoves.Contains(tile)
                 && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
                 && tile.UnitOnTile == null && !activeUnit.AIUnit && movingState)
             {
+                Debug.Log("Test2" + tile);
                 MoveActiveUnitToTile(tile);
             }
             //logic for actions taken
@@ -977,15 +985,37 @@ public class BattleManager : MonoBehaviour {
 
             if(unit.getUnitType() == UnitType.fighter)
             {
-                highlightedUnitText.text = "Fighter";
-                highlightedFighter.gameObject.SetActive(true);
                 highlightedFrigate.gameObject.SetActive(false);
+                highlightedFrigateEnemy.gameObject.SetActive(false);
+
+                highlightedUnitText.text = "Fighter";
+                if (unit.PlayerNumber == 0)
+                {
+                    highlightedFighter.gameObject.SetActive(true);
+                    highlightedFighterEnemy.gameObject.SetActive(false);
+                }
+                else
+                {
+                    highlightedFighter.gameObject.SetActive(false);
+                    highlightedFighterEnemy.gameObject.SetActive(true);
+                }
             }
             else if (unit.getUnitType() == UnitType.frigate)
             {
-                highlightedUnitText.text = "Frigate";
                 highlightedFighter.gameObject.SetActive(false);
-                highlightedFrigate.gameObject.SetActive(true);
+                highlightedFighterEnemy.gameObject.SetActive(false);
+
+                highlightedUnitText.text = "Frigate";
+                if (unit.PlayerNumber == 0)
+                {
+                    highlightedFrigate.gameObject.SetActive(true);
+                    highlightedFrigateEnemy.gameObject.SetActive(false);
+                }
+                else
+                {
+                    highlightedFrigate.gameObject.SetActive(false);
+                    highlightedFrigateEnemy.gameObject.SetActive(true);
+                }
             }
 
             List<Action> actionsList = unit.GetActions();
@@ -1048,15 +1078,37 @@ public class BattleManager : MonoBehaviour {
 
         if (activeUnit.getUnitType() == UnitType.fighter)
         {
-            currentUnitText.text = "Fighter";
-            currentFighter.gameObject.SetActive(true);
             currentFrigate.gameObject.SetActive(false);
+            currentFrigateEnemy.gameObject.SetActive(false);
+
+            currentUnitText.text = "Fighter";
+            if (activeUnit.PlayerNumber == 0)
+            {
+                currentFighter.gameObject.SetActive(true);
+                currentFighterEnemy.gameObject.SetActive(false);
+            }
+            else
+            {
+                currentFighter.gameObject.SetActive(false);
+                currentFighterEnemy.gameObject.SetActive(true);
+            }
         }
         else if (activeUnit.getUnitType() == UnitType.frigate)
         {
-            currentUnitText.text = "Frigate";
             currentFighter.gameObject.SetActive(false);
-            currentFrigate.gameObject.SetActive(true);
+            currentFighterEnemy.gameObject.SetActive(false);
+
+            currentUnitText.text = "Frigate";
+            if (activeUnit.PlayerNumber == 0)
+            {
+                currentFrigate.gameObject.SetActive(true);
+                currentFrigateEnemy.gameObject.SetActive(false);
+            }
+            else
+            {
+                currentFrigate.gameObject.SetActive(false);
+                currentFrigateEnemy.gameObject.SetActive(true);
+            }
         }
 
         List<Action> actionsList = activeUnit.GetActions();
@@ -1089,6 +1141,7 @@ public class BattleManager : MonoBehaviour {
         currentUnitTextInfo.text += "     Type: " + activeUnit.GetShipType() + "\n  Mods: " + modstr;
         
     }
+
     //make explosion at location passed to function
     public void Explode(Vector3 Pos)
     {
