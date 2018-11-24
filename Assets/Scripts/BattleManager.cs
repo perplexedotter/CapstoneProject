@@ -3,12 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
+
 
 public class BattleManager : MonoBehaviour {
 
     [SerializeField] Map map;
     [SerializeField] AIController ai;
     [SerializeField] float aiDelay = 1f;
+    [SerializeField] float actionDelay = 1f;
+    [SerializeField] float actionEffectsWait = 1f;
     [SerializeField] Text statusText;
     [SerializeField] Text roundsLeftText;
 
@@ -117,7 +121,11 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] public GameObject highlightedFighter;
     [SerializeField] public GameObject highlightedFrigate;
 
+    [Header("BattleFX")]
     [SerializeField] AudioSource explosionSound;
+    [SerializeField] GameObject dmgFX;
+    [SerializeField] GameObject healFX;
+    [SerializeField] GameObject slowFX;
     //UNITY FUNCTIONS
 
     // Use this for initialization
@@ -153,10 +161,11 @@ public class BattleManager : MonoBehaviour {
         roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
-        activeUnit.UnitOutline(true);
+        //activeUnit.UnitOutline(true);
         statusBarMods = StringifyModList(activeUnit);
         activeUnitPosActions = activeUnit.GetActions();
-        ProcessTurn();
+        ResetToBattleMenu();
+        //ProcessTurn();
     }
 
     // Update is called once per frame
@@ -168,17 +177,20 @@ public class BattleManager : MonoBehaviour {
         //statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
         if(victoryType == VictoryType.waveSurvival)
         {
-            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive-roundNumber).ToString();
+            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive - roundNumber).ToString();
         }
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            print("escape key was Clicked");
-            if (!activeUnit.AIUnit)
-            {
-                ResetToBattleMenu();
-            }
+            //print("escape key was Clicked");
+            ResetToBattleMenu();
         }
+        //Highlight activeUnit
+        //Highlighter h = activeUnit.CurrentTile.GetComponent<Highlighter>();
+        //if(h && !h.Highlighted)
+        //{
+        //    h.Highlight();
+        //}
     }
 
     private void AddUnitsFromMap()
@@ -235,7 +247,8 @@ public class BattleManager : MonoBehaviour {
             Debug.Log("GAME IS OVER!!!!!!!");
             GameOver(false);
         }
-        ProcessTurn(); //Begin processing the next turn
+        ResetToBattleMenu();
+        //ProcessTurn(); //Begin processing the next turn
     }
 
     private void ResetForNextTurn()
@@ -268,7 +281,9 @@ public class BattleManager : MonoBehaviour {
             turnsToUpdate.Add(roundTurnOrder[i]);
         }
         //TODO Convert this to a GetSpeed and Reverse the sort (Might keep mass)
-        turnsToUpdate.Sort((a, b) => a.GetMass().CompareTo(b.GetMass()));
+
+        turnsToUpdate = turnsToUpdate.OrderBy(o => o.GetMass()).ToList();
+        //turnsToUpdate.Sort((a, b) => a.GetMass().CompareTo(b.GetMass()));
         //Replace updated units
         for(int i = index; i < roundTurnOrder.Count; i++)
         {
@@ -293,9 +308,15 @@ public class BattleManager : MonoBehaviour {
             turnIndex++;
         else
             NextRound();
-        activeUnit.UnitOutline(false);
+        //activeUnit.UnitOutline(false);
+        //Get rid of the old active Units highlight
+        //Highlighter h = activeUnit.CurrentTile.GetComponent<Highlighter>();
+        //if (h && h.Highlighted)
+        //{
+        //    h.RemoveHighlight();
+        //}
         activeUnit = roundTurnOrder[turnIndex];
-        activeUnit.UnitOutline(true);
+        //activeUnit.UnitOutline(true);
         activeUnitPosActions = activeUnit.GetActions();
 
     }
@@ -419,7 +440,8 @@ public class BattleManager : MonoBehaviour {
             case Command.CommandType.Action:
                 map.ResetTileColors();
                 ShowActionRange(command.action);
-                StartCoroutine(DelayActionCommand(command));
+                //StartCoroutine(DelayActionCommand(command));
+                StartCoroutine(ProcessAction(command.action, command.target));
                 break;
         }
     }
@@ -429,6 +451,52 @@ public class BattleManager : MonoBehaviour {
         yield return new WaitForSeconds(aiDelay);
         ResolveAction(command.action, command.target);
         ProcessAITurn();
+    }
+
+    IEnumerator ProcessAction(Action action, Tile target)
+    {
+        Unit unit = target.UnitOnTile;
+        if(ResolveAction(action, target))
+        {
+            actionsTaken++;
+            activeUnit.DisplayAction(action); //Animate Action
+            yield return new WaitForSeconds(actionEffectsWait);
+            DisplayActionEffect(action, target.UnitOnTile);
+            yield return new WaitForSeconds(actionDelay); //Wait for animation
+            //Check if unit is destroyed
+            if (unit.Destroyed)
+            {
+                //explosionSound.Play();
+                DestroyUnit(unit);
+            }
+        }
+        ResetToBattleMenu();
+    }
+
+    private void DisplayActionEffect(Action action, Unit target)
+    {
+        GameObject fx = null;
+        switch (action.Type)
+        {
+            case ActionType.LongAttack:
+            case ActionType.MeleeAttack:
+                fx = dmgFX;
+                break;
+            case ActionType.Heal:
+                fx = healFX;
+                break;
+            case ActionType.Slow:
+                fx = slowFX;
+                break;
+           
+        }
+        if (fx)
+        {
+            Vector3 trueTarget = target.transform.position + new Vector3(0, target.HeightOffset, 0);
+            var effect = Instantiate(fx, trueTarget, Quaternion.Euler(-90, 0, 0));
+            //effect.SetActive(true);
+        }
+       
     }
 
     /****************************************** UTILITY FUNCTIONS ******************************/
@@ -465,10 +533,16 @@ public class BattleManager : MonoBehaviour {
     {
         inputPaused = true;
         yield return new WaitForSeconds(.1f);
-        inputPaused = false;
-        ToggleBattleMenu(true);
+        if (!activeUnit.AIUnit)
+        {
+            inputPaused = false;
+            ToggleBattleMenu(true);            
+        }
+        else
+        {
+            ToggleBattleMenu(false);
+        }
         ToggleActionMenu(false);
-
         movingState = false;
         actionState = false;
         menuState = true;
@@ -586,11 +660,6 @@ public class BattleManager : MonoBehaviour {
                         resolved = true;
                     }
                     break;
-            }
-            if (targetedUnit.Destroyed)
-            {
-                explosionSound.Play();
-                DestroyUnit(targetedUnit);
             }
         }
         return resolved;
@@ -869,10 +938,11 @@ public class BattleManager : MonoBehaviour {
             if (actionState && !activeUnit.AIUnit && tile.UnitOnTile)
             {
                 //ResolveAction(tile);
-                ResolveAction(unitAction, tile);
-                actionsTaken++;
-                Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
-                ResetToBattleMenu();
+                //ResolveAction(unitAction, tile);
+                //actionsTaken++;
+                //Debug.Log("RESET TO BATTLEMENU AFTER ACTION");
+                //ResetToBattleMenu();
+                StartCoroutine(ProcessAction(unitAction, tile));
             }
         }
 

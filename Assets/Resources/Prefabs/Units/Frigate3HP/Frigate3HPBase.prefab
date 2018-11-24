@@ -68,7 +68,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1995823652380114}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 0, z: 20}
+  m_LocalPosition: {x: -50, y: 0, z: 70}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4050443674881232}
@@ -142,7 +142,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: f1fa42de870c1d946baf921d5fc3be1f, type: 3}
@@ -172,11 +172,12 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
+  heightOffset: 2
   currentTile: {fileID: 0}
   playerNumber: 0
   aIUnit: 0
   bossUnit: 0
-  type: 0
+  type: 1
   hitPoints: 100
   damageTaken: 0
   damageDealt: 0
@@ -189,7 +190,14 @@ MonoBehaviour:
   value: 0
   movementRange: 0
   destroy: 0
-  modules: []
+  modules:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  modulePositions:
+  - {x: 0.7, y: 3, z: 0.5}
+  - {x: -0.7, y: 3, z: 0.5}
+  - {x: 0, y: 2.5, z: 2.75}
 --- !u!114 &114702531671097298
 MonoBehaviour:
   m_ObjectHideFlags: 1
