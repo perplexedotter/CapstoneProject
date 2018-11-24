@@ -152,6 +152,7 @@ public class Unit : MonoBehaviour {
     //    }
     //}
     
+     //Get list of modules and update their location
     public void customUnit()
     {
         modules.Clear();

@@ -1056,10 +1056,13 @@ public class BattleManager : MonoBehaviour {
     //show current Unit UI (stats + modules)
     public void currentUnitUI()
     {
+        //current unit UI box
         if (currentUnit.activeSelf == false)
         {
             currentUnit.gameObject.SetActive(true);
         }
+        
+        //Update color scheme red vs blue
         if(activeUnit.PlayerNumber == 0)
         {
             currentUnit.GetComponent<Image>().color = new Color32(74, 81, 161, 141);
@@ -1068,6 +1071,8 @@ public class BattleManager : MonoBehaviour {
         {
             currentUnit.GetComponent<Image>().color = new Color32(144, 42, 42, 141);
         }
+
+        //clear text boxes
         currentUnit.gameObject.SetActive(true);
         highlightedUnitText.text = "";
         highlightedUnitTextInfo.text = "";
@@ -1076,6 +1081,7 @@ public class BattleManager : MonoBehaviour {
         currentUnitTextInfo.text = "  Current HP: " + currentHP;
         List<ModuleType> list = activeUnit.GetModuleTypes();
 
+        //add correct image based on unit type and player number
         if (activeUnit.getUnitType() == UnitType.fighter)
         {
             currentFrigate.gameObject.SetActive(false);
@@ -1113,6 +1119,7 @@ public class BattleManager : MonoBehaviour {
 
         List<Action> actionsList = activeUnit.GetActions();
 
+        //Add list of unit's mods to UI
         List<ModuleType> modList = activeUnit.GetModuleTypes();
         string modstr = "";
         foreach(ModuleType mod in modList)

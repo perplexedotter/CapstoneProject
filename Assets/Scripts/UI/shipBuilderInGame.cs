@@ -3,29 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//assists in assembling Units from saves
 public class shipBuilderInGame : MonoBehaviour
 {
     [SerializeField] public BattleManager BM;
     [SerializeField] public Map map;
     [SerializeField] public Map customMap;
+
     [SerializeField] public GameObject gameOverMenu;
     [SerializeField] public GameObject battleMenu;
     [SerializeField] public GameObject actionMenu;
+
     [SerializeField] public GameObject defaultButton;
     [SerializeField] public GameObject customButton;
+
     [SerializeField] public UnitSave saves;
     [SerializeField] public GameObject loadUnitsUI;
     private UnitData saveData;
     [SerializeField] public List<GameObject> loadbuttons;
-    [SerializeField] public Text unitCount;
+
     [SerializeField] public List<Tile> mapTiles = new List<Tile>();
     [SerializeField] public List<Unit> unitPlayer = new List<Unit>();
     [SerializeField] public List<GameObject> playerObjects = new List<GameObject>();
     [SerializeField] public List<Unit> units = new List<Unit>();
     [SerializeField] public List<UnitData> unitDatas = new List<UnitData>();
+
+    [SerializeField] public Text unitCount;
     [SerializeField] public int count;
     [SerializeField] public int addedUnits;
     [SerializeField] public string type;
+
     // Use this for initialization
     void Start()
     {
@@ -36,6 +43,8 @@ public class shipBuilderInGame : MonoBehaviour
 
         var Units = FindObjectsOfType<Unit>();
         unitPlayer = new List<Unit>(Units);
+
+        //remove non-player units from list
         foreach (Unit t in Units)
         {
             if (t.PlayerNumber == 1)
@@ -44,14 +53,18 @@ public class shipBuilderInGame : MonoBehaviour
             }
         }
 
+        //3 default loads just in case player wants more options
         unitDatas.Add(new UnitData("Default 1", UnitType.fighter, ModuleType.shortRange, ModuleType.shortRange));
         unitDatas.Add(new UnitData("Default 2", UnitType.fighter, ModuleType.longRange, ModuleType.longRange));
         unitDatas.Add(new UnitData("Default 3", UnitType.frigate, ModuleType.heal, ModuleType.heal, ModuleType.heal));
+
+        //load the 9 available saves
         for (int i = 0; i < 9; i++)
         {
             unitDatas.Add(saves.load(i));
         }
 
+        //add saves to menu
         for (int i = 0; i < 12; i++)
         {
             if (unitDatas[i].type == UnitType.fighter)
@@ -70,6 +83,7 @@ public class shipBuilderInGame : MonoBehaviour
         map.gameObject.SetActive(true);
     }
 
+    //update number of units created for map
     public void updateCount()
     {
         unitCount.text = "Count: " + addedUnits + "/" + count;
@@ -77,17 +91,14 @@ public class shipBuilderInGame : MonoBehaviour
         {
             loadUnitsUI.gameObject.SetActive(false);
             runDefault();
-            //BM.CustomStart();
         }
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-        }
     }
 
+    //Enable player to build their own units
     public void runCustom()
     {
         BM.gameObject.SetActive(true);
@@ -108,6 +119,7 @@ public class shipBuilderInGame : MonoBehaviour
         //BM.gameObject.SetActive(true);
     }
 
+    //start game with default setup
     public void runDefault()
     {
         print("Default Map is Running");
@@ -122,6 +134,7 @@ public class shipBuilderInGame : MonoBehaviour
         }
     }
 
+    //loades save based on button input
     public void loadButton(int loadValue)
     {
         customMap.gameObject.SetActive(true);
@@ -137,6 +150,7 @@ public class shipBuilderInGame : MonoBehaviour
         }
     }
 
+    //make a unit -- adding modules as necessary
     public void addUnit(Vector3 position)
     {
         GameObject unit = GameObject.Instantiate(Resources.Load("Prefabs/Units/" + type), BM.transform) as GameObject;
@@ -195,11 +209,8 @@ public class shipBuilderInGame : MonoBehaviour
         BM.gameObject.SetActive(true);
         customUnit.customUnit();
         BM.gameObject.SetActive(false);
-        //GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/MeleeModule"), GameObject.Find("Unit").transform) as GameObject;
-        //GameObject unit = GameObject.Instantiate(Resources.Load("Prefabs/Units/FighterBase"), BM.transform) as GameObject;
         StartCoroutine(DelayMod());
     }
-
 
     IEnumerator DelayMod()
     {
