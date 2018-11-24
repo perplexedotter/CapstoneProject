@@ -9,8 +9,24 @@ public class Highlighter : MonoBehaviour {
     Queue<Color> childColors;
     UnityEngine.EventSystems.EventSystem eventSystem;
 
-	// Use this for initialization
-	void Start () {
+    private bool highlighted;
+
+    public bool Highlighted
+    {
+        get
+        {
+            return highlighted;
+        }
+
+        set
+        {
+            highlighted = value;
+        }
+    }
+
+
+    // Use this for initialization
+    void Start () {
         childRenderers = GetComponentsInChildren<Renderer>();
         eventSystem = GameObject.Find("EventSystem").GetComponent<UnityEngine.EventSystems.EventSystem>();
 	}
@@ -23,12 +39,24 @@ public class Highlighter : MonoBehaviour {
     private void OnMouseEnter()
     {
         Highlight();
+        highlighted = true;
         UnitTileHighlight();
+    }
+
+    private void OnMouseOver()
+    {
+        if (!highlighted)
+        {
+            Highlight();
+            highlighted = true;
+            UnitTileHighlight();
+        }
     }
 
     private void OnMouseExit()
     {
         RemoveHighlight();
+        highlighted = false;
         RemoveUnitTileHighlight();
     }
 
@@ -44,6 +72,7 @@ public class Highlighter : MonoBehaviour {
             }
         }
         //Send a message to other scripts on object to begin animation
+
         SendMessage("StartHighlightAnimation");
     }
     public void RemoveHighlight()
@@ -57,6 +86,7 @@ public class Highlighter : MonoBehaviour {
             }
         }
         //Send a message to other scripts on object to stop animation
+
         SendMessage("StopHighlightAnimation");
     }
 

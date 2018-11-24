@@ -57,10 +57,16 @@ public class Module : MonoBehaviour {
         return null;
     }
 
+    public virtual void DisplayAction(Action action)
+    {
+        return;
+    }
+
     public virtual Buff GetBuff()
     {
         return null;
     }
+
 }
 
 //used to name module

@@ -15,7 +15,9 @@ public class Unit : MonoBehaviour {
 
     [Header("Transform Properties")]
     [SerializeField] protected float moveSpeed = 75.0f;
+    [SerializeField] protected float heightOffset = 2f;
     [SerializeField] Tile currentTile;
+
 
     [Header("Unit Stats")]
     [Tooltip("Which player controls this unit")]
@@ -38,8 +40,8 @@ public class Unit : MonoBehaviour {
 
     [Header("Modules and Statuses")]
     [SerializeField] protected List<Module> modules = new List<Module>();
+    [SerializeField] protected List<Vector3> modulePositions = new List<Vector3>();
     [SerializeField] protected List<StatusEffects> statuses = new List<StatusEffects>();
-
 
 
     //Movement fields
@@ -70,9 +72,21 @@ public class Unit : MonoBehaviour {
         //Needs own function for supplying a small wait time
         //wait allows for components to be added before they are added to module list
         //StartCoroutine (GetChildren());
-        modules = new List<Module>(GetComponentsInChildren<Module>());
+        //modules = new List<Module>(GetComponentsInChildren<Module>());
         SetAttackCapabilityFlags();
+        InstantiateModules();
 
+    }
+
+    private void InstantiateModules()
+    {
+        int i = 0, j = 0;
+        while (i < modules.Count && j < modulePositions.Count)
+        {
+            GameObject module = Instantiate(modules[i++].gameObject, gameObject.transform, false) as GameObject;
+            module.transform.localPosition = modulePositions[j++];
+        }
+        modules = new List<Module>(GetComponentsInChildren<Module>());
 
     }
 
@@ -256,6 +270,14 @@ public class Unit : MonoBehaviour {
         get
         {
             return longRangeCapability;
+        }
+    }
+
+    public float HeightOffset
+    {
+        get
+        {
+            return heightOffset;
         }
     }
 
@@ -608,19 +630,43 @@ public class Unit : MonoBehaviour {
 
     public void UnitOutline(bool outlined)
     {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        foreach(var r in renderers)
+        Renderer renderer = GetComponentInChildren<UnitBody>().GetComponent<Renderer>();
+        if (outlined)
         {
-            if (outlined)
-            {
-                r.material.shader = this.outlineShader;
-            }
-            else
-            {
-                r.material.shader = this.standardShader;
-            }
+            renderer.material.shader = this.outlineShader;
+        }
+        else
+        {
+            renderer.material.shader = this.standardShader;
+        }
+        //Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        //foreach(var r in renderers)
+        //{
+        //    if (outlined)
+        //    {
+        //        r.material.shader = this.outlineShader;
+        //    }
+        //    else
+        //    {
+        //        r.material.shader = this.standardShader;
+        //    }
+        //}
+
+        return;
+    }
+
+    /******************************************** FX METHODS ***********************************************/
+    public void DisplayAction(Action action)
+    {
+
+        foreach (var m in modules)
+        {
+            //Offset for because units float above tiles
+            var parent = m.transform.parent;
+            m.DisplayAction(action);
         }
     }
+
     /******************************************** TEST FUNCTIONS ********************************************/
 
     //for testing getactions
