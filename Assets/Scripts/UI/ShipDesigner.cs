@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class ShipDesigner : MonoBehaviour {
     [SerializeField] public GameObject Fighter;
     [SerializeField] public GameObject Frigate;
+    [SerializeField] public Unit unitFigher;
+    [SerializeField] public Unit unitFrigate;
     [SerializeField] public GameObject ScrollList;
     [SerializeField] public GameObject ContinueOn;
     [SerializeField] public GameObject ClearModules;
@@ -14,7 +16,7 @@ public class ShipDesigner : MonoBehaviour {
     [SerializeField] public Dropdown dropDown;
     [SerializeField] public int dropDownValue;
     public UnitData unitData;
-
+    public GameObject activeUnit;
     [SerializeField] protected List<ModuleType> modules = new List<ModuleType>();
     [SerializeField] protected UnitType type;
 
@@ -23,54 +25,60 @@ public class ShipDesigner : MonoBehaviour {
     {
         ContinueOn.gameObject.SetActive(false);
 
-        if (GameObject.Find("FighterShipBuilder") == null)
+        if (GameObject.Find("Fighter2HPPlayer0") == null)
         {
             Frigate.gameObject.SetActive(false);
             Fighter.gameObject.SetActive(true);
+            activeUnit = Fighter;
             ClearModules.gameObject.SetActive(true);
             type = UnitType.fighter;
             ScrollList.gameObject.SetActive(true);
             modules = new List<ModuleType>();
             ModuleInfo.text = "Modules Chosen:\n";
             moduleCount();
-            
+            AddModulesToActiveUnit();
         }
         else
         {
+            clearModules();
             Fighter.gameObject.SetActive(false);
             ScrollList.gameObject.SetActive(false);
             ClearModules.gameObject.SetActive(false);
             type = UnitType.none;
             clearText();
+            activeUnit = null;
         }
-
     }
-
+ 
 
     //Displaying the model of the frigate or hiding it 
     public void ShowFrigate()
     {
         ContinueOn.gameObject.SetActive(false);
 
-        if (GameObject.Find("FrigateShipBuilder") == null)
+        if (GameObject.Find("Frigate3HPBase") == null)
         {
             Fighter.gameObject.SetActive(false);
             Frigate.gameObject.SetActive(true);
+            activeUnit = Frigate;
             ClearModules.gameObject.SetActive(true);
             type = UnitType.frigate;
             ScrollList.gameObject.SetActive(true);
             modules = new List<ModuleType>();
             ModuleInfo.text = "Modules Chosen:\n";
             moduleCount();
+            AddModulesToActiveUnit();
         }
 
         else
         {
+            clearModules();
             Frigate.gameObject.SetActive(false);
             ScrollList.gameObject.SetActive(false);
             ClearModules.gameObject.SetActive(false);
             type = UnitType.none;
             clearText();
+            activeUnit = null;
         }
     }
 
@@ -97,7 +105,7 @@ public class ShipDesigner : MonoBehaviour {
     public void moduleCount()
     {
         int hardPoints;
-        if(type == UnitType.fighter)
+        if (type == UnitType.fighter)
         {
             hardPoints = 2;
         }
@@ -106,6 +114,7 @@ public class ShipDesigner : MonoBehaviour {
             hardPoints = 3;
         }
         ModuleCount.text = modules.Count + "/" + hardPoints;
+        AddModulesToActiveUnit();
     }
 
     //equip close range module
@@ -170,12 +179,12 @@ public class ShipDesigner : MonoBehaviour {
     public void continueOn()
     {
         DropDownUpdate();
-        if(type == UnitType.fighter)
+        if (type == UnitType.fighter)
         {
             string name = "Unit" + dropDownValue;
             unitData = new UnitData(name, UnitType.fighter, modules[0], modules[1]);
             unitSave.save(unitData);
-            Debug.Log(unitSave.load(0).unitName + " " + unitSave.load(0).type);
+            Debug.Log(unitSave.load(dropDownValue - 1).unitName + " " + unitSave.load(dropDownValue - 1).type);
         }
         else if (type == UnitType.frigate)
         {
@@ -185,7 +194,7 @@ public class ShipDesigner : MonoBehaviour {
             Debug.Log(unitSave.load(dropDownValue - 1).unitName + " " + unitSave.load(dropDownValue - 1).type);
         }
     }
-    
+
     //clear module list and empty the module display text
     public void clearModules()
     {
@@ -203,7 +212,7 @@ public class ShipDesigner : MonoBehaviour {
 
     // Use this for initialization
     // add a listener to call function when dropdown is changed
-    void Start () {
+    void Start() {
         type = UnitType.none;
         clearText();
         dropDown.onValueChanged.AddListener(delegate {
@@ -211,12 +220,14 @@ public class ShipDesigner : MonoBehaviour {
         });
         DropdownValueChanged(dropDown);
     }
-	
-    
-	// Update is called once per frame
-	void Update () {
-        
-        
+
+
+    // Update is called once per frame
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            AddModulesToActiveUnit();
+        }
     }
 
     //this is called to update current unit on display
@@ -229,6 +240,7 @@ public class ShipDesigner : MonoBehaviour {
         {
             Fighter.gameObject.SetActive(true);
             Frigate.gameObject.SetActive(false);
+            activeUnit = Fighter;
             ClearModules.gameObject.SetActive(true);
             type = UnitType.fighter;
             ScrollList.gameObject.SetActive(true);
@@ -241,6 +253,7 @@ public class ShipDesigner : MonoBehaviour {
         {
             Fighter.gameObject.SetActive(false);
             Frigate.gameObject.SetActive(true);
+            activeUnit = Frigate;
             ClearModules.gameObject.SetActive(true);
             type = UnitType.frigate;
             ScrollList.gameObject.SetActive(true);
@@ -255,6 +268,14 @@ public class ShipDesigner : MonoBehaviour {
         {
 
         }
+        StartCoroutine(DelayMod());
+    }
+
+        
+    IEnumerator DelayMod()
+    {
+        yield return new WaitForSeconds(.01f);
+        AddModulesToActiveUnit();
     }
 
     //This will add module to list
@@ -276,5 +297,46 @@ public class ShipDesigner : MonoBehaviour {
         {
             addSlow();
         }
+    }
+
+    private void AddModulesToActiveUnit()
+    {
+        List<Module> Mods = new List<Module>(activeUnit.GetComponentsInChildren<Module>());
+        foreach(Module mod in Mods)
+        {
+            Destroy(mod.gameObject);
+        }
+
+        StartCoroutine(DelayMod2());
+    }
+    IEnumerator DelayMod2()
+    {
+        yield return new WaitForSeconds(.01f);
+
+        if (activeUnit != null)
+        {
+            foreach (ModuleType t in modules)
+            {
+                if (t == ModuleType.shortRange)
+                {
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/ShortRangeModule/ShortAttackModule"), activeUnit.transform) as GameObject;
+                }
+                else if (t == ModuleType.longRange)
+                {
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/LongRangeModule/LongAttackModule"), activeUnit.transform) as GameObject;
+                }
+                else if (t == ModuleType.heal)
+                {
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/HealModule/HealModule"), activeUnit.transform) as GameObject;
+                }
+                else if (t == ModuleType.slow)
+                {
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/SlowModule/SlowModule"), activeUnit.transform) as GameObject;
+                }
+            }
+            Unit unit = activeUnit.GetComponentInChildren<Unit>();
+            unit.customUnit();
+        }
+        
     }
 }
