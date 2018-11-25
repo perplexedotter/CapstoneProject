@@ -203,10 +203,11 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 114994601414536830, guid: cf2c779f0085d83469372dcbc4e47718, type: 2}
+  - {fileID: 114994601414536830, guid: cf2c779f0085d83469372dcbc4e47718, type: 2}
+  - {fileID: 114994601414536830, guid: cf2c779f0085d83469372dcbc4e47718, type: 2}
   modulePositions:
   - {x: 0.7, y: 3, z: 0.5}
   - {x: -0.7, y: 3, z: 0.5}
   - {x: 0, y: 2.5, z: 2.75}
+  path: []

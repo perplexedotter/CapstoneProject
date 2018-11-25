@@ -184,24 +184,23 @@ public class Tile : MonoBehaviour {
 
     private void OnMouseEnter()
     {
+        GameObject BMObject = GameObject.Find("BattleManager");
+        BattleManager BM = BMObject.GetComponent<BattleManager>();
         if (UnitOnTile != null)
         {
-            GameObject BMObject = GameObject.Find("BattleManager");
-            BattleManager BM = BMObject.GetComponent<BattleManager>();
             BM.HoveredUI(unitOnTile);
-
+        }
+        else
+        {
+            BM.removeHover();
         }
     }
     private void OnMouseExit()
     {
-        
-        if (UnitOnTile != null)
-        {
-            GameObject BMObject = GameObject.Find("BattleManager");
-            BattleManager BM = BMObject.GetComponent<BattleManager>();
-            BM.HoveredUI(unitOnTile);
 
-        }
+        GameObject BMObject = GameObject.Find("BattleManager");
+        BattleManager BM = BMObject.GetComponent<BattleManager>();
+        BM.removeHover();
     }
 
 }
