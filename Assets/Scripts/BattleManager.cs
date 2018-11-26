@@ -412,6 +412,7 @@ public class BattleManager : MonoBehaviour {
 
     IEnumerator ProcessAction(Action action, Tile target)
     {
+        inputPaused = true; // Stop input while action is being processed
         Unit unit = target.UnitOnTile;
         if(ResolveAction(action, target))
         {
@@ -427,6 +428,7 @@ public class BattleManager : MonoBehaviour {
                 DestroyUnit(unit);
             }
         }
+        inputPaused = false; // resume input 
         ResetToBattleMenu();
     }
 
@@ -862,14 +864,14 @@ public class BattleManager : MonoBehaviour {
 
     }
 
-    //TODO Make this actually work (Add OnMouseOver to Unit that sends this message)
-    public void UnitClicked(Unit unit)
-    {
-        TileClicked(unit.CurrentTile);
-    }
+    ////TODO Make this actually work (Add OnMouseOver to Unit that sends this message)
+    //public void UnitClicked(Unit unit)
+    //{
+    //    TileClicked(unit.CurrentTile);
+    //}
 
 /**************************************** TEST FUNCTIONS *********************************/
-    public void removeHover()
+    public void RemoveHover()
     {
         highlightedUnit.SetActive(false);
     }

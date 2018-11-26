@@ -200,7 +200,7 @@ public class Tile : MonoBehaviour {
         }
         else
         {
-            BM.removeHover();
+            BM.RemoveHover();
         }
     }
     private void OnMouseExit()
@@ -208,7 +208,7 @@ public class Tile : MonoBehaviour {
 
         GameObject BMObject = GameObject.Find("BattleManager");
         BattleManager BM = BMObject.GetComponent<BattleManager>();
-        BM.removeHover();
+        BM.RemoveHover();
     }
 
 }
