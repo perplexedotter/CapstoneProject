@@ -17,7 +17,7 @@
      void Update()
      {
 		Scene scene = SceneManager.GetActiveScene();
-        Debug.Log("Active scene is '" + scene.name + "'.");
+        //Debug.Log("Active scene is '" + scene.name + "'.");
         if (scene.name == "map1")
         {
             Destroy(this.gameObject);

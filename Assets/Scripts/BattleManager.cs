@@ -963,6 +963,10 @@ public class BattleManager : MonoBehaviour {
     }
 
 /**************************************** TEST FUNCTIONS *********************************/
+    public void removeHover()
+    {
+        highlightedUnit.SetActive(false);
+    }
 
     //show hovered Unit UI
     public void HoveredUI(Unit unit)
@@ -1017,7 +1021,10 @@ public class BattleManager : MonoBehaviour {
                     highlightedFrigateEnemy.gameObject.SetActive(true);
                 }
             }
-
+            if(unit.BossUnit == true)
+            {
+                highlightedUnitText.text = "BOSS";
+            }
             List<Action> actionsList = unit.GetActions();
 
             List<ModuleType> modList = unit.GetModuleTypes();
@@ -1117,6 +1124,10 @@ public class BattleManager : MonoBehaviour {
             }
         }
 
+        if (activeUnit.BossUnit == true)
+        {
+            currentUnitText.text = "BOSS";
+        }
         List<Action> actionsList = activeUnit.GetActions();
 
         //Add list of unit's mods to UI

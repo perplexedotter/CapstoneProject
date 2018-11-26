@@ -371,6 +371,7 @@ MonoBehaviour:
   ActionType: 1
   Range: 4
   Power: 40
+  effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!114 &114375216593798022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -390,6 +391,7 @@ MonoBehaviour:
   ActionType: 1
   Range: 4
   Power: 40
+  effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!114 &114547504113839888
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -405,11 +407,12 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: f243fa5c20945b34194f8e25d92867e4, type: 3}
   standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   moveSpeed: 75
+  heightOffset: 2
   currentTile: {fileID: 0}
-  playerNumber: 0
+  playerNumber: 1
   aIUnit: 1
   bossUnit: 0
-  type: 0
+  type: 1
   hitPoints: 100
   damageTaken: 0
   damageDealt: 0
@@ -423,6 +426,8 @@ MonoBehaviour:
   movementRange: 0
   destroy: 0
   modules: []
+  modulePositions: []
+  path: []
 --- !u!114 &114674060948224432
 MonoBehaviour:
   m_ObjectHideFlags: 1
