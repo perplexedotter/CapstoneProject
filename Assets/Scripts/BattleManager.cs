@@ -145,7 +145,6 @@ public class BattleManager : MonoBehaviour {
     }
     void Start() {
         
-        //AddUnitsFromMap();
         ToggleGameOverMenu(false);
         //TODO Only search children
         units = new List<Unit>(FindObjectsOfType<Unit>());
@@ -155,7 +154,7 @@ public class BattleManager : MonoBehaviour {
         roundTurnOrder = new List<Unit>(units);
         NextRound();
         activeUnit = roundTurnOrder[turnIndex];
-        //activeUnit.UnitOutline(true);
+        activeUnit.UnitOutline(true);
         statusBarMods = StringifyModList(activeUnit);
         activeUnitPosActions = activeUnit.GetActions();
         ResetToBattleMenu();
@@ -207,7 +206,7 @@ public class BattleManager : MonoBehaviour {
         roundNumber++;
         if (roundNumber%5==0 && victoryType == VictoryType.waveSurvival)
         {
-            generateWave();
+            GenerateWave();
         }
         UpdateTurnOrder(turnIndex); //Update the turn order for all units
         DisplayTurnOrder();
@@ -291,7 +290,7 @@ public class BattleManager : MonoBehaviour {
             turnIndex++;
         else
             NextRound();
-        //activeUnit.UnitOutline(false);
+        activeUnit.UnitOutline(false);
         //Get rid of the old active Units highlight
         //Highlighter h = activeUnit.CurrentTile.GetComponent<Highlighter>();
         //if (h && h.Highlighted)
@@ -299,7 +298,7 @@ public class BattleManager : MonoBehaviour {
         //    h.RemoveHighlight();
         //}
         activeUnit = roundTurnOrder[turnIndex];
-        //activeUnit.UnitOutline(true);
+        activeUnit.UnitOutline(true);
         activeUnitPosActions = activeUnit.GetActions();
 
     }
@@ -1209,7 +1208,7 @@ public class BattleManager : MonoBehaviour {
         ToggleGameOverMenu(true);
     }
     //IN PROGRESS
-    private void generateWave() {
+    private void GenerateWave() {
         Unit waveUnit;
         GameObject spawnObject = healAIObj;
         int spawnIndex = UnityEngine.Random.Range(0,3);

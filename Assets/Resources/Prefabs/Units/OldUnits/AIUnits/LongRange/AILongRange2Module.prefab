@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 33614352591219350}
   - component: {fileID: 23405272291352036}
   - component: {fileID: 64818573120797980}
+  - component: {fileID: 114758344531395326}
   m_Layer: 0
   m_Name: Frigate2HPRed
   m_TagString: Untagged
@@ -449,5 +450,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62bd458edf2bb5048bf6cdac24679d95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114758344531395326
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1571213810726960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7d33b1c0c4c5c2488ea7b079e9df673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
