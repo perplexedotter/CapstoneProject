@@ -216,7 +216,7 @@ public class BattleManager : MonoBehaviour {
         turnIndex = 0;
         unitTeleported = false;
         roundNumber++;
-        if (roundNumber%5==0)
+        if (roundNumber%5==0 && victoryType == VictoryType.waveSurvival)
         {
             generateWave();
         }
