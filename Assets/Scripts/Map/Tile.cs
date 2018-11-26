@@ -76,6 +76,14 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public bool ShipBuilderTile
+    {
+        get
+        {
+            return shipBuilderTile;
+        }
+    }
+
     private void Awake()
     {
         gridPos = GetGridPos();
@@ -115,7 +123,7 @@ public class Tile : MonoBehaviour {
 
     //TODO Convert to SendMessageUpwards
     void OnMouseDown(){
-        if (!shipBuilderTile)
+        if (!ShipBuilderTile)
         {
             Debug.Log("clicked");
             BattleManager.instance.TileClicked(this);

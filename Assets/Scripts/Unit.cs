@@ -119,6 +119,15 @@ public class Unit : MonoBehaviour {
         ProcessMovement();
     }
 
+    //Link mouse clicks to current tile
+    void OnMouseDown()
+    {
+        if (currentTile != null && !currentTile.ShipBuilderTile)
+        {
+            Debug.Log("clicked");
+            BattleManager.instance.TileClicked(currentTile);
+        }
+    }
 
     /*********************************************** SETUP FUNCTIONS **********************************/
 
@@ -151,8 +160,8 @@ public class Unit : MonoBehaviour {
     //        }
     //    }
     //}
-    
-     //Get list of modules and update their location
+
+    //Get list of modules and update their location
     public void customUnit()
     {
         modules.Clear();
