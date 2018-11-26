@@ -362,33 +362,7 @@ public class BattleManager : MonoBehaviour {
                 }
                 ToggleBattleMenu(false);
                 ToggleActionMenu(false);
-                //do actions based on selection
-                //switch (actionChosen)
-                //{
-                //    case ActionChosen.longRange:
-                //        UpdateCurrentPossibleLongAttack();
-                //        ShowCurrentPossibleLongRange();
-                //        break;
-                //    case ActionChosen.shortRange:
-                //        UpdateCurrentPossibleShortAttack();
-                //        ShowCurrentPossibleShortRange();
-                //        break;
-                //    case ActionChosen.heal:
-                //        UpdateCurrentPossibleShortAttack();
-                //        ShowCurrentPossibleHealRange();
-                //        break;
-                //    case ActionChosen.slow:
-                //        UpdateCurrentPossibleLongAttack();
-                //        ShowCurrentPossibleSlowRange();
-                //        break;
-                //    default:
-                //        Debug.Log("Entered action state with no action chosen");
-                //        ResetToBattleMenu();
-                //        break;
-
-                //}
                 ShowActionRange(unitAction);
-                //do action stuff
             }
 
         }
