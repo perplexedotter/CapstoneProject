@@ -142,17 +142,6 @@ public class BattleManager : MonoBehaviour {
         bossDead = false;
         this.gameObject.SetActive(false);
 
-
-        //this is how to add modules to units via children
-        //just know that the units use void awake for building module list -- which means these will get added after they have called awake
-        //the units have a small wait time to call functions in awake, which provides enough time to add components
-        /*
-        GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/MeleeModule"), GameObject.Find("Unit").transform) as GameObject;
-        GameObject mod2 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/RangeAttackModule"), GameObject.Find("Unit").transform) as GameObject;
-        GameObject mod3 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/HealModule"), GameObject.Find("Unit").transform) as GameObject;
-        GameObject mod4 = GameObject.Instantiate(Resources.Load("Prefabs/Modules/SlowModule"), GameObject.Find("Unit").transform) as GameObject;
-        */
-
     }
     void Start() {
         
@@ -220,8 +209,6 @@ public class BattleManager : MonoBehaviour {
         {
             generateWave();
         }
-        //unitSlowed = false;
-        //roundTurnOrder = new List<Unit>(roundTurnOrder); //TODO Maybe make this the previous turnOrder as seed
         UpdateTurnOrder(turnIndex); //Update the turn order for all units
         DisplayTurnOrder();
     }
@@ -299,16 +286,6 @@ public class BattleManager : MonoBehaviour {
 
     private void UpdateActiveUnit()
     {
-        //TODO Move this elsewhere so units are imediatly destroyed when its their turn
-        //destroys active unit if destoyed bool = true 
-        //if (activeUnit.Destroyed)
-        //{
-        //    roundTurnOrder.RemoveAt(turnIndex);
-        //    units.Remove(activeUnit);
-        //    Explode(activeUnit.transform.position);
-        //    Destroy(activeUnit.gameObject);
-        //    turnIndex -= 1;
-        //}
 
         if (turnIndex + 1 < roundTurnOrder.Count)
             turnIndex++;
@@ -583,51 +560,6 @@ public class BattleManager : MonoBehaviour {
             }
         }
     }
-
-    ////takes the current tile clicked after action and resolves sadi action on unit on tile
-    //private bool ResolveAction(Tile tile) 
-    //{
-    //    switch (actionChosen)
-    //    {
-    //        case ActionChosen.longRange:
-    //            if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
-    //            {
-    //                Debug.Log("Long Attack Hits" + tile.UnitOnTile.name);
-    //                tile.UnitOnTile.DamageUnit(50);
-    //                return true;
-    //            }
-    //            break;
-    //        case ActionChosen.shortRange:
-    //            if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
-    //            {
-    //                Debug.Log("Short Attack Hits" + tile.UnitOnTile.name);
-    //                tile.UnitOnTile.DamageUnit(100);
-    //                return true;
-    //            }
-    //            break;
-    //        case ActionChosen.heal:
-    //            if(activeUnitPosShort.Contains(tile) && tile.UnitOnTile && !tile.UnitOnTile.AIUnit)
-    //            {
-    //                Debug.Log("Heal Attack Hits" + tile.UnitOnTile.name);
-    //                tile.UnitOnTile.DamageUnit(-100);
-    //                return true;
-    //            }
-    //            break;
-    //        case ActionChosen.slow:
-    //            if(activeUnitPosLong.Contains(tile) && tile.UnitOnTile && tile.UnitOnTile.AIUnit)
-    //            {
-    //                Debug.Log("Slow Attack Hits" + tile.UnitOnTile.name);
-    //                tile.UnitOnTile.AddStatus(new StatusEffects(5, 100, statusType.mass));
-    //                return true;
-    //            }
-    //            break;
-    //        default:
-    //            Debug.Log("Entered action state with no action chosen");
-    //            ResetToBattleMenu();
-    //            break;
-    //    }
-    //    return false;
-    //}
 
     private bool ResolveAction(Action action, Tile tile)
     {
@@ -1183,77 +1115,7 @@ public class BattleManager : MonoBehaviour {
     {
         activeUnit.DefineUnit(UnitType.fighter);
     }
-    //add short range module to active unit
-    //public void AddShortRangeModule()
-    //{
-    //    activeUnit.AddModule(new MeleeAttackModule());
-    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-    //    map.ResetTileColors();
-    //    UpdateCurrentPossibleMoves();
-    //    ShowCurrentPossibleMoves();
-    //}
 
-    ////add long range module to active unit
-    //public void AddLongRangeModule()
-    //{
-    //    activeUnit.AddModule(new RangeAttackModule());
-    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-    //    map.ResetTileColors();
-    //    UpdateCurrentPossibleMoves();
-    //    ShowCurrentPossibleMoves();
-    //}
-    ////add Healing module to active unit
-    //public void AddHealModule()
-    //{
-    //    activeUnit.AddModule(new HealModule());
-    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-    //    map.ResetTileColors();
-    //    UpdateCurrentPossibleMoves();
-    //    ShowCurrentPossibleMoves();
-    //}
-
-    ////add Slowing module to active unit
-    //public void AddSlowModule()
-    //{
-    //    activeUnit.AddModule(new SlowModule());
-    //    Debug.Log("HP:" + activeUnit.GetHP() + "  Mass:" + activeUnit.GetMass());
-    //    map.ResetTileColors();
-    //    UpdateCurrentPossibleMoves();
-    //    ShowCurrentPossibleMoves();
-    //}
-    //remove short ranged module from active unit
-    public void RemoveShortRangeModule()
-    {
-        activeUnit.RemoveModule(ModuleType.shortRange);
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-
-    //remove short ranged module from active unit
-    public void RemoveLongRangeModule()
-    {
-        activeUnit.RemoveModule(ModuleType.longRange);
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-    //remove short ranged module from active unit
-    public void RemoveHealModule()
-    {
-        activeUnit.RemoveModule(ModuleType.heal);
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-    //remove short ranged module from active unit
-    public void RemoveSlowModule()
-    {
-        activeUnit.RemoveModule(ModuleType.slow);
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
     //remove all modules from active unit
     public void RemoveAllModules()
     {
@@ -1330,24 +1192,6 @@ public class BattleManager : MonoBehaviour {
     //triggered when a unit lands on a wormhole tile. Thi swill teleport the user to the empty wormhole
     private void ActivateWormholeEvent(Tile wormhole){
         Debug.Log("Wormhole event activated!");
-        //if(wormholeTileList[0].UnitOnTile && wormholeTileList[1].UnitOnTile) {
-        //    Debug.Log("Wormhole is blocked by another ship!");
-        //    //TODO - alert in ui about this
-        //    return;
-        //}
-        //Debug.Log("wormhole 0 " + (wormholeTileList[0].UnitOnTile));
-        //Debug.Log("wormhole 1 " + (wormholeTileList[1].UnitOnTile));
-
-        //if(wormholeTileList[0].UnitOnTile) {
-        //    Debug.Log("Wormhole 0 to 1");
-        //    wormholeTileList[0].UnitOnTile.PlaceOnTile(wormholeTileList[1]);
-        //    unitTeleported = true;
-
-        //} else {
-        //    Debug.Log("Wormhole 1 to 0!");
-        //    wormholeTileList[1].UnitOnTile.PlaceOnTile(wormholeTileList[0]);
-        //    unitTeleported = true;
-        //}
         if(wormhole.WormholeDestination == null || wormhole.UnitOnTile == null)
         {
             Debug.Log("Error no destination or unit to transport");
@@ -1430,46 +1274,5 @@ public class BattleManager : MonoBehaviour {
         waveUnit = go.GetComponent<Unit>();
         roundTurnOrder.Add(waveUnit);
     }
-    ////this will create the units on the map for this level
-    //void GenerateUnits(){
-    //	Unit unit;
-    //       //Unit 0
-    //       GameObject obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
-    //       obj.transform.parent = transform;
-    //       unit = obj.GetComponent<Unit>();
-    //       unit.PlayerNumber = 0;
-
-
-    //       //makes the unit a fighter
-    //       unit.DefineUnit(UnitType.fighter);
-
-    //       unit.PlaceOnTile(map.GetTileByCoord(5, 1));
-    //       units.Add(unit);
-
-    //       //Unit 1
-    //       obj = Instantiate(PlayerUnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
-    //       obj.transform.parent = transform;
-    //       unit = obj.GetComponent<Unit>();
-    //       unit.PlayerNumber = 0;
-
-    //       //makes the unit a fighter
-    //       unit.DefineUnit(UnitType.fighter);
-
-    //       unit.PlaceOnTile(map.GetTileByCoord(2, 2));
-    //       units.Add(unit);
-
-    //       //Unit 2
-    //       obj = Instantiate(Player2UnitPreFab, new Vector3(-100, -100, -100), Quaternion.Euler(new Vector3()));
-    //       obj.transform.parent = transform;
-    //       unit = obj.GetComponent<Unit>();
-
-    //       //makes the unit a fighter
-    //       unit.DefineUnit(UnitType.fighter);
-    //       unit.PlayerNumber = 1;
-
-    //       unit.PlaceOnTile(map.GetTileByCoord(1, 1));
-    //       units.Add(unit);
-    //       NextTurn();
-    //   }
 
 }
