@@ -1131,16 +1131,6 @@ public class BattleManager : MonoBehaviour {
         Debug.Log(activeUnit.GetThreat());
     }
 
-    //Example of how to add status effect 
-    public void AddStatusEffect()
-    {
-        //for testing
-        activeUnit.AddStatus(new StatusEffects(5, 100, statusType.mass));
-        map.ResetTileColors();
-        UpdateCurrentPossibleMoves();
-        ShowCurrentPossibleMoves();
-    }
-
     //for testing getAction of activeUnit
     public void GetActions()
     {
@@ -1150,14 +1140,6 @@ public class BattleManager : MonoBehaviour {
         actButton4.SetActive(false);
         List<Action> action = activeUnit.GetActions();
         makeAction.MakeActionList(action);
-    }
-
-    //for testing taking damage
-    public void TakeDamage()
-    {
-        Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
-        activeUnit.DamageUnit(50);
-        Debug.Log(activeUnit.GetHP() - activeUnit.GetDamage());
     }
 
     public void ActivateAction(int i)
