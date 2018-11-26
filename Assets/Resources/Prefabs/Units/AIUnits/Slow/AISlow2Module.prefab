@@ -369,7 +369,7 @@ MonoBehaviour:
   moveSpeed: 75
   heightOffset: 2
   currentTile: {fileID: 0}
-  playerNumber: 0
+  playerNumber: 1
   aIUnit: 1
   bossUnit: 0
   type: 1
