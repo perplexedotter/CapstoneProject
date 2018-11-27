@@ -122,7 +122,6 @@ public class shipBuilderInGame : MonoBehaviour
     //start game with default setup
     public void runDefault()
     {
-        print("Default Map is Running");
         battleMenu.SetActive(true);
         BM.gameObject.SetActive(true);
         defaultButton.SetActive(false);
@@ -146,7 +145,7 @@ public class shipBuilderInGame : MonoBehaviour
         }
         else
         {
-            type = "Frigate3HP/Frigate3HPBase";
+            type = "Frigate3HP/Frigate3HPPlayer0";
         }
     }
 
@@ -188,19 +187,19 @@ public class shipBuilderInGame : MonoBehaviour
             BM.gameObject.SetActive(true);
             if (t == ModuleType.shortRange)
             {
-                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/ShortRangeModule/ShortAttackModule"), unit.transform) as GameObject;
+                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ShortRangeModule/ShortAttackModule"), unit.transform) as GameObject;
             }
             else if (t == ModuleType.longRange)
             {
-                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/LongRangeModule/LongAttackModule"), unit.transform) as GameObject;
+                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/LongRangeModule/LongAttackModule"), unit.transform) as GameObject;
             }
             else if (t == ModuleType.heal)
             {
-                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/HealModule/HealModule"), unit.transform) as GameObject;
+                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/HealModule/HealModule"), unit.transform) as GameObject;
             }
             else if (t == ModuleType.slow)
             {
-                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/SlowModule/SlowModule"), unit.transform) as GameObject;
+                GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/SlowModule/SlowModule"), unit.transform) as GameObject;
             }
             BM.gameObject.SetActive(false);
             customMap.gameObject.SetActive(true);

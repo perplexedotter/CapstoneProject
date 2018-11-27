@@ -631,7 +631,7 @@ public class BattleManager : MonoBehaviour {
     {
         unitMoved = true;
         //if unit is on wormhole
-        Debug.Log("wormholeTileList list:" + wormholeTileList.ToString());
+        //Debug.Log("wormholeTileList list:" + wormholeTileList.ToString());
         if(activeUnit.CurrentTile.Type == Tile.TileType.wormhole && !unitTeleported)
         {
             ActivateWormholeEvent(activeUnit.CurrentTile);
