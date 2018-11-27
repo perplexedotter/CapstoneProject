@@ -846,7 +846,6 @@ public class BattleManager : MonoBehaviour {
                 && !activeUnit.IsMoving && tile != activeUnit.CurrentTile
                 && tile.UnitOnTile == null && !activeUnit.AIUnit && movingState)
             {
-                Debug.Log("Test2" + tile);
                 MoveActiveUnitToTile(tile);
             }
             //logic for actions taken
