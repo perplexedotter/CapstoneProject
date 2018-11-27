@@ -527,6 +527,4 @@ public class AIController : MonoBehaviour {
         //Return the actual tiles
         return safestUsefulPositions.Select(o=>o.Tile).ToList();
     }
-
-
 }

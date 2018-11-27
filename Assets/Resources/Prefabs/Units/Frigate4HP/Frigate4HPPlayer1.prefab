@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33216364187846844}
   - component: {fileID: 23915516592297990}
   - component: {fileID: 64816479784437250}
+  - component: {fileID: 114484248860251814}
   m_Layer: 0
   m_Name: Frigate4HPRed
   m_TagString: Untagged
@@ -84,7 +85,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1401868657707620}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 0, z: 110}
+  m_LocalPosition: {x: 0, y: 0, z: 40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4018371763745860}
@@ -175,6 +176,17 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: f2ab8757cd6b3d4449f653992c0cad2c, type: 3}
+--- !u!114 &114484248860251814
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1058684498818872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7d33b1c0c4c5c2488ea7b079e9df673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114487176823406334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,6 +230,7 @@ MonoBehaviour:
   - {x: -0.7, y: 3, z: 0.5}
   - {x: 1.3, y: 2.55, z: 3}
   - {x: -1.3, y: 2.55, z: 3}
+  path: []
 --- !u!114 &114948850472194750
 MonoBehaviour:
   m_ObjectHideFlags: 1

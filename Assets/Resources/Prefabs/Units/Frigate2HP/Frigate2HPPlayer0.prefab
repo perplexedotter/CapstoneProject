@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33310189758407210}
   - component: {fileID: 23010072170567362}
   - component: {fileID: 64210085067327312}
+  - component: {fileID: 114883251885713932}
   m_Layer: 0
   m_Name: Frigate2HP
   m_TagString: Untagged
@@ -169,6 +170,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62bd458edf2bb5048bf6cdac24679d95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114883251885713932
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1165564237631944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7d33b1c0c4c5c2488ea7b079e9df673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114936263716463992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -208,3 +220,4 @@ MonoBehaviour:
   modulePositions:
   - {x: -1.1, y: 3.2, z: 0}
   - {x: 0, y: 2.55, z: 2.56}
+  path: []

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Module : MonoBehaviour {
-    public int HitPoints { get; protected set; }
+    //public int HitPoints { get; protected set; }
     //public int Mass { get; protected set; }
     //public Target ModuleTarget { get; protected set; }
     //public ModuleType ModuleType { get; set; }
