@@ -186,6 +186,7 @@ MonoBehaviour:
   modulePositions:
   - {x: -1.1, y: 3.2, z: 0}
   - {x: 0, y: 2.55, z: 2.56}
+  path: []
 --- !u!114 &114526024467692826
 MonoBehaviour:
   m_ObjectHideFlags: 1

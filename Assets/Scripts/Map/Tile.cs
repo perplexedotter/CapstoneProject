@@ -76,6 +76,14 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    public bool ShipBuilderTile
+    {
+        get
+        {
+            return shipBuilderTile;
+        }
+    }
+
     private void Awake()
     {
         gridPos = GetGridPos();
@@ -115,7 +123,7 @@ public class Tile : MonoBehaviour {
 
     //TODO Convert to SendMessageUpwards
     void OnMouseDown(){
-        if (!shipBuilderTile)
+        if (!ShipBuilderTile)
         {
             Debug.Log("clicked");
             BattleManager.instance.TileClicked(this);
@@ -192,7 +200,7 @@ public class Tile : MonoBehaviour {
         }
         else
         {
-            BM.removeHover();
+            BM.RemoveHover();
         }
     }
     private void OnMouseExit()
@@ -200,7 +208,7 @@ public class Tile : MonoBehaviour {
 
         GameObject BMObject = GameObject.Find("BattleManager");
         BattleManager BM = BMObject.GetComponent<BattleManager>();
-        BM.removeHover();
+        BM.RemoveHover();
     }
 
 }

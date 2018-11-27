@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33330243347426454}
   - component: {fileID: 23771179249665138}
   - component: {fileID: 64110567049754892}
+  - component: {fileID: 114519006476430992}
   m_Layer: 0
   m_Name: Frigate3HPRed
   m_TagString: Untagged
@@ -169,6 +170,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &114519006476430992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1742370689861572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7d33b1c0c4c5c2488ea7b079e9df673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114805559816266068
 MonoBehaviour:
   m_ObjectHideFlags: 1

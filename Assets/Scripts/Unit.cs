@@ -119,40 +119,19 @@ public class Unit : MonoBehaviour {
         ProcessMovement();
     }
 
+    //Link mouse clicks to current tile
+    void OnMouseDown()
+    {
+        if (currentTile != null && !currentTile.ShipBuilderTile)
+        {
+            Debug.Log("clicked");
+            BattleManager.instance.TileClicked(currentTile);
+        }
+    }
 
     /*********************************************** SETUP FUNCTIONS **********************************/
 
-    //IEnumerator GetChildren()
-    //{
-    //    yield return new WaitForSeconds(.5f);
-    //    Transform[] childModules = GetComponentsInChildren<Transform>();
-    //    foreach (Transform child in childModules)
-    //    {
-    //        if (child.tag == "Melee")
-    //        {
-    //            MeleeAttackModule melee = child.GetComponent<MeleeAttackModule>();
-    //            modules.Add(melee);
-    //        }
-    //        else if (child.tag == "Range")
-    //        {
-    //            RangeAttackModule range = child.GetComponent<RangeAttackModule>();
-    //            modules.Add(range);
-    //        }
-    //        else if (child.tag == "Heal")
-    //        {
-    //            Debug.Log("k");
-    //            HealModule heal = child.GetComponent<HealModule>();
-    //            modules.Add(heal);
-    //        }
-    //        else if (child.tag == "Slow")
-    //        {
-    //            SlowModule slow = child.GetComponent<SlowModule>();
-    //            modules.Add(slow);
-    //        }
-    //    }
-    //}
-    
-     //Get list of modules and update their location
+    //Get list of modules and update their location
     public void customUnit()
     {
         modules.Clear();
@@ -338,35 +317,6 @@ public class Unit : MonoBehaviour {
         return tempThreat;
     }
 
-    //returns list of actions
-    //will combine actions into more powerful one
-    //public List<Action> GetActions()
-    //{
-    //    List<Action> actions = new List<Action>();
-    //    List<Action> actionsSorted = new List<Action>();
-
-    //    for (int i = 0; i < modules.Count; i++)
-    //    {
-    //        actions.Add(modules[i].Action);
-    //    }
-
-    //    actionsSorted = actions.OrderBy(o => o.Type).ToList();
-    //    for (int i = 0; i < actionsSorted.Count; i++)
-    //    {
-    //        if (i != actionsSorted.Count - 1)
-    //        {
-    //            if (actionsSorted[i].Type == actionsSorted[i + 1].Type)
-    //            {
-    //                actionsSorted[i + 1] = actionsSorted[i].Combine(actionsSorted[i + 1]);
-    //                actionsSorted.RemoveAt(i);
-    //                i -= 1;
-    //            }
-    //        }
-    //    }
-    //    //DebugActions(actionsSorted);
-    //    return actionsSorted;
-    //}
-
     public List<Action> GetActions()
     {
         Dictionary<ActionType, Action> actions = new Dictionary<ActionType, Action>();
@@ -408,10 +358,10 @@ public class Unit : MonoBehaviour {
     {
         float moddedStat = hitPoints;
 
-        for (int i = 0; i < modules.Count; i++)
-        {
-            moddedStat += modules[i].HitPoints;
-        }
+        //for (int i = 0; i < modules.Count; i++)
+        //{
+        //    moddedStat += modules[i].HitPoints;
+        //}
 
         for (int i = 0; i < statuses.Count; i++)
         {

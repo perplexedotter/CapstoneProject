@@ -3,7 +3,7 @@
 Shader "Custom/Outline" {
 	Properties{
 		_MainTex("MainTex", 2D) = "white" {}
-		_Outline("_Outline", Range(0,0.1)) = 0.5
+		_Outline("_Outline", Range(0,0.1)) = 0.3
 		_OutlineColor("Color", Color) = (1, 1, 1, 1)
 		_Color("Color", Color) = (1, 1, 1, 1)
 	}
