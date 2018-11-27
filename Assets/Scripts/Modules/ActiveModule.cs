@@ -42,6 +42,31 @@ public class ActiveModule : Module {
             {
                 p.Play(true);
             }
+
+            AudioClip laser = null;
+            if (ActionType == ActionType.MeleeAttack)
+            {
+                laser = Resources.Load("Sounds/laser5", typeof(AudioClip)) as AudioClip;
+            }
+
+            else if (ActionType == ActionType.LongAttack)
+            {
+                laser = Resources.Load("Sounds/laser8Delay", typeof(AudioClip)) as AudioClip;
+                audioSource.PlayOneShot(laser);
+                laser = Resources.Load("Sounds/laser5", typeof(AudioClip)) as AudioClip;
+            }
+
+            else if (ActionType == ActionType.Heal)
+            {
+                laser = Resources.Load("Sounds/laser12", typeof(AudioClip)) as AudioClip;
+            }
+
+            else if (ActionType == ActionType.Slow)
+            {
+                laser = Resources.Load("Sounds/laser2", typeof(AudioClip)) as AudioClip;
+            }
+            
+            audioSource.PlayOneShot(laser);
         }
     }
 }

@@ -423,7 +423,7 @@ public class BattleManager : MonoBehaviour {
             //Check if unit is destroyed
             if (unit.Destroyed)
             {
-                //explosionSound.Play();
+                explosionSound.Play();
                 DestroyUnit(unit);
             }
         }
@@ -1148,7 +1148,8 @@ public class BattleManager : MonoBehaviour {
     //triggered when a unit lands on a wormhole tile. Thi swill teleport the user to the empty wormhole
     private void ActivateWormholeEvent(Tile wormhole){
         Debug.Log("Wormhole event activated!");
-        if(wormhole.WormholeDestination == null || wormhole.UnitOnTile == null)
+       
+        if (wormhole.WormholeDestination == null || wormhole.UnitOnTile == null)
         {
             Debug.Log("Error no destination or unit to transport");
             return;
@@ -1159,6 +1160,9 @@ public class BattleManager : MonoBehaviour {
         }
         else
         {
+            AudioSource audioSource = GameObject.Find("BGMusic").GetComponent<AudioSource>();
+            audioSource.PlayOneShot(Resources.Load("Sounds/teleport", typeof(AudioClip)) as AudioClip);
+
             wormhole.UnitOnTile.PlaceOnTile(wormhole.WormholeDestination);
             unitTeleported = true;
         }
