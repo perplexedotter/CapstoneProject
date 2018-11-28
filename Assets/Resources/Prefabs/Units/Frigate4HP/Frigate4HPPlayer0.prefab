@@ -168,12 +168,12 @@ MonoBehaviour:
   aIUnit: 0
   bossUnit: 0
   type: 0
-  hitPoints: 100
+  hitPoints: 200
   damageTaken: 0
   damageDealt: 0
   attack: 0
   speed: 100
-  mass: 400
+  mass: 600
   shields: 0
   hardPoints: 4
   threat: 0

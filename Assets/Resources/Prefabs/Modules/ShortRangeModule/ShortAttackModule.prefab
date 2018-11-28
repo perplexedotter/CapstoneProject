@@ -190,10 +190,13 @@ MonoBehaviour:
   value: 19
   threat: 21
   mass: 12
+  audioSource: {fileID: 0}
+  moduleInfo:
+  - Short powerful attack
   Target: 1
   ActionType: 0
-  Range: 1
-  Power: 18
+  range: 1
+  power: 30
   effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!198 &198243836399468138
 ParticleSystem:

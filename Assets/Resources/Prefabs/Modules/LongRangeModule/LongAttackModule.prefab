@@ -159,10 +159,14 @@ MonoBehaviour:
   value: 26
   threat: 32
   mass: 23
+  audioSource: {fileID: 0}
+  moduleInfo:
+  - Attacks at a Distance
+  - Can't Use After Move
   Target: 1
   ActionType: 1
-  Range: 4
-  Power: 40
+  range: 4
+  power: 25
   effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!198 &198431221353259544
 ParticleSystem:

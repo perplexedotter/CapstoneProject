@@ -8,11 +8,26 @@ public class ActiveModule : Module {
 
     [SerializeField] protected Target Target;
     [SerializeField] protected ActionType ActionType;
-    [SerializeField] protected int Range;
-    [SerializeField] protected int Power;
+    [SerializeField] protected int range;
+    [SerializeField] protected int power;
 
     [SerializeField] protected Vector3 effectFXLocation;
 
+    public int Power
+    {
+        get
+        {
+            return power;
+        }
+    }
+
+    public int Range
+    {
+        get
+        {
+            return range;
+        }
+    }
 
     public override Action GetAction()
     {
@@ -23,8 +38,8 @@ public class ActiveModule : Module {
     {
         this.Target = Target;
         this.ActionType = ActionType;
-        this.Range = Range;
-        this.Power = Power;
+        this.range = Range;
+        this.power = Power;
         this.mass = mass;
         this.type = type;
         this.value = value;
