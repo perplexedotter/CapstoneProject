@@ -885,7 +885,7 @@ public class BattleManager : MonoBehaviour {
         {
             highlightedUnit.GetComponent<Image>().color = new Color32(144, 42, 42, 141);
         }
-        if (highlightedUnit.activeSelf == false){
+        if (highlightedUnit.activeSelf == false) {
             highlightedUnit.SetActive(true);
             highlightedUnitText.text = "";
             highlightedUnitTextInfo.text = "";
@@ -893,7 +893,7 @@ public class BattleManager : MonoBehaviour {
             highlightedUnitTextInfo.text = "  Current HP: " + currentHP;
             List<ModuleType> list = unit.GetModuleTypes();
 
-            if(unit.getUnitType() == UnitType.fighter)
+            if (unit.getUnitType() == UnitType.fighter)
             {
                 highlightedFrigate.gameObject.SetActive(false);
                 highlightedFrigateEnemy.gameObject.SetActive(false);
@@ -927,7 +927,7 @@ public class BattleManager : MonoBehaviour {
                     highlightedFrigateEnemy.gameObject.SetActive(true);
                 }
             }
-            if(unit.BossUnit == true)
+            if (unit.BossUnit == true)
             {
                 highlightedUnitText.text = "BOSS";
             }
@@ -958,7 +958,80 @@ public class BattleManager : MonoBehaviour {
                     modstr += "   ";
                 }
             }
+
             highlightedUnitTextInfo.text += "     Type: " + unit.GetShipType() + "\n  Mods: " + modstr;
+
+            if (actionState)
+            {
+                List<Action> actions = activeUnit.GetActions();
+                Action action = null;
+                ActionType chosenAction = ActionType.Slow;
+                if (actionChosen == 0)
+                {
+                    chosenAction = ActionType.LongAttack;
+                }
+                else if (actionChosen == (ActionChosen)1)
+                {
+                    chosenAction = ActionType.MeleeAttack;
+                }
+                else if (actionChosen == (ActionChosen)2)
+                {
+                    chosenAction = ActionType.Heal;
+                }
+                int power = 0;
+                foreach (Action a in actions)
+                {
+                    if (a.Type == chosenAction)
+                    {
+                        power = a.Power;
+                        action = a;
+                        break;
+                    }
+                }
+
+                List<Tile> inRange = GetActionRange(action);
+                Tile.TileColor color = (action.Target == Target.Self || action.Target == Target.Ally) ? Tile.TileColor.ally : Tile.TileColor.attack;
+                bool testUnit = false;
+                foreach (var t in inRange)
+                {
+                    if (t.gameObject.name == unit.CurrentTile.gameObject.name)
+                    {
+                        testUnit = true;
+                        break;
+                    }
+                }
+
+                if (testUnit)
+                {
+                    float expectedHealthHeal = currentHP + power;
+                    float expectedHealthDmg = currentHP - power;
+                    if(expectedHealthHeal > unit.GetHP())
+                    {
+                        expectedHealthHeal = unit.GetHP();
+                    }
+                    if(expectedHealthDmg < 0)
+                    {
+                        expectedHealthDmg = 0;
+                    }
+                    if (actionChosen == ActionChosen.heal)
+                    {
+                        highlightedUnitTextInfo.text = "  Action = Heal\n  New HP: " + expectedHealthHeal + " (" + currentHP + " + " + power + ")\n  Max HP: " + unit.GetHP();
+                    }
+                    else if (actionChosen == ActionChosen.slow)
+                    {
+                        highlightedUnitTextInfo.text = "  Action = Slow\n  Target's move distance will be decreased";
+                    }
+                    else if (actionChosen == ActionChosen.shortRange)
+                    {
+                        highlightedUnitTextInfo.text = "  Action = Short Range\n  New HP: " + expectedHealthDmg + " (" + currentHP + " - " + power + ")";
+                    }
+                    else if (actionChosen == ActionChosen.longRange)
+                    {
+                        highlightedUnitTextInfo.text = "  Action = Long Range\n  New HP: " + expectedHealthDmg + " (" + currentHP + " - " + power + ")";
+                    }
+                }
+
+            }
         }
         else
         {
@@ -987,8 +1060,8 @@ public class BattleManager : MonoBehaviour {
 
         //clear text boxes
         currentUnit.gameObject.SetActive(true);
-        highlightedUnitText.text = "";
-        highlightedUnitTextInfo.text = "";
+        currentUnitText.text = "";
+        currentUnitTextInfo.text = "";
 
         float currentHP = activeUnit.GetHP() - activeUnit.GetDamage();
         currentUnitTextInfo.text = "  Current HP: " + currentHP;
