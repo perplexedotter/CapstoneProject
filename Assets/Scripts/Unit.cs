@@ -78,7 +78,7 @@ public class Unit : MonoBehaviour {
 
     }
 
-    private void InstantiateModules()
+    public void InstantiateModules()
     {
         int i = 0, j = 0;
         while (i < modules.Count && j < modulePositions.Count)
