@@ -83,7 +83,7 @@ public class Highlighter : MonoBehaviour {
         {
             foreach (Renderer r in childRenderers)
             {
-                if(childColors != null && childColors.Count > 0)
+                if(childColors != null && childColors.Count > 0 && r.material.HasProperty("_Color"))
                     r.material.color = childColors.Dequeue();
             }
         }
