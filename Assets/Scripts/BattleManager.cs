@@ -195,7 +195,7 @@ public class BattleManager : MonoBehaviour {
     }
 
 
-    //TURN / ROUND FUNCTIONS
+    /*****************************************TURN / ROUND FUNCTIONS********************************/
 
     private void NextRound()
     {
@@ -211,8 +211,6 @@ public class BattleManager : MonoBehaviour {
         UpdateTurnOrder(turnIndex); //Update the turn order for all units
         DisplayTurnOrder();
     }
-
-
 
 
     public void NextTurn()
@@ -523,7 +521,8 @@ public class BattleManager : MonoBehaviour {
                         HealButton.interactable = true;
                         break;
                     case ActionType.LongAttack:
-                        LongRangeButton.interactable = true;
+                        if(!unitMoved) //Long Range Modules can't be used after moving
+                            LongRangeButton.interactable = true;
                         break;
                     case ActionType.MeleeAttack:
                         ShortRangeButton.interactable = true;
