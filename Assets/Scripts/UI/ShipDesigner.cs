@@ -319,19 +319,19 @@ public class ShipDesigner : MonoBehaviour {
             {
                 if (t == ModuleType.shortRange)
                 {
-                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/ShortRangeModule/ShortAttackModule"), activeUnit.transform) as GameObject;
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ShortRangeModule/ShortAttackModule"), activeUnit.transform) as GameObject;
                 }
                 else if (t == ModuleType.longRange)
                 {
-                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/LongRangeModule/LongAttackModule"), activeUnit.transform) as GameObject;
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/LongRangeModule/LongAttackModule"), activeUnit.transform) as GameObject;
                 }
                 else if (t == ModuleType.heal)
                 {
-                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/HealModule/HealModule"), activeUnit.transform) as GameObject;
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/HealModule/HealModule"), activeUnit.transform) as GameObject;
                 }
                 else if (t == ModuleType.slow)
                 {
-                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/ActiveModules/SlowModule/SlowModule"), activeUnit.transform) as GameObject;
+                    GameObject mod = GameObject.Instantiate(Resources.Load("Prefabs/Modules/SlowModule/SlowModule"), activeUnit.transform) as GameObject;
                 }
             }
             Unit unit = activeUnit.GetComponentInChildren<Unit>();

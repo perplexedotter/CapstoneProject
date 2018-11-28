@@ -67,8 +67,10 @@ public class Highlighter : MonoBehaviour {
             childColors = new Queue<Color>();
             foreach (Renderer r in childRenderers)
             {
-                childColors.Enqueue(r.material.color);
-                r.material.color = highlightColor;
+                if (r.material.HasProperty("_Color")){
+                    childColors.Enqueue(r.material.color);
+                    r.material.color = highlightColor;
+                }
             }
         }
         //Send a message to other scripts on object to begin animation

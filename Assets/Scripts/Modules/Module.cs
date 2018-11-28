@@ -13,7 +13,11 @@ public class Module : MonoBehaviour {
     [SerializeField] protected int value;
     [SerializeField] protected int threat = 0;
     [SerializeField] protected int mass;
-
+    [SerializeField] protected AudioSource audioSource;
+    private void Awake()
+    {
+        audioSource = GameObject.Find("BGMusic").GetComponent<AudioSource>();
+    }
     public int Mass
     {
         get

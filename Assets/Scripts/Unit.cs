@@ -83,8 +83,13 @@ public class Unit : MonoBehaviour {
         int i = 0, j = 0;
         while (i < modules.Count && j < modulePositions.Count)
         {
-            GameObject module = Instantiate(modules[i++].gameObject, gameObject.transform, false) as GameObject;
-            module.transform.localPosition = modulePositions[j++];
+            if (modules[i] != null)
+            {
+                GameObject module = Instantiate(modules[i].gameObject, gameObject.transform, false) as GameObject;
+                module.transform.localPosition = modulePositions[j];
+            }
+            i++;
+            j++;
         }
         modules = new List<Module>(GetComponentsInChildren<Module>());
 
@@ -323,6 +328,10 @@ public class Unit : MonoBehaviour {
         foreach(var m in modules)
         {
             Action a;
+            if(m == null)
+            {
+                break;
+            }
             Action action = m.GetAction();
             if (action != null){
                 if(actions.TryGetValue(action.Type, out a)){
@@ -479,7 +488,6 @@ public class Unit : MonoBehaviour {
     { 
         if (IsMoving)
         {
-            Debug.Log("Test 6");
             ContinuePathTraversal();
         }
         if (movementFinished)
@@ -510,19 +518,15 @@ public class Unit : MonoBehaviour {
             this.path = path;
             isMoving = true;
             pathIndex = 0;
-            Debug.Log("Test3");
         }
     }
 
     private void ContinuePathTraversal()
     {
-        Debug.Log(currentTile.gameObject.name + "  " + path[path.Count - 1]);
         if(currentTile != path[path.Count - 1]) //If the Unit hasn't reached the end of the path
         {
-            Debug.Log("Test4");
             if (currentTile != path[pathIndex]) //If the current Tile isn't the same as the next tile
             {
-                Debug.Log("Test5");
                 Vector3 destination = path[pathIndex].transform.position;
                 float step = moveSpeed * Time.deltaTime;
                 //Vector3.RotateTowards(transform.position, destination);
