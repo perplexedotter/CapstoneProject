@@ -222,7 +222,7 @@ RectTransform:
   m_Children:
   - {fileID: 738403067}
   m_Father: {fileID: 1726899138}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -442,6 +442,7 @@ GameObject:
   - component: {fileID: 161091770}
   - component: {fileID: 161091769}
   - component: {fileID: 161091768}
+  - component: {fileID: 161091771}
   m_Layer: 5
   m_Name: ModuleButton (1)
   m_TagString: Untagged
@@ -465,9 +466,9 @@ RectTransform:
   m_Father: {fileID: 1285790624}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.4, y: -210.1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 316.8, y: 205.1}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &161091768
@@ -559,6 +560,24 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 161091766}
   m_CullTransparentMesh: 0
+--- !u!114 &161091771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 161091766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a3c1fa4eb040438afc6c9dc15f5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  module: {fileID: 114994601414536830, guid: cf2c779f0085d83469372dcbc4e47718, type: 2}
+  moduleTipBox: {fileID: 1831621628393404, guid: 2814965c7786dcb499f98f4e79f16c8d,
+    type: 2}
+  parent: {fileID: 1726899138}
+  tipText:
+  - 'DMG: 40 RNG: 4'
+  - Can't Fire After Move
 --- !u!1 &187702079
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,7 +715,7 @@ RectTransform:
   m_LocalScale: {x: 1.0000306, y: 1.0000306, z: 1.0000306}
   m_Children: []
   m_Father: {fileID: 1726899138}
-  m_RootOrder: 2
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1027,6 +1046,7 @@ GameObject:
   - component: {fileID: 293336475}
   - component: {fileID: 293336474}
   - component: {fileID: 293336473}
+  - component: {fileID: 293336472}
   m_Layer: 5
   m_Name: ModuleButton
   m_TagString: Untagged
@@ -1050,11 +1070,28 @@ RectTransform:
   m_Father: {fileID: 1285790624}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.4, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 316.8, y: 205.1}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &293336472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 293336470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a3c1fa4eb040438afc6c9dc15f5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  module: {fileID: 114125170869023298, guid: 1ac7b4119c24b344fbfd2aff229d4738, type: 2}
+  moduleTipBox: {fileID: 1831621628393404, guid: 2814965c7786dcb499f98f4e79f16c8d,
+    type: 2}
+  parent: {fileID: 1726899138}
+  tipText:
+  - 'DMG: 30 RNG: 1'
 --- !u!114 &293336473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1636,7 +1673,7 @@ RectTransform:
   - {fileID: 1389640261}
   - {fileID: 1736465580}
   m_Father: {fileID: 1726899138}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1990,7 +2027,7 @@ RectTransform:
   m_Children:
   - {fileID: 2037004505}
   m_Father: {fileID: 1726899138}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2182,7 +2219,7 @@ RectTransform:
   m_Children:
   - {fileID: 1736405228}
   m_Father: {fileID: 1726899138}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2386,8 +2423,8 @@ RectTransform:
   m_Father: {fileID: 554664288}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.2548479}
-  m_AnchorMax: {x: 1, y: 0.9999999}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2722,6 +2759,7 @@ GameObject:
   - component: {fileID: 1113137649}
   - component: {fileID: 1113137648}
   - component: {fileID: 1113137647}
+  - component: {fileID: 1113137650}
   m_Layer: 5
   m_Name: ModuleButton (3)
   m_TagString: Untagged
@@ -2745,9 +2783,9 @@ RectTransform:
   m_Father: {fileID: 1285790624}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.4, y: -630.30005}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 316.8, y: 205.1}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1113137647
@@ -2839,6 +2877,25 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1113137645}
   m_CullTransparentMesh: 0
+--- !u!114 &1113137650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1113137645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a3c1fa4eb040438afc6c9dc15f5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  module: {fileID: 114337613351686046, guid: f965eb1fb21d1a043886ed219734beaa, type: 2}
+  moduleTipBox: {fileID: 1831621628393404, guid: 2814965c7786dcb499f98f4e79f16c8d,
+    type: 2}
+  parent: {fileID: 1726899138}
+  tipText:
+  - 'SLOW: 400 RNG: 4'
+  - Reduce Trgt Movmnt
+  - Postpone Trgt Turn
 --- !u!1 &1237959260
 GameObject:
   m_ObjectHideFlags: 0
@@ -2959,7 +3016,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 1.2, y: 311.25003}
-  m_SizeDelta: {x: 316.8, y: 835.4}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1285790625
 MonoBehaviour:
@@ -3716,6 +3773,7 @@ GameObject:
   - component: {fileID: 1565678252}
   - component: {fileID: 1565678251}
   - component: {fileID: 1565678250}
+  - component: {fileID: 1565678253}
   m_Layer: 5
   m_Name: ModuleButton (2)
   m_TagString: Untagged
@@ -3739,9 +3797,9 @@ RectTransform:
   m_Father: {fileID: 1285790624}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 158.4, y: -420.2}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 316.8, y: 205.1}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1565678250
@@ -3833,6 +3891,24 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1565678248}
   m_CullTransparentMesh: 0
+--- !u!114 &1565678253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1565678248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958a3c1fa4eb040438afc6c9dc15f5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  module: {fileID: 114750274332693228, guid: f29669dcd1f351e439cff038f51da8b6, type: 2}
+  moduleTipBox: {fileID: 1831621628393404, guid: 2814965c7786dcb499f98f4e79f16c8d,
+    type: 2}
+  parent: {fileID: 1726899138}
+  tipText:
+  - 'HEAL: 25 RNG: 4'
+  - Heals Allies
 --- !u!1 &1574251137
 GameObject:
   m_ObjectHideFlags: 0
@@ -4215,11 +4291,11 @@ RectTransform:
   m_Children:
   - {fileID: 244114512}
   - {fileID: 317466947}
-  - {fileID: 208473953}
   - {fileID: 977656142}
   - {fileID: 927712839}
   - {fileID: 598556001}
   - {fileID: 57002624}
+  - {fileID: 208473953}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4493,7 +4569,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1796311777
 RectTransform:
   m_ObjectHideFlags: 0

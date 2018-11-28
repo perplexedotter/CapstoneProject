@@ -14,6 +14,7 @@ public class Module : MonoBehaviour {
     [SerializeField] protected int threat = 0;
     [SerializeField] protected int mass;
     [SerializeField] protected AudioSource audioSource;
+    [SerializeField] protected List<string> moduleInfo;
     private void Awake()
     {
         audioSource = GameObject.Find("BGMusic").GetComponent<AudioSource>();
@@ -52,6 +53,19 @@ public class Module : MonoBehaviour {
         get
         {
             return threat;
+        }
+    }
+
+    public List<string> ModuleInfo
+    {
+        get
+        {
+            return new List<string>(moduleInfo);
+        }
+
+        set
+        {
+            moduleInfo = value;
         }
     }
 

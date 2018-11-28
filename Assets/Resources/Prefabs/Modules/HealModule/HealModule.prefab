@@ -159,10 +159,14 @@ MonoBehaviour:
   value: 29
   threat: 0
   mass: 32
+  audioSource: {fileID: 0}
+  moduleInfo:
+  - Heals Allies
+  - Over a Distance
   Target: 0
   ActionType: 2
-  Range: 4
-  Power: 15
+  range: 4
+  power: 20
   effectFXLocation: {x: 0.06, y: 1, z: 0.2}
 --- !u!198 &198536700160942438
 ParticleSystem:
