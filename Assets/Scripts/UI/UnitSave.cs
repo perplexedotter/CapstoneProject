@@ -74,6 +74,9 @@ public class UnitSave : MonoBehaviour {
     static string[] GetFilePaths()
     {
         string folderPath = Path.Combine(Application.persistentDataPath, folder);
+        if (!Directory.Exists(folderPath))
+            Directory.CreateDirectory(folderPath);
+
         return Directory.GetFiles(folderPath, "*.*");
     }
 }
