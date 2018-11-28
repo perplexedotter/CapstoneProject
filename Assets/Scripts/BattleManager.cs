@@ -45,11 +45,15 @@ public class BattleManager : MonoBehaviour {
 
     //adding waves
     public enum waveEnemyType {attackerAI, healerAI, longAI};
+    [Header("Enemies for waves")]
     [SerializeField] GameObject meleeAIObj;
     [SerializeField] GameObject healAIObj;
     [SerializeField] GameObject longAIObj;
+    [SerializeField] GameObject slowAIObj;
+
     [SerializeField] Tile enemyWarp;
     //Turn Order
+    [Header("Round and Turn")]
     [SerializeField] List<Unit> roundTurnOrder;
     [SerializeField] int turnIndex;
     [SerializeField] int roundNumber = 0;
@@ -1290,16 +1294,17 @@ public class BattleManager : MonoBehaviour {
         switch (spawnIndex)
         {
             case 0:
-            spawnObject = healAIObj;
-            break;
+                spawnObject = healAIObj;
+                break;
             case 1:
-            spawnObject = meleeAIObj;
-            break;
+                spawnObject = meleeAIObj;
+                break;
             case 2:
-            spawnObject = longAIObj;
-            break;
+                spawnObject = longAIObj;
+                break;
             default:
-            break;
+                spawnObject = slowAIObj;
+                break;
         }
         GameObject go = Instantiate(spawnObject, enemyWarp.transform.position, Quaternion.identity) as GameObject; 
         go.transform.parent = GameObject.Find("BattleManager").transform;
