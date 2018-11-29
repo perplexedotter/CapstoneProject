@@ -189,15 +189,15 @@ MonoBehaviour:
   type: 3
   value: 23
   threat: 10
-  mass: 31
+  mass: 16
   audioSource: {fileID: 0}
   moduleInfo:
   - Reduces Target Movmnt
   - Delays Targets Turn
   Target: 1
   ActionType: 3
-  range: 4
-  power: 400
+  range: 5
+  power: 75
   effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!198 &198275500730183520
 ParticleSystem:

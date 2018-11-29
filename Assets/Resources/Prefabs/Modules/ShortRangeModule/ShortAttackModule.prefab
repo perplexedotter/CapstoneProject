@@ -187,16 +187,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  value: 19
+  value: 25
   threat: 21
-  mass: 12
+  mass: 18
   audioSource: {fileID: 0}
   moduleInfo:
   - Short powerful attack
   Target: 1
   ActionType: 0
   range: 1
-  power: 30
+  power: 22
   effectFXLocation: {x: 0, y: 0, z: 0}
 --- !u!198 &198243836399468138
 ParticleSystem:

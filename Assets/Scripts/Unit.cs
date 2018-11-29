@@ -363,7 +363,7 @@ public class Unit : MonoBehaviour {
         return type;
     }
     //returns base hp + bonus from modules
-    public float GetHP()
+    public float GetMaxHP()
     {
         float moddedStat = hitPoints;
 
@@ -380,6 +380,11 @@ public class Unit : MonoBehaviour {
             }
         }
         return moddedStat;
+    }
+
+    public float GetCurrentHP()
+    {
+        return GetMaxHP() - damageTaken;
     }
 
     //returns base mass + bonus from modules
@@ -416,7 +421,7 @@ public class Unit : MonoBehaviour {
     public float DamageUnit(float dmg)
     {
         damageTaken += dmg;
-        float currentHP = GetHP() - damageTaken;
+        float currentHP = GetMaxHP() - damageTaken;
         if(currentHP <= 0)
         {
             destroy = true;
