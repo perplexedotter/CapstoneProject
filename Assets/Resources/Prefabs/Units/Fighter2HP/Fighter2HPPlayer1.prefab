@@ -229,7 +229,7 @@ MonoBehaviour:
   shields: 0
   hardPoints: 2
   threat: 0
-  value: 0
+  value: 40
   movementRange: 0
   destroy: 0
   modules:

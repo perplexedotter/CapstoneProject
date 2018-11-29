@@ -158,7 +158,7 @@ MonoBehaviour:
   type: 2
   value: 22
   threat: 0
-  mass: 32
+  mass: 22
   audioSource: {fileID: 0}
   moduleInfo:
   - Heals Allies

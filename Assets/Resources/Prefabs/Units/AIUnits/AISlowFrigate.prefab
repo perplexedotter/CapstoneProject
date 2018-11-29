@@ -207,7 +207,7 @@ MonoBehaviour:
   damageDealt: 0
   attack: 0
   speed: 100
-  mass: 600
+  mass: 550
   shields: 0
   hardPoints: 3
   threat: 0
