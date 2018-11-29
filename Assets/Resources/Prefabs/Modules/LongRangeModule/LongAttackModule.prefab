@@ -157,7 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   value: 26
-  threat: 32
+  threat: 30
   mass: 23
   audioSource: {fileID: 0}
   moduleInfo:

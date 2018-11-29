@@ -892,7 +892,7 @@ public class BattleManager : MonoBehaviour {
             highlightedUnit.SetActive(true);
             highlightedUnitText.text = "";
             highlightedUnitTextInfo.text = "";
-            float currentHP = unit.GetHP() - unit.GetDamage();
+            float currentHP = unit.GetMaxHP() - unit.GetDamage();
             highlightedUnitTextInfo.text = "  Current HP: " + currentHP;
             List<ModuleType> list = unit.GetModuleTypes();
 
@@ -1008,9 +1008,9 @@ public class BattleManager : MonoBehaviour {
                 {
                     float expectedHealthHeal = currentHP + power;
                     float expectedHealthDmg = currentHP - power;
-                    if(expectedHealthHeal > unit.GetHP())
+                    if(expectedHealthHeal > unit.GetMaxHP())
                     {
-                        expectedHealthHeal = unit.GetHP();
+                        expectedHealthHeal = unit.GetMaxHP();
                     }
                     if(expectedHealthDmg < 0)
                     {
@@ -1018,7 +1018,7 @@ public class BattleManager : MonoBehaviour {
                     }
                     if (actionChosen == ActionChosen.heal)
                     {
-                        highlightedUnitTextInfo.text = "  Action = Heal\n  New HP: " + expectedHealthHeal + " (" + currentHP + " + " + power + ")\n  Max HP: " + unit.GetHP();
+                        highlightedUnitTextInfo.text = "  Action = Heal\n  New HP: " + expectedHealthHeal + " (" + currentHP + " + " + power + ")\n  Max HP: " + unit.GetMaxHP();
                     }
                     else if (actionChosen == ActionChosen.slow)
                     {
@@ -1066,7 +1066,7 @@ public class BattleManager : MonoBehaviour {
         currentUnitText.text = "";
         currentUnitTextInfo.text = "";
 
-        float currentHP = activeUnit.GetHP() - activeUnit.GetDamage();
+        float currentHP = activeUnit.GetMaxHP() - activeUnit.GetDamage();
         currentUnitTextInfo.text = "  Current HP: " + currentHP;
         List<ModuleType> list = activeUnit.GetModuleTypes();
 
