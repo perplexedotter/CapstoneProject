@@ -173,10 +173,7 @@ public class BattleManager : MonoBehaviour {
         //Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
         //statusText.transform.position = statusPos;
         //statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
-        if(victoryType == VictoryType.waveSurvival)
-        {
-            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive - roundNumber).ToString();
-        }
+
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -208,6 +205,10 @@ public class BattleManager : MonoBehaviour {
         turnIndex = 0;
         unitTeleported = false;
         roundNumber++;
+        if(victoryType == VictoryType.waveSurvival)
+        {
+            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive - roundNumber).ToString();
+        }
         if (roundNumber%5==0 && victoryType == VictoryType.waveSurvival)
         {
             GenerateWave();
