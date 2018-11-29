@@ -391,6 +391,7 @@ public class BattleManager : MonoBehaviour {
             //TODO add checking to make sure AI is making valid moves
             case Command.CommandType.Move:
                 UpdateCurrentPossibleMoves();
+                map.ResetTileColors();
                 ShowCurrentPossibleMoves();
                 MoveActiveUnitToTile(command.target);
                 break;

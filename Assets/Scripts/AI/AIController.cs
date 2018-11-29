@@ -135,8 +135,8 @@ public class AIController : MonoBehaviour {
         //Find most damaged highest value unit in potential range
         List<Unit> damagedAllies = map.GetAllAllies(unit)
             .Where(u => u.PlayerNumber == unit.PlayerNumber && u.GetDamage() > 0)
-            .OrderBy(u=>u.GetValue())
-            .OrderByDescending(u=>u.GetMaxHP())
+            .OrderByDescending(u=>u.GetValue())
+            .OrderBy(u=>u.GetCurrentHP())
             .ToList();
 
         List<Tile> healRange = map.GetMovementRangeExtended(unit, action.Range);
