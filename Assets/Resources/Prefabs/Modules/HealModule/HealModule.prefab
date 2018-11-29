@@ -156,9 +156,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
-  value: 29
+  value: 22
   threat: 0
-  mass: 32
+  mass: 22
   audioSource: {fileID: 0}
   moduleInfo:
   - Heals Allies

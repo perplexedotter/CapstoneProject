@@ -173,10 +173,7 @@ public class BattleManager : MonoBehaviour {
         //Vector3 statusPos = Camera.main.WorldToScreenPoint(activeUnit.transform.position);
         //statusText.transform.position = statusPos;
         //statusText.text = "HP: " + activeUnit.DamageUnit(0) +  "\nType: " + activeUnit.GetShipType() + "\nMods: " + statusBarMods;
-        if(victoryType == VictoryType.waveSurvival)
-        {
-            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive - roundNumber).ToString();
-        }
+
         //TODO Add logic to escape the battle menu to let player examine map/units
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -208,6 +205,10 @@ public class BattleManager : MonoBehaviour {
         turnIndex = 0;
         unitTeleported = false;
         roundNumber++;
+        if(victoryType == VictoryType.waveSurvival)
+        {
+            roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive - roundNumber).ToString();
+        }
         if (roundNumber%5==0 && victoryType == VictoryType.waveSurvival)
         {
             GenerateWave();
@@ -390,6 +391,7 @@ public class BattleManager : MonoBehaviour {
             //TODO add checking to make sure AI is making valid moves
             case Command.CommandType.Move:
                 UpdateCurrentPossibleMoves();
+                map.ResetTileColors();
                 ShowCurrentPossibleMoves();
                 MoveActiveUnitToTile(command.target);
                 break;
@@ -892,7 +894,7 @@ public class BattleManager : MonoBehaviour {
             highlightedUnit.SetActive(true);
             highlightedUnitText.text = "";
             highlightedUnitTextInfo.text = "";
-            float currentHP = unit.GetHP() - unit.GetDamage();
+            float currentHP = unit.GetMaxHP() - unit.GetDamage();
             highlightedUnitTextInfo.text = "  Current HP: " + currentHP;
             List<ModuleType> list = unit.GetModuleTypes();
 
@@ -1008,9 +1010,9 @@ public class BattleManager : MonoBehaviour {
                 {
                     float expectedHealthHeal = currentHP + power;
                     float expectedHealthDmg = currentHP - power;
-                    if(expectedHealthHeal > unit.GetHP())
+                    if(expectedHealthHeal > unit.GetMaxHP())
                     {
-                        expectedHealthHeal = unit.GetHP();
+                        expectedHealthHeal = unit.GetMaxHP();
                     }
                     if(expectedHealthDmg < 0)
                     {
@@ -1018,7 +1020,7 @@ public class BattleManager : MonoBehaviour {
                     }
                     if (actionChosen == ActionChosen.heal)
                     {
-                        highlightedUnitTextInfo.text = "  Action = Heal\n  New HP: " + expectedHealthHeal + " (" + currentHP + " + " + power + ")\n  Max HP: " + unit.GetHP();
+                        highlightedUnitTextInfo.text = "  Action = Heal\n  New HP: " + expectedHealthHeal + " (" + currentHP + " + " + power + ")\n  Max HP: " + unit.GetMaxHP();
                     }
                     else if (actionChosen == ActionChosen.slow)
                     {
@@ -1066,7 +1068,7 @@ public class BattleManager : MonoBehaviour {
         currentUnitText.text = "";
         currentUnitTextInfo.text = "";
 
-        float currentHP = activeUnit.GetHP() - activeUnit.GetDamage();
+        float currentHP = activeUnit.GetMaxHP() - activeUnit.GetDamage();
         currentUnitTextInfo.text = "  Current HP: " + currentHP;
         List<ModuleType> list = activeUnit.GetModuleTypes();
 

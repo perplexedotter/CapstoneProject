@@ -68,24 +68,33 @@ public class AIController : MonoBehaviour {
         //Determine if highest value in melee range is adjacent
         List<Unit> adjEnemies = GetAdjacentUnits(unit.CurrentTile, Team.Enemy);
         List<Tile> meleeRange = map.GetMovementRangeExtended(unit, meleeAction.Range);
-        Unit highestValueUnit = GetHighestValue(map.GetUnits(meleeRange, unit.PlayerNumber, Team.Enemy));
+        List<Unit> enemiesInRange = map.GetUnits(meleeRange, unit.PlayerNumber, Team.Enemy);
+        Unit highestValueUnit = null;
 
+        //Prioritize enemies that this attack can destroy
+        List<Unit> destroyableEnemies = enemiesInRange
+            .Where(o => (int)o.GetCurrentHP() <= meleeAction.Power)
+            .OrderByDescending(o => o.GetValue())
+            .ToList();
+        //If a destroyable enemy exists target it.
+        highestValueUnit = destroyableEnemies.Count > 0 ? destroyableEnemies[0] : null;
+
+        if (!highestValueUnit)
+            highestValueUnit = GetHighestValue(enemiesInRange);
 
         //If the highest value unit is in range attack it
         if (highestValueUnit != null && adjEnemies.Count > 0 && adjEnemies.Contains(highestValueUnit))
         {
             commands.Add(new Command(highestValueUnit.CurrentTile, Command.CommandType.Action, meleeAction));
         }
-        else
+        else //If there is not unit in melee range find the closest enemy and move to engage
         {
-            //If there is not unit in melee range find the closest enemy and move to engage
             if (highestValueUnit == null)
             {
                 highestValueUnit = GetClosestUnit(unit.CurrentTile, Team.Enemy);
             }
 
             List<Tile> movementRange = map.GetMovementRange(unit);
-            
             //Check if the highestValueUnit is in range because it is adjacent to a wormhole destination
             List<Tile> tilesAroundHVU = map.GetTilesInRange(highestValueUnit.CurrentTile, meleeAction.Range);
             Tile closestTileToEnemy = null;
@@ -100,13 +109,7 @@ public class AIController : MonoBehaviour {
             //If there is no optimal wormhole move, move normally
             if (!closestTileToEnemy)
                 closestTileToEnemy = GetClosestTile(movementRange, highestValueUnit.CurrentTile);
-            //Check if a wormhole destination is closer then the chosen tile
 
-                //TODO Implement
-
-
-            //if (highestValueUnit.CurrentTile)
-            //    GetClosestTile(map.GetMovementRange(unit), highestValueUnit.CurrentTile);
             //Move to the enemy with the highest value
             commands.Add(new Command(closestTileToEnemy, Command.CommandType.Move, null));
         }
@@ -129,12 +132,11 @@ public class AIController : MonoBehaviour {
     {
         Action action = GetAction(ActionType.Heal);
         List<Command> commands = new List<Command>();
-
         //Find most damaged highest value unit in potential range
         List<Unit> damagedAllies = map.GetAllAllies(unit)
             .Where(u => u.PlayerNumber == unit.PlayerNumber && u.GetDamage() > 0)
-            .OrderBy(u=>u.GetValue())
-            .OrderByDescending(u=>u.GetHP())
+            .OrderByDescending(u=>u.GetValue())
+            .OrderBy(u=>u.GetCurrentHP())
             .ToList();
 
         List<Tile> healRange = map.GetMovementRangeExtended(unit, action.Range);
@@ -151,14 +153,6 @@ public class AIController : MonoBehaviour {
         }
         //Get information about threat and enemies and allies in range
         HashSet<Tile> movementRange = new HashSet<Tile>(map.GetMovementRange(unit));
-        //Dictionary<Tile, Map.TileData> tileData = map.GetTileData(map.GetMovementRange(unit), unit, action.Range);
-        ////Sort the tiles by least enemies in range -> lowest threat -> most allies in range 
-        //List<Map.TileData> safestUsefulPositions = tileData.Values
-        //    .OrderByDescending(o => o.DistToNearestEnemy)
-        //    .OrderBy(o => o.Threat)
-        //    .OrderByDescending(o => o.AlliesInUnitRange)
-        //    .ToList();
-
         List<Tile> bestPossibleMoves = GetBestPossibleMoves(unit, action.Range, Team.Ally);
         //There is a damaged unit to heal
         if (healTarget != null)
@@ -179,8 +173,7 @@ public class AIController : MonoBehaviour {
                     }
                 }
             }
-            //Heal target
-            commands.Add(new Command(healTarget.CurrentTile, Command.CommandType.Action, action));
+            commands.Add(new Command(healTarget.CurrentTile, Command.CommandType.Action, action)); //Heal target
         }
         //If no movement has occured move to the safest useful position
         if (!ContainsMove(commands))
@@ -202,10 +195,20 @@ public class AIController : MonoBehaviour {
             .Where(u => u.PlayerNumber != unit.PlayerNumber)
             .OrderByDescending(u => u.GetValue())
             .ToList();
+
+        Unit highestValueUnit = null;
+
+        //Prioritize enemies that this attack can destroy
+        List<Unit> destroyableEnemies = enemiesInRange
+            .Where(o => (int)o.GetCurrentHP() <= action.Power)
+            .ToList();
+        //If a destroyable enemy exists target it otherwise target the most valueable enemy in range.
+        highestValueUnit = destroyableEnemies.Count > 0 ? destroyableEnemies[0] : enemiesInRange.Count > 0 ? enemiesInRange[0] : null;
+
         //Attack most valueable unit in range
-        if(enemiesInRange.Count > 0)
+        if (highestValueUnit)
         {
-            commands.Add(new Command(enemiesInRange[0].CurrentTile, Command.CommandType.Action, action));
+            commands.Add(new Command(highestValueUnit.CurrentTile, Command.CommandType.Action, action));
         }
 
         //Handle Movement
@@ -471,7 +474,6 @@ public class AIController : MonoBehaviour {
             .OrderBy(o => o.Threat)
             .ToList();
 
-
         bool unitsInRange = false;
 
         //Sort based on allies or enemies in range based on team passed
@@ -523,7 +525,6 @@ public class AIController : MonoBehaviour {
                     .ToList();
             }
         }
-
         //Return the actual tiles
         return safestUsefulPositions.Select(o=>o.Tile).ToList();
     }

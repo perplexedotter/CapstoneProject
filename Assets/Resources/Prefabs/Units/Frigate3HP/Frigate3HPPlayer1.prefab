@@ -207,11 +207,11 @@ MonoBehaviour:
   damageDealt: 0
   attack: 0
   speed: 100
-  mass: 600
+  mass: 500
   shields: 0
   hardPoints: 3
   threat: 0
-  value: 0
+  value: 60
   movementRange: 0
   destroy: 0
   modules:
