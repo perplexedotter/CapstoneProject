@@ -23,10 +23,10 @@ public class ShipDesigner : MonoBehaviour {
     //Displaying the model of the fighter or hiding it 
     public void ShowFighter()
     {
-        ContinueOn.gameObject.SetActive(false);
 
         if (GameObject.Find("Fighter2HPPlayer0") == null)
         {
+            ContinueOn.gameObject.SetActive(false);
             Frigate.gameObject.SetActive(false);
             Fighter.gameObject.SetActive(true);
             activeUnit = Fighter;
@@ -38,26 +38,26 @@ public class ShipDesigner : MonoBehaviour {
             moduleCount();
             AddModulesToActiveUnit();
         }
-        else
-        {
-            clearModules();
-            Fighter.gameObject.SetActive(false);
-            ScrollList.gameObject.SetActive(false);
-            ClearModules.gameObject.SetActive(false);
-            type = UnitType.none;
-            clearText();
-            activeUnit = null;
-        }
+        //else
+        //{
+        //    clearModules();
+        //    Fighter.gameObject.SetActive(false);
+        //    ScrollList.gameObject.SetActive(false);
+        //    ClearModules.gameObject.SetActive(false);
+        //    type = UnitType.none;
+        //    clearText();
+        //    activeUnit = null;
+        //}
     }
  
 
     //Displaying the model of the frigate or hiding it 
     public void ShowFrigate()
     {
-        ContinueOn.gameObject.SetActive(false);
 
-        if (GameObject.Find("Frigate3HPBase") == null)
+        if (GameObject.Find("Frigate3HPPlayer0") == null)
         {
+            ContinueOn.gameObject.SetActive(false);
             Fighter.gameObject.SetActive(false);
             Frigate.gameObject.SetActive(true);
             activeUnit = Frigate;
@@ -70,16 +70,16 @@ public class ShipDesigner : MonoBehaviour {
             AddModulesToActiveUnit();
         }
 
-        else
-        {
-            clearModules();
-            Frigate.gameObject.SetActive(false);
-            ScrollList.gameObject.SetActive(false);
-            ClearModules.gameObject.SetActive(false);
-            type = UnitType.none;
-            clearText();
-            activeUnit = null;
-        }
+        //else
+        //{
+        //    clearModules();
+        //    Frigate.gameObject.SetActive(false);
+        //    ScrollList.gameObject.SetActive(false);
+        //    ClearModules.gameObject.SetActive(false);
+        //    type = UnitType.none;
+        //    clearText();
+        //    activeUnit = null;
+        //}
     }
 
     //check if unit is completed (type + full modules)
