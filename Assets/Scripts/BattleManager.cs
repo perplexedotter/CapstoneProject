@@ -84,6 +84,7 @@ public class BattleManager : MonoBehaviour {
 
     //for handling battle menu
     [Header("Battle Menu Components")]
+    [SerializeField] GameObject menuCanvas;
     [SerializeField] Button LongRangeButton;
     [SerializeField] Button ShortRangeButton;
     [SerializeField] Button HealButton;
@@ -471,13 +472,21 @@ public class BattleManager : MonoBehaviour {
         if (on)
         {
             //Remove the battlemanager and other UI
-            GameObject.Find("WinCondition").SetActive(false);
-            GameObject.Find("CurrentUnit").SetActive(false);
-            GameObject.Find("highlightedUnit").SetActive(false);
-            if (victoryType == VictoryType.waveSurvival)
-            {
-                GameObject.Find("StatusText").SetActive(false);
-            }
+            //GameObject toDeactivate = GameObject.Find("WinCondition");
+            //if (toDeactivate)
+            //    toDeactivate.SetActive(false);
+            //toDeactivate = GameObject.Find("CurrentUnit");
+            //if (toDeactivate)
+            //    toDeactivate.SetActive(false);
+            ////GameObject.Find("CurrentUnit").SetActive(false);
+            //toDeactivate = GameObject.Find("highlightedUnit");
+            //if (toDeactivate)
+            //    toDeactivate.SetActive(false);
+            //if (victoryType == VictoryType.waveSurvival)
+            //{
+            //    GameObject.Find("StatusText").SetActive(false);
+            //}
+            menuCanvas.SetActive(false);
             gameObject.SetActive(false);
         }
     } 
