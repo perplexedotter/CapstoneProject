@@ -33,6 +33,7 @@ public class BattleManager : MonoBehaviour {
    	public enum VictoryType {waveSurvival, bossKill, destroyAll};
     [SerializeField] VictoryType victoryType;
     [SerializeField] int RoundsToSurvive;
+    [SerializeField] int WaveRounds;
     public int ShipsLeft { get; protected set; }
     public int EnemiesLeft { get; protected set; }
     private bool bossDead;
@@ -209,7 +210,7 @@ public class BattleManager : MonoBehaviour {
         {
             roundsLeftText.text = "Survive The Waves!\n     Rounds Left: " + (RoundsToSurvive - roundNumber).ToString();
         }
-        if (roundNumber%5==0 && victoryType == VictoryType.waveSurvival)
+        if (victoryType == VictoryType.waveSurvival && roundNumber % WaveRounds==0)
         {
             GenerateWave();
         }
@@ -467,7 +468,18 @@ public class BattleManager : MonoBehaviour {
     {
         GameOverMenuCanvas.interactable = (on);
         GameOverMenu.SetActive(on);
+        if (on)
+        {
+            //Remove the battlemanager
+            gameObject.SetActive(false);
+            GameObject.Find("WinCondition").SetActive(false);
+            GameObject.Find("CurrentUnit").SetActive(false);
+            if(victoryType == VictoryType.waveSurvival)
+            {
+                GameObject.Find("StatusText").SetActive(false);
 
+            }
+        }
     } 
     private void ToggleBattleMenu(bool on)
     {
