@@ -175,6 +175,15 @@ public class AIController : MonoBehaviour {
             }
             commands.Add(new Command(healTarget.CurrentTile, Command.CommandType.Action, action)); //Heal target
         }
+        else
+        {
+            //If an ally is damaged but out of range move towards them
+            if(damagedAllies.Count > 0)
+            {
+                Tile tileNearestDmgedAlly = GetClosestTile(new List<Tile>(movementRange), damagedAllies[0].CurrentTile);
+                commands.Add(new Command(tileNearestDmgedAlly, Command.CommandType.Move, null));
+            }
+        }
         //If no movement has occured move to the safest useful position
         if (!ContainsMove(commands))
         {
