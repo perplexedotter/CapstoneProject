@@ -470,15 +470,15 @@ public class BattleManager : MonoBehaviour {
         GameOverMenu.SetActive(on);
         if (on)
         {
-            //Remove the battlemanager
-            gameObject.SetActive(false);
+            //Remove the battlemanager and other UI
             GameObject.Find("WinCondition").SetActive(false);
             GameObject.Find("CurrentUnit").SetActive(false);
-            if(victoryType == VictoryType.waveSurvival)
+            GameObject.Find("highlightedUnit").SetActive(false);
+            if (victoryType == VictoryType.waveSurvival)
             {
                 GameObject.Find("StatusText").SetActive(false);
-
             }
+            gameObject.SetActive(false);
         }
     } 
     private void ToggleBattleMenu(bool on)
