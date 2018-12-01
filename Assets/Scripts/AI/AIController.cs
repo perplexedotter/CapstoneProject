@@ -141,7 +141,6 @@ public class AIController : MonoBehaviour {
 
         List<Tile> healRange = map.GetMovementRangeExtended(unit, action.Range);
         HashSet<Unit> unitsInRange = new HashSet<Unit>(map.GetUnits(healRange));
-
         Unit healTarget = null;
         foreach(var u in damagedAllies)
         {
@@ -156,15 +155,12 @@ public class AIController : MonoBehaviour {
         List<Tile> bestPossibleMoves = GetBestPossibleMoves(unit, action.Range, Team.Ally);
         //There is a damaged unit to heal
         if (healTarget != null)
-        {
-            //If target is not in heal range move nearer to it first
-            if(!map.GetUnitsInRange(unit.CurrentTile, action.Range).Contains(healTarget))
-            {
-                //Get the tiles that are within movement range and healing range of target
+        {//If target is not in heal range move nearer to it first
+            if (!map.GetUnitsInRange(unit.CurrentTile, action.Range).Contains(healTarget))
+            {//Get the tiles that are within movement range and healing range of target
                 HashSet<Tile> tilesInRange = new HashSet<Tile>(map.GetTilesInRange(healTarget.CurrentTile, action.Range));
                 tilesInRange.UnionWith(movementRange);
-                //Find the safest tile of these options based on previous sort
-                foreach(var t in bestPossibleMoves)
+                foreach(var t in bestPossibleMoves)//Find the safest tile of these options based on previous sort
                 {
                     if (tilesInRange.Contains(t))
                     {
@@ -176,16 +172,14 @@ public class AIController : MonoBehaviour {
             commands.Add(new Command(healTarget.CurrentTile, Command.CommandType.Action, action)); //Heal target
         }
         else
-        {
-            //If an ally is damaged but out of range move towards them
-            if(damagedAllies.Count > 0)
+        {//If an ally is damaged but out of range move towards them
+            if (damagedAllies.Count > 0)
             {
                 Tile tileNearestDmgedAlly = GetClosestTile(new List<Tile>(movementRange), damagedAllies[0].CurrentTile);
                 commands.Add(new Command(tileNearestDmgedAlly, Command.CommandType.Move, null));
             }
         }
-        //If no movement has occured move to the safest useful position
-        if (!ContainsMove(commands))
+        if (!ContainsMove(commands))//If no movement has occured move to the safest useful position
         {
             if(bestPossibleMoves.Count > 0)
                 commands.Add(new Command(bestPossibleMoves[0], Command.CommandType.Move, null));
